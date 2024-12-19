@@ -1,9 +1,3 @@
-# https://mirror.xyz/polymarket.eth/TOHA3ir5R76bO1vjTrKQclS9k8Dygma53OIzHztJSjk
-# https://docs.polymarket.com/#methodology
-# https://stanford.edu/class/msande448/2018/Final/Reports/gr5.pdf
-# https://medium.com/blockapex/market-making-mechanics-and-strategies-4daf2122121c
-# A Manipulator Can Aid Prediction Market Accuracy
-
 abstract type AbstractOrder end
 
 """

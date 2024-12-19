@@ -3,11 +3,11 @@ module PlotsExt
 using Agents
 using LaTeXStrings
 using Plots
-using PredictionMarketABM
+using ABMPredictionMarkets
 using StatsBase
 
-import PredictionMarketABM: plot_dashboard
-import PredictionMarketABM: plot_depth_chart
+import ABMPredictionMarkets: plot_dashboard
+import ABMPredictionMarkets: plot_depth_chart
 
 """
     plot_depth_chart(order_book::Vector{Order}; kwargs...)

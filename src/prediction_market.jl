@@ -147,25 +147,6 @@ function ask_match!(proposal, model, bidx, i)
 end
 
 """
-    model_step!(model)
-
-After all agents have submitted orders, this function is called executes `add_info` for each agent 
-on iterations specified in `info_times`.
-
-# Arguments
-
-- `model`: an abm object for the prediction market simulation 
-"""
-function model_step!(model)
-    if abmtime(model) ∈ model.info_times
-        for agent ∈ allagents(model)
-            add_info(agent, model)
-        end
-    end
-    return nothing
-end
-
-"""
     get_market_info(model; yes)
 
 Returns the maximum bid and minimum ask in the order book. 

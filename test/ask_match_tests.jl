@@ -56,7 +56,7 @@ end
     using ABMPredictionMarkets: find_trade!
     using ABMPredictionMarkets: init
     using Test
-    
+
     include("test_agent.jl")
 
     n_markets = 5

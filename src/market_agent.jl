@@ -168,5 +168,3 @@ end
 
 can_bid(agent::MarketAgent) = agent.money > 0
 can_ask(agent::MarketAgent, bidx) = !isempty(agent.shares[bidx])
-
-function add_info(agent::MarketAgent, model) end

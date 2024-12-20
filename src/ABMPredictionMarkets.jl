@@ -23,9 +23,9 @@ export plot_depth_chart
 export compute_trade_volume
 
 include("type_system.jl")
-include("market_agent.jl")
 include("orders.jl")
 include("continuous_double_auction.jl")
+include("market_agent.jl")
 include("utilities.jl")
 include("ext_functions.jl")
 end

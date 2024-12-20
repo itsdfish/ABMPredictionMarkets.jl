@@ -5,7 +5,7 @@ using Agents
 using Distributions
 using LaTeXStrings
 using Plots
-using PredictionMarketABM
+using ABMPredictionMarkets
 using Random
 using StatsBase
 Random.seed!(93)
@@ -15,20 +15,68 @@ Random.seed!(93)
 ## Load Dependencies
 
 ```@example example
+using ABMPredictionMarkets
+using ABMPredictionMarkets: init
 using Agents
 using Distributions
 using LaTeXStrings
 using Plots
-using PredictionMarketABM
 using Random
 Random.seed!(93)
+```
+
+## Create Agent 
+
+```@example example 
+@agent struct TestAgent(NoSpaceAgent) <: MarketAgent
+    judgments::Vector{Int}
+    δ::Int
+    money::Int
+    shares::Vector{Vector{Order}}
+end
+```
+
+## Initialize Model 
+
+```@example example
+function initialize(
+    ::Type{<:TestAgent};
+    n_agents,
+    μ,
+    η,
+    δ,
+    money,
+    info_times = Int[],
+    n_markets
+)
+    space = nothing
+    model = StandardABM(
+        TestAgent,
+        space;
+        properties = DoubleContinuousAuction(; n_markets, info_times),
+        agent_step!,
+        scheduler = Schedulers.Randomly()
+    )
+    for _ ∈ 1:n_agents
+        judgments = rand(DiscreteDirichlet(μ, η))
+        push!(judgments, judgments[1] + judgments[2])
+        add_agent!(
+            model;
+            judgments,
+            money,
+            δ,
+            shares = init(Order, n_markets)
+        )
+    end
+    return model
+end
 ```
 
 ## Run Model 
 ```@example example
 n_agents = 1000
 model = initialize(
-    CompatibleAgent;
+    TestAgent;
     n_agents,
     μ = [0.20, 0.25, 0.10, 0.45],
     η = 20.0,

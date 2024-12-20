@@ -22,9 +22,10 @@ export plot_dashboard
 export plot_depth_chart
 export compute_trade_volume
 
-include("prediction_market_structs.jl")
+include("type_system.jl")
 include("market_agent.jl")
-include("prediction_market.jl")
+include("orders.jl")
+include("continuous_double_auction.jl")
 include("utilities.jl")
 include("ext_functions.jl")
 end

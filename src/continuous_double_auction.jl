@@ -1,6 +1,41 @@
+"""
+    DoubleContinuousAuction <: AbstractPredictionMarket   
+
+Holds data and order book for a continuous double auction prediction market simulation.
+
+# Fields 
+
+- `order_books::Vector{Vector{Order}}`: outstanding orders (bids and asks). Each sub-vector corresponds to a different market
+- `market_prices::Vector{Vector{Float64}}`: the market price in dollars after each interaction. The market price stays the same
+    if a transaction does not occur. Each sub-vector corresponds to a different market
+- `info_times::Vector{Int}`: 
+- `info_times::Vector{Int}`: a vector of days on which new information is provided 
+- `trade_made::Vector{Vector{Bool}}`: on each agent step, indicates whether a trade was made
+
+# Constructors
+    
+    DoubleContinuousAuction(; order_book, market_prices)
+"""
+mutable struct DoubleContinuousAuction <: AbstractPredictionMarket
+    order_books::Vector{Vector{Order}}
+    market_prices::Vector{Vector{Float64}}
+    info_times::Vector{Int}
+    trade_made::Vector{Vector{Bool}}
+end
+
+function DoubleContinuousAuction(; n_markets, info_times)
+    return DoubleContinuousAuction(
+        init(Order, n_markets),
+        init(Float64, n_markets),
+        info_times,
+        init(Bool, n_markets)
+    )
+end
+
 function find_trade!(proposal, model, bidx)
     return find_trade!(proposal, get_market_type(model), model, bidx)
 end
+
 """
     find_trade!(proposal, ::Type{<:DoubleContinuousAuction}, model, bidx)
 
@@ -197,20 +232,6 @@ standard deviation.
 function to_beta(μ, σ)
     x = μ * (1 - μ) / σ^2
     return μ * (x - 1), (1 - μ) * (x - 1)
-end
-
-function ≠(s1::Order, s2::Order)
-    for f ∈ fieldnames(Order)
-        getproperty(s1, f) ≠ getproperty(s2, f) ? (return true) : nothing
-    end
-    return false
-end
-
-function ==(s1::Order, s2::Order)
-    for f ∈ fieldnames(Order)
-        getproperty(s1, f) ≠ getproperty(s2, f) ? (return false) : nothing
-    end
-    return true
 end
 
 init(T, n) = [T[] for _ ∈ 1:n]

@@ -1,7 +1,7 @@
 # Public API 
 
 ```@autodocs
-Modules = [PredictionMarketABM]
+Modules = [ABMPredictionMarkets]
 Order   = [:type, :function]
 Private = false
 ```
@@ -16,7 +16,7 @@ plot_dashboard
 # Internal Functions 
 
 ```@autodocs
-Modules = [PredictionMarketABM]
+Modules = [ABMPredictionMarkets]
 Order   = [:type, :function]
 Private = true
 ```

@@ -1,4 +1,4 @@
-# PredictionMarketABM
+# ABMPredictionMarkets
 
 This project contains an agent-based simulation of unpacking effects in prediction markets. 
 
@@ -13,12 +13,12 @@ This project contains an agent-based simulation of unpacking effects in predicti
 using Random
 using Agents
 using Plots
-using PredictionMarketABM
+using ABMPredictionMarkets
 Random.seed!(568)
 
 n_agents = 200
 model = initialize(
-    CompatibleAgent;
+    TestAgent;
     n_agents,
     μ = [0.20, 0.25, 0.10, 0.45],
     η = 20.0,

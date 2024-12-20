@@ -58,7 +58,6 @@ function initialize(
         TestAgent,
         space;
         properties = DoubleContinuousAuction(; n_markets, info_times),
-        model_step!,
         agent_step!,
         scheduler = Schedulers.Randomly()
     )
@@ -75,5 +74,3 @@ function initialize(
     end
     return model
 end
-
-function model_step!(model) end

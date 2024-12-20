@@ -1,10 +1,10 @@
 using Documenter
-using PredictionMarketABM
+using ABMPredictionMarkets
 using Plots
 
 makedocs(;
     warnonly = true,
-    sitename = "PredictionMarketABM",
+    sitename = "ABMPredictionMarkets",
     format = Documenter.HTML(
         assets = [
             asset(
@@ -15,9 +15,8 @@ makedocs(;
         collapselevel = 1
     ),
     modules = [
-        PredictionMarketABM,
-        Base.get_extension(PredictionMarketABM, :PlotsExt)
-        #Base.get_extension(PredictionMarketABM, :NamedArraysExt)
+        ABMPredictionMarkets,
+        Base.get_extension(ABMPredictionMarkets, :PlotsExt)
     ],
     pages = [
         "Home" => "index.md",
@@ -26,4 +25,4 @@ makedocs(;
     ]
 )
 
-deploydocs(repo = "github.com/itsdfish/PredictionMarketABM.jl.git")
+deploydocs(repo = "github.com/itsdfish/ABMPredictionMarkets.jl.git")

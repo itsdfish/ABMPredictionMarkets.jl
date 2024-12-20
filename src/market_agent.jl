@@ -1,10 +1,3 @@
-"""
-    MarketAgent <: AbstractAgent
-
-An agent that submits bids and asks in a prediction market. 
-"""
-abstract type MarketAgent <: AbstractAgent end
-
 get_market_type(model) = typeof(abmproperties(model))
 
 function create_order(agent::MarketAgent, model, bidx)

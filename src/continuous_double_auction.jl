@@ -32,6 +32,128 @@ function DoubleContinuousAuction(; n_markets, info_times)
     )
 end
 
+"""
+    create_order(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, model, bidx)
+
+Creates and returns a bid or ask. The function `bid` is called if the agent has no shares. The function `ask`
+is called if the agent has no money. If the agent has money and shares, `bid` and `ask` are called with equal probability. 
+
+# Arguments
+
+- `agent::MarketAgent`: an agent participating in the prediction market
+- `::Type{<:DoubleContinuousAuction}`: a double continuous auction prediction market type 
+- `model`: an abm object for the prediction market simulation 
+- `bidx`: the index of the current order book
+"""
+function create_order(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, model, bidx)
+    if can_bid(agent) && can_ask(agent, bidx)
+        order = rand() ≤ 0.50 ? bid(agent, model, bidx) : ask(agent, model, bidx)
+    elseif can_bid(agent) && !can_ask(agent, bidx)
+        order = bid(agent, model, bidx)
+    elseif !can_bid(agent) && can_ask(agent, bidx)
+        order = ask(agent, model, bidx)
+    end
+    return order
+end
+
+"""
+    bid(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, model, bidx)
+
+Removes previous order and returns a bid. The bid amount is 
+
+`v ~ Uniform(p - δ, p, - 1)`,
+
+where `p` is the agent's subject probability of the event. 
+
+# Arguments
+
+- `agent::MarketAgent`: an agent participating in the prediction market
+- `::Type{<:DoubleContinuousAuction}`: a double continuous auction prediction market type 
+- `model`: an abm object for the prediction market simulation 
+- `bidx`: the index of the current order book
+"""
+function bid(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, model, bidx)
+    order_book = model.order_books[bidx]
+    # remove old order
+    filter!(x -> x.id ≠ agent.id, order_book)
+    yes = rand(Bool)
+    _, min_ask = get_market_info(order_book; yes)
+    judgment = yes ? agent.judgments[bidx] : (100 - agent.judgments[bidx])
+    price = judgment > min_ask ? min_ask : sample_bid(judgment, agent.δ)
+    price = min(price, agent.money)
+    return Order(; id = agent.id, yes, price, type = :bid)
+end
+
+"""
+    sample_bid(judgment, δ)
+
+Samples an amount to ask.  
+
+`v ~ Uniform(judgment, - δ, judgment - 1)`,
+
+where `judgment` is the agent's subjective probability. 
+
+# Arguments
+
+- `judgment`: s the agent's subjective probability. judgment ∈ [0, 100]
+- `δ`: the range of noise added to ask price. δ ≥ 1.  
+"""
+function sample_bid(judgment, δ)
+    return max(
+        rand(DiscreteUniform(judgment - δ, judgment - 1)),
+        0
+    )
+end
+
+"""
+    ask(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, model, bidx)
+
+Removes previous order and returns an ask. The ask amount is 
+
+`v ~ Uniform(p, + 1, p + δ)`,
+
+where `p` is the maximum share price. 
+
+# Arguments
+
+- `agent::MarketAgent`: an agent participating in the prediction market
+- `::Type{<:DoubleContinuousAuction}`: a double continuous auction prediction market type 
+- `model`: an abm object for the prediction market simulation 
+- `bidx`: the index of the current order book
+"""
+function ask(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, model, bidx)
+    order_book = model.order_books[bidx]
+    # remove previous order
+    filter!(x -> x.id ≠ agent.id, order_book)
+    _, idx = findmax(x -> x.price, agent.shares[bidx])
+    share = deepcopy(agent.shares[bidx][idx])
+    share.type = :ask
+    max_bid, _ = get_market_info(order_book; yes = share.yes)
+    share.price = max_bid > share.price ? max_bid : sample_ask(share.price, agent.δ)
+    return share
+end
+
+"""
+    sample_ask(p, δ)
+
+Samples an amount to ask.  
+
+`v ~ Uniform(p, + 1, p + δ)`,
+
+where `p` is typically the maximum share price. 
+
+# Arguments
+
+- `p`: is typically the maximum share price. p ∈ [0, 100]
+- `δ`: the range of noise added to ask price. δ ≥ 1.  
+"""
+function sample_ask(p, δ)
+    return min(
+        rand(DiscreteUniform(p + 1, p + δ)),
+        100
+    )
+end
+
 function find_trade!(proposal, model, bidx)
     return find_trade!(proposal, get_market_type(model), model, bidx)
 end

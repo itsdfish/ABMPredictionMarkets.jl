@@ -8,4 +8,3 @@ abstract type MarketAgent <: AbstractAgent end
 abstract type AbstractOrder end
 
 abstract type AbstractPredictionMarket end
-

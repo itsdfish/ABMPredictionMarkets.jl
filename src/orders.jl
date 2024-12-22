@@ -39,7 +39,6 @@ function ==(s1::Order, s2::Order)
     return true
 end
 
-
 """
     MMOrder <: AbstractOrder
 

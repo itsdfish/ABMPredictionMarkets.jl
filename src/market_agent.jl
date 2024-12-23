@@ -32,7 +32,7 @@ an exchange is made if one is found. Otherwise, the order is added to the order 
 function agent_step!(agent::MarketAgent, ::Type{<:AbstractPredictionMarket}, model)
     for bidx ∈ 1:length(model.order_books)
         order = create_order(agent, model, bidx)
-        push!(model.trade_made[bidx], find_trade!(order, model, bidx))
+        push!(model.trade_made[bidx], transact!(order, model, bidx))
     end
     return nothing
 end

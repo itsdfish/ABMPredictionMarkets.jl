@@ -2,7 +2,7 @@
     using Agents
     using ABMPredictionMarkets
     using ABMPredictionMarkets: ask_bid_match!
-    using ABMPredictionMarkets: find_trade!
+    using ABMPredictionMarkets: transact!
     using Test
 
     include("test_agent.jl")

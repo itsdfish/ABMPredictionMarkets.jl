@@ -2,7 +2,7 @@
     using Agents
     using ABMPredictionMarkets
     using ABMPredictionMarkets: ask_match!
-    using ABMPredictionMarkets: find_trade!
+    using ABMPredictionMarkets: transact!
     using ABMPredictionMarkets: init
     using Test
 
@@ -34,7 +34,7 @@
     push!(agent.shares[bidx], share)
     ask = Order(; id = 1, yes = true, type = :ask, price = 20)
 
-    success = find_trade!(ask, model, bidx)
+    success = transact!(ask, model, bidx)
 
     @test model[1].money ≈ 100
     for i ∈ 1:n_markets
@@ -53,7 +53,7 @@ end
     using Agents
     using ABMPredictionMarkets
     using ABMPredictionMarkets: ask_match!
-    using ABMPredictionMarkets: find_trade!
+    using ABMPredictionMarkets: transact!
     using ABMPredictionMarkets: init
     using Test
 
@@ -97,7 +97,7 @@ end
 
     ask = Order(; id = 1, yes = false, type = :ask, price = 39)
 
-    success = find_trade!(ask, model, bidx)
+    success = transact!(ask, model, bidx)
 
     @test model[1].money ≈ 100
     @test model[2].money ≈ 100
@@ -119,7 +119,7 @@ end
     using Agents
     using ABMPredictionMarkets
     using ABMPredictionMarkets: ask_match!
-    using ABMPredictionMarkets: find_trade!
+    using ABMPredictionMarkets: transact!
     using ABMPredictionMarkets: init
     using Test
 
@@ -166,7 +166,7 @@ end
 
     ask = Order(; id = 1, yes = true, type = :ask, price = 40)
 
-    success = find_trade!(ask, model, bidx)
+    success = transact!(ask, model, bidx)
 
     @test model[1].money ≈ 100
     @test model[2].money ≈ 100
@@ -188,7 +188,7 @@ end
     using Agents
     using ABMPredictionMarkets
     using ABMPredictionMarkets: ask_match!
-    using ABMPredictionMarkets: find_trade!
+    using ABMPredictionMarkets: transact!
     using ABMPredictionMarkets: init
     using Test
 
@@ -235,7 +235,7 @@ end
 
     ask = Order(; id = 1, yes = true, type = :ask, price = 40)
 
-    success = find_trade!(ask, model, bidx)
+    success = transact!(ask, model, bidx)
 
     @test model[1].money ≈ 100
     @test model[2].money ≈ 100
@@ -257,7 +257,7 @@ end
     using Agents
     using ABMPredictionMarkets
     using ABMPredictionMarkets: ask_match!
-    using ABMPredictionMarkets: find_trade!
+    using ABMPredictionMarkets: transact!
     using ABMPredictionMarkets: init
     using Test
 
@@ -304,7 +304,7 @@ end
 
     ask = Order(; id = 1, yes = true, type = :ask, price = 40)
 
-    success = find_trade!(ask, model, bidx)
+    success = transact!(ask, model, bidx)
 
     @test model[1].money ≈ 100
     @test model[2].money ≈ 100
@@ -327,7 +327,7 @@ end
     using Agents
     using ABMPredictionMarkets
     using ABMPredictionMarkets: ask_match!
-    using ABMPredictionMarkets: find_trade!
+    using ABMPredictionMarkets: transact!
     using ABMPredictionMarkets: init
     using Test
 
@@ -378,7 +378,7 @@ end
 
     ask = Order(; id = 1, yes = true, type = :ask, price = 40)
 
-    success = find_trade!(ask, model, bidx)
+    success = transact!(ask, model, bidx)
 
     @test model[1].money ≈ 140
     @test model[2].money ≈ 160

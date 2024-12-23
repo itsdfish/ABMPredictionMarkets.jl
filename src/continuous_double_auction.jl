@@ -154,12 +154,12 @@ function sample_ask(p, δ)
     )
 end
 
-function find_trade!(proposal, model, bidx)
-    return find_trade!(proposal, get_market_type(model), model, bidx)
+function transact!(proposal, model, bidx)
+    return transact!(proposal, get_market_type(model), model, bidx)
 end
 
 """
-    find_trade!(proposal, ::Type{<:DoubleContinuousAuction}, model, bidx)
+    transact!(proposal, ::Type{<:DoubleContinuousAuction}, model, bidx)
 
 Attempts to find a possible trade for a submitted proposal (bid or ask). Returns `true` if a 
 trade was found and performed. Otherwise, `false` is returned. If no trade is performed, the proposal is added to 
@@ -172,7 +172,7 @@ the order book.
 - `model`: an abm object for the prediction market simulation 
 - `bidx`: the index of the current order book
 """
-function find_trade!(proposal, ::Type{<:DoubleContinuousAuction}, model, bidx)
+function transact!(proposal, ::Type{<:DoubleContinuousAuction}, model, bidx)
     order_book = model.order_books[bidx]
     market_prices = model.market_prices[bidx]
     for i ∈ 1:length(order_book)

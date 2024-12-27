@@ -57,7 +57,7 @@ function initialize(
     model = StandardABM(
         TestAgent,
         space;
-        properties = DoubleContinuousAuction(; n_markets, info_times),
+        properties = DCA(; n_markets, info_times),
         agent_step!,
         scheduler = Schedulers.Randomly()
     )

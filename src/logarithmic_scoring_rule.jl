@@ -1,5 +1,5 @@
 """
-    LogarithmicScoringRule <: AbstractPredictionMarket
+    LSR <: AbstractLSR
 
 A market maker using the logarithmic scoring rule.
 
@@ -18,7 +18,7 @@ Berg, H., & Proebsting, T. A. (2009). Hanson’s automated market maker. The Jou
 
 Hanson, R. (2003). Combinatorial information market design. Information Systems Frontiers, 5, 107-119.
 """
-mutable struct LogarithmicScoringRule <: AbstractPredictionMarket
+mutable struct LSR <: AbstractLSR
     n_shares::Vector{Vector{Int}}
     market_prices::Vector{Vector{Float64}}
     current_prices::Vector{Vector{Float64}}
@@ -28,7 +28,7 @@ mutable struct LogarithmicScoringRule <: AbstractPredictionMarket
 end
 
 """
-    create_order(agent::MarketAgent, ::Type{<:LogarithmicScoringRule}, model, bidx)
+    create_order(agent::MarketAgent, ::Type{<:AbstractLSR}, model, bidx)
 
 Creates and returns a bid or ask. The function `bid` is called if the agent has no shares. The function `ask`
 is called if the agent has no money. If the agent has money and shares, `bid` and `ask` are called with equal probability. 
@@ -36,11 +36,11 @@ is called if the agent has no money. If the agent has money and shares, `bid` an
 # Arguments
 
 - `agent::MarketAgent`: an agent participating in the prediction market
-- `::Type{<:LogarithmicScoringRule}`: a LSR market maker type 
+- `::Type{<:AbstractLSR}`: a LSR market maker type 
 - `model`: an abm object for the prediction market simulation 
 - `bidx`: the index of the current order book
 """
-function create_order(agent::MarketAgent, ::Type{<:LogarithmicScoringRule}, model, bidx)
+function create_order(agent::MarketAgent, ::Type{<:AbstractLSR}, model, bidx)
     market = abmproperties(model)
     prices = compute_prices(market, bidx)
     judgments = agent.judgments[bidx]
@@ -52,7 +52,7 @@ function create_order(agent::MarketAgent, ::Type{<:LogarithmicScoringRule}, mode
 end
 
 """
-    transact!(proposal, ::Type{<:DoubleContinuousAuction}, model, bidx)
+    transact!(proposal, ::Type{<:AbstractLSR}, model, bidx)
 
 Attempts to find a possible trade for a submitted proposal (bid or ask). Returns `true` if a 
 trade was found and performed. Otherwise, `false` is returned. If no trade is performed, the proposal is added to 
@@ -61,16 +61,17 @@ the order book.
 # Arguments
 
 - `order`: a proposal bid or ask 
-- `::Type{<:LogarithmicScoringRule}`: a LSR market maker type 
+- `::Type{<:AbstractLSR}`: a LSR market maker type 
 - `model`: an abm object for the prediction market simulation 
 - `bidx`: the index of the current order book
 """
-function transact!(order, ::Type{<:LogarithmicScoringRule}, model, bidx)
-    isempty(market_prices) ? push!(market_prices, NaN) : push!(market_prices, market_prices[end])
+function transact!(order, ::Type{<:AbstractLSR}, model, bidx)
+    isempty(market_prices) ? push!(market_prices, NaN) :
+    push!(market_prices, market_prices[end])
     return false
 end
 
-function compute_prices(market::LogarithmicScoringRule, bidx)
+function compute_prices(market::AbstractLSR, bidx)
     (; n_shares, elasticity) = market
     return compute_prices(n_shares[bidx], elasticity)
 end
@@ -97,7 +98,7 @@ function set_elasticity(total_money, n_events, upper_price)
     return -total_money / x
 end
 
-function shares_to_cost(market::LogarithmicScoringRule, bidx)
+function shares_to_cost(market::AbstractLSR, bidx)
     (; prices, n_shares, elasticity) = market
     return shares_to_cost(prices[bidx], n_shares[bidx], elasticity)
 end

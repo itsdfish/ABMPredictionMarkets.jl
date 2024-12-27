@@ -1,5 +1,5 @@
 """
-    DoubleContinuousAuction <: AbstractPredictionMarket   
+    DCA <: AbstractDCA   
 
 Holds data and order book for a continuous double auction prediction market simulation.
 
@@ -14,17 +14,17 @@ Holds data and order book for a continuous double auction prediction market simu
 
 # Constructors
     
-    DoubleContinuousAuction(; order_book, market_prices)
+    DCA(; order_book, market_prices)
 """
-mutable struct DoubleContinuousAuction <: AbstractPredictionMarket
+mutable struct DCA <: AbstractDCA
     order_books::Vector{Vector{Order}}
     market_prices::Vector{Vector{Float64}}
     info_times::Vector{Int}
     trade_made::Vector{Vector{Bool}}
 end
 
-function DoubleContinuousAuction(; n_markets, info_times)
-    return DoubleContinuousAuction(
+function DCA(; n_markets, info_times)
+    return DCA(
         init(Order, n_markets),
         init(Float64, n_markets),
         info_times,
@@ -33,7 +33,7 @@ function DoubleContinuousAuction(; n_markets, info_times)
 end
 
 """
-    create_order(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, model, bidx)
+    create_order(agent::MarketAgent, ::Type{<:AbstractDCA}, model, bidx)
 
 Creates and returns a bid or ask. The function `bid` is called if the agent has no shares. The function `ask`
 is called if the agent has no money. If the agent has money and shares, `bid` and `ask` are called with equal probability. 
@@ -41,11 +41,11 @@ is called if the agent has no money. If the agent has money and shares, `bid` an
 # Arguments
 
 - `agent::MarketAgent`: an agent participating in the prediction market
-- `::Type{<:DoubleContinuousAuction}`: a double continuous auction prediction market type 
+- `::Type{<:AbstractDCA}`: a double continuous auction prediction market type 
 - `model`: an abm object for the prediction market simulation 
 - `bidx`: the index of the current order book
 """
-function create_order(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, model, bidx)
+function create_order(agent::MarketAgent, ::Type{<:AbstractDCA}, model, bidx)
     if can_bid(agent) && can_ask(agent, bidx)
         order = rand() ≤ 0.50 ? bid(agent, model, bidx) : ask(agent, model, bidx)
     elseif can_bid(agent) && !can_ask(agent, bidx)
@@ -57,7 +57,7 @@ function create_order(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, mod
 end
 
 """
-    bid(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, model, bidx)
+    bid(agent::MarketAgent, ::Type{<:AbstractDCA}, model, bidx)
 
 Removes previous order and returns a bid. The bid amount is 
 
@@ -72,7 +72,7 @@ where `p` is the agent's subject probability of the event.
 - `model`: an abm object for the prediction market simulation 
 - `bidx`: the index of the current order book
 """
-function bid(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, model, bidx)
+function bid(agent::MarketAgent, ::Type{<:AbstractDCA}, model, bidx)
     order_book = model.order_books[bidx]
     # remove old order
     filter!(x -> x.id ≠ agent.id, order_book)
@@ -106,7 +106,7 @@ function sample_bid(judgment, δ)
 end
 
 """
-    ask(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, model, bidx)
+    ask(agent::MarketAgent, ::Type{<:AbstractDCA}, model, bidx)
 
 Removes previous order and returns an ask. The ask amount is 
 
@@ -117,11 +117,11 @@ where `p` is the maximum share price.
 # Arguments
 
 - `agent::MarketAgent`: an agent participating in the prediction market
-- `::Type{<:DoubleContinuousAuction}`: a double continuous auction prediction market type 
+- `::Type{<:AbstractDCA}`: a double continuous auction prediction market type 
 - `model`: an abm object for the prediction market simulation 
 - `bidx`: the index of the current order book
 """
-function ask(agent::MarketAgent, ::Type{<:DoubleContinuousAuction}, model, bidx)
+function ask(agent::MarketAgent, ::Type{<:AbstractDCA}, model, bidx)
     order_book = model.order_books[bidx]
     # remove previous order
     filter!(x -> x.id ≠ agent.id, order_book)
@@ -159,7 +159,7 @@ function transact!(proposal, model, bidx)
 end
 
 """
-    transact!(proposal, ::Type{<:DoubleContinuousAuction}, model, bidx)
+    transact!(proposal, ::Type{<:AbstractDCA}, model, bidx)
 
 Attempts to find a possible trade for a submitted proposal (bid or ask). Returns `true` if a 
 trade was found and performed. Otherwise, `false` is returned. If no trade is performed, the proposal is added to 
@@ -168,11 +168,11 @@ the order book.
 # Arguments
 
 - `proposal`: a proposal bid or ask 
-- `::Type{<:DoubleContinuousAuction}`: a double continuous auction prediction market type 
+- `::Type{<:AbstractDCA}`: a double continuous auction prediction market type 
 - `model`: an abm object for the prediction market simulation 
 - `bidx`: the index of the current order book
 """
-function transact!(proposal, ::Type{<:DoubleContinuousAuction}, model, bidx)
+function transact!(proposal, ::Type{<:AbstractDCA}, model, bidx)
     order_book = model.order_books[bidx]
     market_prices = model.market_prices[bidx]
     for i ∈ 1:length(order_book)

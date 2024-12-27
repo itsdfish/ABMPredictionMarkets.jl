@@ -265,11 +265,11 @@ end
 
     money = 1000
     n_options = 2
-    upper_price = .98
+    upper_price = 0.98
     n_shares = fill(0.0, 2)
 
     b = set_elasticity(money, n_options, upper_price)
-    n_shares[1] = cost_to_shares(-money, .50, b)
+    n_shares[1] = cost_to_shares(-money, 0.50, b)
     prices = compute_prices(n_shares, b)
 
     @test prices[1] ≈ upper_price

@@ -10,8 +10,8 @@ import Distributions: ContinuousUnivariateDistribution
 
 export AbstractOrder
 export AbstractPredictionMarket
-export AbstractDCA
-export DCA
+export AbstractCDA
+export CDA
 export DiscreteDirichlet
 export MarketAgent
 export Order

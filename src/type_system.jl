@@ -9,7 +9,6 @@ abstract type AbstractOrder end
 
 abstract type AbstractPredictionMarket end
 
-abstract type AbstractDCA <: AbstractPredictionMarket end
+abstract type AbstractCDA <: AbstractPredictionMarket end
 
 abstract type AbstractLSR <: AbstractPredictionMarket end
-

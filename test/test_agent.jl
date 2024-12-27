@@ -57,7 +57,7 @@ function initialize(
     model = StandardABM(
         TestAgent,
         space;
-        properties = DCA(; n_markets, info_times),
+        properties = CDA(; n_markets, info_times),
         agent_step!,
         scheduler = Schedulers.Randomly()
     )

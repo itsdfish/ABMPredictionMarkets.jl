@@ -274,3 +274,33 @@ end
 
     @test prices[1] ≈ upper_price
 end
+
+@testitem "run LSR" begin
+    using Agents
+    using ABMPredictionMarkets
+    using ABMPredictionMarkets: set_elasticity
+    using ABMPredictionMarkets: compute_prices
+    using Distributions
+    using Random
+    using Test
+
+    Random.seed!(84)
+
+    include("test_agent.jl")
+
+    μ = [0.20, 0.25, 0.10, 0.45]
+
+    model = initialize(
+        LSRAgent;
+        n_agents = 1000,
+        μ,
+        η = 1000,
+        money = 100
+    )
+    run!(model, 10)
+
+    market = abmproperties(model)
+    prices = compute_prices(market, 1)
+
+    @test μ ≈ prices atol = 0.020
+end

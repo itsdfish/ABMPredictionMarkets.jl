@@ -11,7 +11,9 @@ import Distributions: ContinuousUnivariateDistribution
 export AbstractOrder
 export AbstractPredictionMarket
 export AbstractCDA
+export AbstractLSR
 export CDA
+export LSR
 export DiscreteDirichlet
 export MarketAgent
 export Order

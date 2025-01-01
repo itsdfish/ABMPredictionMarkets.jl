@@ -46,19 +46,18 @@ An object representing a bid, ask, or share.
 
 # Fields 
 
-- `id::Int`: agent id 
-- `yes::Bool`: true if represents a `yes` share 
-- `price::Int`: the price of the share, price ∈ [0,100]
-- `type::Symbol`: object type type ∈ [bid,ask,share]
+- `option_idx`: true if represents a `yes` share 
+- `n_shares`: 
 
 # Constructors 
 
-    MMOrder(id, yes, price, type)
+    MMOrder(option_idx, n_shares)
 
-    MMOrder(; id, yes, price, type)
+    MMOrder(; option_idx, n_shares)
 """
 mutable struct MMOrder <: AbstractOrder
-    n_shares::Vector{Int}
+    option_idx::Int
+    n_shares::Float64
 end
 
-MMOrder(; n_shares) = MMOrder(n_shares)
+MMOrder(; option_idx, n_shares) = MMOrder(option_idx, n_shares)

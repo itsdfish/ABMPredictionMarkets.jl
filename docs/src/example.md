@@ -22,6 +22,7 @@ using Distributions
 using LaTeXStrings
 using Plots
 using Random
+using StatsBase
 Random.seed!(93)
 ```
 
@@ -39,6 +40,7 @@ end
 ## Initialize Model 
 
 ```@example example
+import ABMPredictionMarkets: initialize
 function initialize(
     ::Type{<:TestAgent};
     n_agents,
@@ -53,7 +55,7 @@ function initialize(
     model = StandardABM(
         TestAgent,
         space;
-        properties = DCA(; n_markets, info_times),
+        properties = CDA(; n_markets, info_times),
         agent_step!,
         scheduler = Schedulers.Randomly()
     )

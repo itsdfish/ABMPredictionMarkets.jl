@@ -5,9 +5,9 @@ A market maker using the logarithmic scoring rule.
 
 # Fields 
 
+- `elasticity`: elasticity parameter where higher values correspond to less elasticity
 - `n_shares::Vector{Vector{Int}}`:
 - `market_prices::Vector{Vector{Float64}}`:
-- `current_prices::Vector{Vector{Float64}}`:
 - `n_decimals::Int`:
 - `info_times::Vector{Int}`:
 - `trade_made::Vector{Vector{Bool}}`:
@@ -19,61 +19,63 @@ Berg, H., & Proebsting, T. A. (2009). Hanson’s automated market maker. The Jou
 Hanson, R. (2003). Combinatorial information market design. Information Systems Frontiers, 5, 107-119.
 """
 mutable struct LSR <: AbstractLSR
-    n_shares::Vector{Vector{Int}}
-    market_prices::Vector{Vector{Float64}}
-    current_prices::Vector{Vector{Float64}}
+    elasticity::Vector{Float64}
+    n_shares::Vector{Vector{Float64}}
+    market_prices::Vector{Vector{Vector{Float64}}}
     n_decimals::Int
     info_times::Vector{Int}
     trade_made::Vector{Vector{Bool}}
 end
 
-"""
-    create_order(agent::MarketAgent, ::Type{<:AbstractLSR}, model, bidx)
-
-Creates and returns a bid or ask. The function `bid` is called if the agent has no shares. The function `ask`
-is called if the agent has no money. If the agent has money and shares, `bid` and `ask` are called with equal probability. 
-
-# Arguments
-
-- `agent::MarketAgent`: an agent participating in the prediction market
-- `::Type{<:AbstractLSR}`: a LSR market maker type 
-- `model`: an abm object for the prediction market simulation 
-- `bidx`: the index of the current order book
-"""
-function create_order(agent::MarketAgent, ::Type{<:AbstractLSR}, model, bidx)
-    market = abmproperties(model)
-    prices = compute_prices(market, bidx)
-    judgments = agent.judgments[bidx]
-
-    # prices = [0.60, 0.40]
-    # judgments = [0.55, 0.45]
-
-    return order
+function LSR(; elasticity, n_options, info_times)
+    return LSR(
+        elasticity,
+        zeros.(n_options),
+        init(Float64, length(n_options)),
+        3,
+        info_times,
+        init(Bool, length(n_options))
+    )
 end
 
-"""
-    transact!(proposal, ::Type{<:AbstractLSR}, model, bidx)
+function agent_step!(agent::MarketAgent, ::Type{<:AbstractLSR}, model)
+    market = abmproperties(model)
+    n_markets = length(market.market_prices)
+    for bidx ∈ shuffle(1:n_markets)
+        transact!(agent, market, model, bidx)
+    end
+    return nothing
+end
 
-Attempts to find a possible trade for a submitted proposal (bid or ask). Returns `true` if a 
-trade was found and performed. Otherwise, `false` is returned. If no trade is performed, the proposal is added to 
-the order book.
+function transact!(agent::MarketAgent, market::AbstractLSR, model, bidx)
+    prices = compute_prices(market, bidx)
+    judgments = agent.judgments[bidx]
+    diffs = judgments .- prices
+    for idx ∈ sortperm(diffs)
+        cost = price_to_cost(market, judgments[idx], prices[idx], bidx)
+        if cost ≥ 0
+            n_shares = agent.shares[bidx][idx]
+            share_value = shares_to_cost(market, prices[idx], -n_shares, bidx)
+            amount = min(share_value, cost)
+        else
+            amount = max(cost, -agent.money)
+        end
+        n_shares = cost_to_shares(market, amount, prices[idx], bidx)
+        # println("agent id $(agent.id) n_shares $n_shares cost $cost amount $amount price $(prices[idx])")
+        agent.money += amount
+        agent.shares[bidx][idx] += n_shares
+        market.n_shares[bidx][idx] += n_shares
 
-# Arguments
-
-- `order`: a proposal bid or ask 
-- `::Type{<:AbstractLSR}`: a LSR market maker type 
-- `model`: an abm object for the prediction market simulation 
-- `bidx`: the index of the current order book
-"""
-function transact!(order, ::Type{<:AbstractLSR}, model, bidx)
-    isempty(market_prices) ? push!(market_prices, NaN) :
-    push!(market_prices, market_prices[end])
-    return false
+        prices = compute_prices(market, bidx)
+        push!(model.market_prices[bidx], prices)
+        #println("")
+    end
+    return nothing
 end
 
 function compute_prices(market::AbstractLSR, bidx)
     (; n_shares, elasticity) = market
-    return compute_prices(n_shares[bidx], elasticity)
+    return compute_prices(n_shares[bidx], elasticity[bidx])
 end
 
 function compute_prices(n, b)
@@ -98,11 +100,6 @@ function set_elasticity(total_money, n_events, upper_price)
     return -total_money / x
 end
 
-function shares_to_cost(market::AbstractLSR, bidx)
-    (; prices, n_shares, elasticity) = market
-    return shares_to_cost(prices[bidx], n_shares[bidx], elasticity)
-end
-
 """
     shares_to_cost(prices, n_shares, elasticity)    
 
@@ -116,6 +113,11 @@ Finds the cost given a number of shares and current price.
 """
 shares_to_cost(price, n_shares, elasticity) =
     -elasticity * log(price * (exp(n_shares / elasticity) - 1) + 1)
+
+function shares_to_cost(market::AbstractLSR, price, n_shares, bidx)
+    (; elasticity) = market
+    return shares_to_cost(price, n_shares, elasticity[bidx])
+end
 
 """
     shares_to_price(price, n_shares, elasticity)   
@@ -159,6 +161,10 @@ Finds the number of shares needed to change to a new price.
 price_to_cost(new_price, price, elasticity) =
     -elasticity * log((1 - price) / (1 - new_price))
 
+function price_to_cost(market::AbstractLSR, new_price, price, bidx)
+    price_to_cost(new_price, price, market.elasticity[bidx])
+end
+
 """
     cost_to_shares(cost, price, elasticity) 
 
@@ -173,6 +179,10 @@ Finds the number of shares that can be purchased at a given total cost.
 cost_to_shares(cost, price, elasticity) =
     elasticity * log(((exp(-cost / elasticity) - 1) / price) + 1)
 
+function cost_to_shares(market::AbstractLSR, cost, price, bidx)
+    return cost_to_shares(cost, price, market.elasticity[bidx])
+end
+
 """
     cost_to_price(cost, price, elasticity) 
 
@@ -180,7 +190,7 @@ Finds the total cost of a transaction to move the current price to a new price.
 
 # Arguments 
 
-- `cost`: the toal dollar amount of an exchange of shares
+- `cost`: the total dollar amount of an exchange of shares
 - `price`: the current price of a given share
 - `elasticity`: the elasticity parameter
 """

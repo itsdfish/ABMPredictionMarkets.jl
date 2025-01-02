@@ -38,26 +38,3 @@ function ==(s1::Order, s2::Order)
     end
     return true
 end
-
-"""
-    MMOrder <: AbstractOrder
-
-An object representing a bid, ask, or share. 
-
-# Fields 
-
-- `option_idx`: true if represents a `yes` share 
-- `n_shares`: 
-
-# Constructors 
-
-    MMOrder(option_idx, n_shares)
-
-    MMOrder(; option_idx, n_shares)
-"""
-mutable struct MMOrder <: AbstractOrder
-    option_idx::Int
-    n_shares::Float64
-end
-
-MMOrder(; option_idx, n_shares) = MMOrder(option_idx, n_shares)

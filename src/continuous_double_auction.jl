@@ -47,13 +47,14 @@ is called if the agent has no money. If the agent has money and shares, `bid` an
 """
 function create_order(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
     if can_bid(agent) && can_ask(agent, bidx)
-        order = rand() ≤ 0.50 ? bid(agent, model, bidx) : ask(agent, model, bidx)
+        return rand() ≤ 0.50 ? bid(agent, model, bidx) : ask(agent, model, bidx)
     elseif can_bid(agent) && !can_ask(agent, bidx)
-        order = bid(agent, model, bidx)
+        return bid(agent, model, bidx)
     elseif !can_bid(agent) && can_ask(agent, bidx)
-        order = ask(agent, model, bidx)
+        return ask(agent, model, bidx)
+    else
+        return Order(; id = 0, yes = true, price = 0, type = :empty)
     end
-    return order
 end
 
 """

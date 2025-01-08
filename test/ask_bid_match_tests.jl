@@ -26,6 +26,7 @@
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -75,6 +76,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -83,6 +85,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -140,6 +143,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -148,6 +152,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -205,6 +210,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -213,6 +219,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -270,6 +277,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -278,6 +286,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -337,6 +346,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -345,6 +355,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -353,10 +364,13 @@ end
     push!(model.order_books[bidx], Order(; id = 2, yes = true, type = :ask, price = 40))
 
     bid = Order(; id = 1, yes = true, type = :bid, price = 40)
+    model[1].money -= bid.price
+    model[1].bid_reserve += bid.price
 
     success = transact!(bid, model, bidx)
 
     @test model[1].money ≈ 60
+    @test model[1].bid_reserve ≈ 0
     @test model[2].money ≈ 140
     for i ∈ 1:n_markets
         @test isempty(model.order_books[i])
@@ -401,6 +415,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -409,12 +424,15 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
-    push!(model[1].shares[bidx], Order(; id = 2, yes = true, type = :share, price = 20))
+    push!(model[1].shares[bidx], Order(; id = 1, yes = true, type = :share, price = 20))
 
     push!(model.order_books[bidx], Order(; id = 2, yes = true, type = :bid, price = 40))
+    model[2].money -= 40
+    model[2].bid_reserve += 40
 
     ask = Order(; id = 1, yes = true, type = :ask, price = 40)
 
@@ -422,6 +440,7 @@ end
 
     @test model[1].money ≈ 140
     @test model[2].money ≈ 60
+    @test model[2].bid_reserve == 0
     for i ∈ 1:n_markets
         @test isempty(model.order_books[i])
         if i == bidx

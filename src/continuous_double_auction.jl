@@ -60,11 +60,13 @@ end
 """
     bid(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
 
-Removes previous order and returns a bid. The bid amount is 
+Generates an ask amount according to
 
 `v ~ Uniform(p - δ, p, - 1)`,
 
-where `p` is the agent's subject probability of the event. 
+where `p` is the agent's subject probability of the event. The bid price is subtracted from 
+money and added to the bid reserve to ensure the agent has sufficient funds when making bids 
+in multiple markets. 
 
 # Arguments
 
@@ -80,6 +82,8 @@ function bid(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
     judgment = yes ? agent.judgments[bidx] : (100 - agent.judgments[bidx])
     price = judgment > min_ask ? min_ask : sample_bid(judgment, agent.δ)
     price = min(price, agent.money)
+    agent.money -= price 
+    agent.bid_reserve += price
     return Order(; id = agent.id, yes, price, type = :bid)
 end
 
@@ -107,7 +111,7 @@ end
 """
     ask(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
 
-Removes previous order and returns an ask. The ask amount is 
+Generates an ask amount according to 
 
 `v ~ Uniform(p, + 1, p + δ)`,
 
@@ -171,12 +175,12 @@ the order book.
 """
 function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
     order_book = model.order_books[bidx]
-    market_prices = model.market_prices[bidx]
     for i ∈ 1:length(order_book)
         bid_match!(proposal, model, bidx, i) ? (return true) : nothing
         ask_match!(proposal, model, bidx, i) ? (return true) : nothing
         ask_bid_match!(proposal, model, bidx, i) ? (return true) : nothing
     end
+    market_prices = model.market_prices[bidx]
     push!(order_book, proposal)
     isempty(market_prices) ? push!(market_prices, NaN) :
     push!(market_prices, market_prices[end])
@@ -215,7 +219,7 @@ function ask_bid_match!(proposal, model, bidx, i)
 end
 
 function exchange!(buyer, seller, proposal, bidx)
-    buyer.money -= proposal.price
+    buyer.bid_reserve -= proposal.price
     proposal.type = :share
     proposal.id = buyer.id
     push!(buyer.shares[bidx], proposal)
@@ -245,11 +249,11 @@ function bid_match!(proposal, model, bidx, i)
         buyer1 = model[proposal.id]
         buyer2 = model[order.id]
 
-        buyer1.money -= proposal.price
+        buyer1.bid_reserve -= proposal.price
         proposal.type = :share
         push!(buyer1.shares[bidx], proposal)
 
-        buyer2.money -= order.price
+        buyer2.bid_reserve -= order.price
         order.type = :share
         push!(buyer2.shares[bidx], order)
 

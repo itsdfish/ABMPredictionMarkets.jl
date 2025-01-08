@@ -44,8 +44,14 @@ end
 
 function remove_orders!(agent::MarketAgent, model, bidx)
     order_book = model.order_books[bidx]
-    filter!(x -> x.id ≠ agent.id, order_book)
-    return nothing 
+    removed_orders = filter!(x -> x.id ≠ agent.id, order_book)
+    for order ∈ removed_orders
+        if order.type == :bid 
+            agent.bid_reserve -= order.price 
+            agent.money += order.price
+        end
+    end
+    return nothing
 end
 
 can_bid(agent::MarketAgent) = agent.money > 0

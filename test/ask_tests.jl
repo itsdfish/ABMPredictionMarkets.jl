@@ -32,6 +32,7 @@
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = shares
     )
 
@@ -85,6 +86,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = shares
     )
 

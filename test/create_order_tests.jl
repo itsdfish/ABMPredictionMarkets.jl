@@ -30,6 +30,7 @@
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 0,
+        bid_reserve = 0,
         shares = shares
     )
 
@@ -72,6 +73,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = init(Order, n_markets)
     )
 
@@ -83,5 +85,7 @@ end
     #for i ∈ 1:20
     proposal = create_order(agent, model, bidx)
     @test proposal.type == :bid
+    @test agent.money == (100 - proposal.price)
+    @test agent.bid_reserve == proposal.price
     #end
 end

@@ -34,6 +34,7 @@
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = shares
     )
 
@@ -51,6 +52,8 @@
     @test proposal.type == :bid
     @test model.order_books[bidx] == [Order(; id = 2, yes = true, type = :ask, price = 10)]
     @test agent.shares == shares
+    @test agent.money == 90
+    @test agent.bid_reserve == 10
 end
 
 @testitem "2" begin
@@ -90,6 +93,7 @@ end
         δ = 3,
         judgments = [50, 20, 30, 20, 30],
         money = 100,
+        bid_reserve = 0,
         shares = shares
     )
 
@@ -107,4 +111,6 @@ end
     @test proposal.type == :bid
     @test model.order_books[bidx] == [Order(; id = 2, yes = true, type = :ask, price = 60)]
     @test agent.shares == shares
+    @test agent.money == (100 - proposal.price[bidx])
+    @test agent.bid_reserve == proposal.price[bidx]
 end

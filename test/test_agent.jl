@@ -9,12 +9,14 @@ An agent that sells and buys shares in a prediction market.
 - `judgments::Vector{Int}`: the agent's judgment for probability event e will occur [0, 100]
 - `δ::Int`: range of bid and ask noise 
 - `money::Int`: the agent's current money available in cents
+- `bid_reserve`: bid amount is accounted here to ensure sufficient funds
 - `shares::Vector{Order}`: the shares owned by the agent 
 """
 @agent struct TestAgent(NoSpaceAgent) <: MarketAgent
     judgments::Vector{Int}
     δ::Int
     money::Int
+    bid_reserve::Int
     shares::Vector{Vector{Order}}
 end
 
@@ -68,6 +70,7 @@ function initialize(
             model;
             judgments,
             money,
+            bid_reserve = 0,
             δ,
             shares = init(Order, n_markets)
         )

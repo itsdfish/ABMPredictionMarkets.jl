@@ -82,7 +82,7 @@ function bid(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
     judgment = yes ? agent.judgments[bidx] : (100 - agent.judgments[bidx])
     price = judgment > min_ask ? min_ask : sample_bid(judgment, agent.δ)
     price = min(price, agent.money)
-    agent.money -= price 
+    agent.money -= price
     agent.bid_reserve += price
     return Order(; id = agent.id, yes, price, type = :bid)
 end

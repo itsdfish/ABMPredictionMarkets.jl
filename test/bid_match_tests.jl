@@ -365,11 +365,11 @@ end
 
     agent2_order = Order(; id = 2, yes = true, type = :bid, price = 60)
     push!(model.order_books[bidx], agent2_order)
-    model[2].money -= agent2_order.price 
+    model[2].money -= agent2_order.price
     model[2].bid_reserve += agent2_order.price
 
     bid = Order(; id = 1, yes = false, type = :bid, price = 40)
-    model[1].money -= bid.price 
+    model[1].money -= bid.price
     model[1].bid_reserve += bid.price
 
     success = transact!(bid, model, bidx)

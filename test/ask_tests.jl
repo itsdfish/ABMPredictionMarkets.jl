@@ -3,6 +3,7 @@
     using ABMPredictionMarkets
     using ABMPredictionMarkets: ask
     using ABMPredictionMarkets: init
+    using ABMPredictionMarkets: remove_orders!
     using Test
 
     include("test_agent.jl")
@@ -39,6 +40,7 @@
         Order(; id = 2, yes = false, type = :ask, price = 90)
     ]
 
+    remove_orders!(agent, model, bidx)
     proposal = ask(agent, model, bidx)
 
     @test proposal.price[bidx] ≥ 21 && proposal.price[bidx] ≤ 23
@@ -54,6 +56,7 @@ end
     using ABMPredictionMarkets
     using ABMPredictionMarkets: ask
     using ABMPredictionMarkets: init
+    using ABMPredictionMarkets: remove_orders!
     using Test
 
     include("test_agent.jl")
@@ -90,6 +93,7 @@ end
         Order(; id = 2, yes = true, type = :bid, price = 30)
     ]
 
+    remove_orders!(agent, model, bidx)
     proposal = ask(agent, model, bidx)
 
     @test proposal.price[bidx] == 30

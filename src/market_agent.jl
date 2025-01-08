@@ -31,6 +31,7 @@ an exchange is made if one is found. Otherwise, the order is added to the order 
 """
 function agent_step!(agent::MarketAgent, ::Type{<:AbstractPredictionMarket}, model)
     for bidx ∈ 1:length(model.order_books)
+        remove_orders!(agent, model, bidx)
         order = create_order(agent, model, bidx)
         if order.type == :empty
             push!(model.trade_made[bidx], false)
@@ -39,6 +40,12 @@ function agent_step!(agent::MarketAgent, ::Type{<:AbstractPredictionMarket}, mod
         end
     end
     return nothing
+end
+
+function remove_orders!(agent::MarketAgent, model, bidx)
+    order_book = model.order_books[bidx]
+    filter!(x -> x.id ≠ agent.id, order_book)
+    return nothing 
 end
 
 can_bid(agent::MarketAgent) = agent.money > 0

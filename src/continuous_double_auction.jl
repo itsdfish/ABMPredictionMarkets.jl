@@ -75,8 +75,6 @@ where `p` is the agent's subject probability of the event.
 """
 function bid(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
     order_book = model.order_books[bidx]
-    # remove old order
-    filter!(x -> x.id ≠ agent.id, order_book)
     yes = rand(Bool)
     _, min_ask = get_market_info(order_book; yes)
     judgment = yes ? agent.judgments[bidx] : (100 - agent.judgments[bidx])
@@ -124,8 +122,6 @@ where `p` is the maximum share price.
 """
 function ask(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
     order_book = model.order_books[bidx]
-    # remove previous order
-    filter!(x -> x.id ≠ agent.id, order_book)
     _, idx = findmax(x -> x.price, agent.shares[bidx])
     share = deepcopy(agent.shares[bidx][idx])
     share.type = :ask

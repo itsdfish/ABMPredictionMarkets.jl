@@ -3,6 +3,7 @@
     using ABMPredictionMarkets
     using ABMPredictionMarkets: bid
     using ABMPredictionMarkets: init
+    using ABMPredictionMarkets: remove_orders!
     using Random
     using Test
     Random.seed!(5870)
@@ -41,6 +42,7 @@
         Order(; id = 2, yes = true, type = :ask, price = 10)
     ]
 
+    remove_orders!(agent, model, bidx)
     proposal = bid(agent, model, bidx)
 
     @test proposal.price[bidx] == 10
@@ -56,6 +58,7 @@ end
     using ABMPredictionMarkets
     using ABMPredictionMarkets: bid
     using ABMPredictionMarkets: init
+    using ABMPredictionMarkets: remove_orders!
     using Random
     using Test
 
@@ -95,6 +98,7 @@ end
         Order(; id = 2, yes = true, type = :ask, price = 60)
     ]
 
+    remove_orders!(agent, model, bidx)
     proposal = bid(agent, model, bidx)
 
     @test proposal.price[bidx] ≥ 45 && proposal.price[bidx] ≤ 49

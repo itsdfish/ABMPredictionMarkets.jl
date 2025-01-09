@@ -188,7 +188,7 @@ function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
 end
 
 """
-    ask_bid_match!(proposal, model, i)
+    ask_bid_match!(proposal, model, bidx, i)
 
 For agent `i` and agent `j`, let `b` be the bid amount, `a` be the ask amount, and `e` be the event.   
 If `bₑᵢ = aₑⱼ`, then exchange. 
@@ -230,7 +230,7 @@ function exchange!(buyer, seller, proposal, bidx)
 end
 
 """
-    bid_match!(proposal, model, i)
+    bid_match!(proposal, model, bidx, i)
 
 For agent `i` and agent `j`, let `b` be the bid amount, and `e` be the event.   
 If `bₑᵢ + b¬ₑⱼ = 1`, then create new shares for `i` and `j`. 
@@ -268,7 +268,7 @@ function bid_match!(proposal, model, bidx, i)
 end
 
 """
-    ask_match!(proposal, model, i)
+    ask_match!(proposal, model, bidx, i)
 
 For agent `i` and agent `j`, let `a` be the ask amount, and `e` be the event.   
 If `aₑᵢ + a¬ₑⱼ = 1`, then remove shares and deduct ask amounts for `i` and `j` . 

@@ -105,3 +105,38 @@ end
     @test model.order_books[bidx] == [Order(; id = 2, yes = true, type = :bid, price = 30)]
     @test agent.shares == shares
 end
+
+@testitem "ask sanity test" begin
+    using Agents
+    using ABMPredictionMarkets: get_market_info
+    using ABMPredictionMarkets: agent_step!
+    using ABMPredictionMarkets: sample_ask
+    using Test
+
+    include("test_agent.jl")
+
+    n_agents = 1000
+    n_reps = 10
+    model = initialize(
+        TestAgent;
+        n_agents = 100,
+        μ = [0.20, 0.25, 0.10, 0.45],
+        η = 20.0,
+        money = 10_000,
+        δ = 3,
+        n_markets = 5
+    )
+
+    for _ ∈ 1:n_reps
+        for id ∈ Agents.schedule(model)
+            agent = model[id]
+            agent_step!(agent, model)
+            for (i, shares) ∈ enumerate(agent.shares)
+                for s ∈ shares
+                    judgment = s.yes ? agent.judgments[i] : (100 - agent.judgments[i])
+                    @test s.price < judgment
+                end
+            end
+        end
+    end
+end

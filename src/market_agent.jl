@@ -42,6 +42,18 @@ function agent_step!(agent::MarketAgent, ::Type{<:AbstractPredictionMarket}, mod
     return nothing
 end
 
+"""
+     remove_orders!(agent::MarketAgent, model, bidx)
+
+Removes orders from the specified order book and transfers funds from the bid reserve to
+the agent's money fund.     
+
+# Arguments
+
+- `agent::MarketAgent`: an agent participating in the prediction market
+- `model`: an abm object for the prediction market simulation 
+- `bidx`: the index of the current order book
+"""
 function remove_orders!(agent::MarketAgent, model, bidx)
     order_book = model.order_books[bidx]
     removed_orders = filter(x -> x.id == agent.id, order_book)

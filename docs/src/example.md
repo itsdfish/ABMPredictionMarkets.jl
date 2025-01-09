@@ -33,6 +33,7 @@ Random.seed!(93)
     judgments::Vector{Int}
     δ::Int
     money::Int
+    bid_reserve::Int
     shares::Vector{Vector{Order}}
 end
 ```
@@ -66,6 +67,7 @@ function initialize(
             model;
             judgments,
             money,
+            bid_reserve = 0,
             δ,
             shares = init(Order, n_markets)
         )

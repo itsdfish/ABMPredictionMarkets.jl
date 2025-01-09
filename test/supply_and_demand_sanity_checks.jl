@@ -1,4 +1,4 @@
-@testitem "bounds 2" begin
+@testitem "bounds" begin
     using Agents
     using ABMPredictionMarkets: get_market_info
     using ABMPredictionMarkets: agent_step!

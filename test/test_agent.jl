@@ -61,6 +61,7 @@ function initialize(
         space;
         properties = CDA(; n_markets, info_times),
         agent_step!,
+        model_step!,
         scheduler = Schedulers.Randomly()
     )
     for _ ∈ 1:n_agents
@@ -77,6 +78,8 @@ function initialize(
     end
     return model
 end
+
+function model_step!(model) end
 
 """
     TestAgent(NoSpaceAgent)

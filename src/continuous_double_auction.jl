@@ -126,11 +126,19 @@ where `p` is the maximum share price.
 """
 function ask(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
     order_book = model.order_books[bidx]
-    _, idx = findmax(x -> x.price, agent.shares[bidx])
+    _, idx = findmax(x -> x.yes ? x.price : (100 - x.price), agent.shares[bidx])
     share = deepcopy(agent.shares[bidx][idx])
     share.type = :ask
     max_bid, _ = get_market_info(order_book; yes = share.yes)
-    share.price = max_bid > share.price ? max_bid : sample_ask(share.price, agent.δ)
+    judgment = share.yes ? agent.judgments[bidx] : (100 - agent.judgments[bidx])
+    # println("judgment $judgment share price $(share.price)")
+    # expected value for keeping the share 
+    ev1 = judgment - share.price
+    # println("max bid $max_bid share price $(share.price)")
+    #expected value for sell at maximum bid 
+    ev2 = max_bid - share.price
+    # println("ev1 $ev1 ev2 $ev2")
+    share.price = ev2 > ev1 ? max_bid : sample_ask(judgment, agent.δ)
     return share
 end
 
@@ -224,8 +232,9 @@ function exchange!(buyer, seller, proposal, bidx)
     proposal.id = buyer.id
     push!(buyer.shares[bidx], proposal)
     seller.money += proposal.price
-    idx = findfirst(x -> x.yes == proposal.yes, seller.shares[bidx])
-    deleteat!(seller.shares[bidx], idx)
+    shares = filter(x -> x.yes == proposal.yes, seller.shares[bidx])
+    _,idx = findmax(x -> x.price, shares)
+    filter!(x -> x ≠ shares[idx], seller.shares[bidx])
     return nothing
 end
 
@@ -287,12 +296,19 @@ function ask_match!(proposal, model, bidx, i)
         seller2 = model[order.id]
 
         seller1.money += proposal.price
-        idx = findfirst(x -> x.yes == proposal.yes, seller1.shares[bidx])
-        deleteat!(seller1.shares[bidx], idx)
+        shares = filter(x -> x.yes == proposal.yes, seller1.shares[bidx])
+        _,idx = findmax(x -> x.price, shares)
+        filter!(x -> x ≠ shares[idx], seller1.shares[bidx])
+
+        # seller2.money += order.price
+        # idx = findfirst(x -> x.yes == order.yes, seller2.shares[bidx])
+        # println("share 1 $(seller2.shares[bidx][idx])")
+        # deleteat!(seller2.shares[bidx], idx)
 
         seller2.money += order.price
-        idx = findfirst(x -> x.yes == order.yes, seller2.shares[bidx])
-        deleteat!(seller2.shares[bidx], idx)
+        shares = filter(x -> x.yes == order.yes, seller2.shares[bidx])
+        _,idx = findmax(x -> x.price, shares)
+        filter!(x -> x ≠ shares[idx], seller2.shares[bidx])
 
         push!(
             model.market_prices[bidx],

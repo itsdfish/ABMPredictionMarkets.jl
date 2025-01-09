@@ -30,7 +30,7 @@
     agent = add_agent!(
         model;
         δ = 3,
-        judgments = [50, 20, 30, 20, 30],
+        judgments = [45, 25, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
         shares = shares
@@ -44,7 +44,7 @@
     remove_orders!(agent, model, bidx)
     proposal = ask(agent, model, bidx)
 
-    @test proposal.price[bidx] ≥ 21 && proposal.price[bidx] ≤ 23
+    @test proposal.price ≥ 46 && proposal.price ≤ 48
     @test proposal.yes
     @test proposal.id == 1
     @test proposal.type == :ask
@@ -84,7 +84,7 @@ end
     agent = add_agent!(
         model;
         δ = 3,
-        judgments = [50, 20, 30, 20, 30],
+        judgments = [45, 25, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
         shares = shares
@@ -92,17 +92,17 @@ end
 
     model.order_books[bidx] = [
         Order(; id = 1, yes = true, type = :ask, price = 20),
-        Order(; id = 2, yes = true, type = :bid, price = 30)
+        Order(; id = 2, yes = true, type = :bid, price = 46)
     ]
 
     remove_orders!(agent, model, bidx)
     proposal = ask(agent, model, bidx)
 
-    @test proposal.price[bidx] == 30
+    @test proposal.price[bidx] == 46
     @test proposal.yes
     @test proposal.id == 1
     @test proposal.type == :ask
-    @test model.order_books[bidx] == [Order(; id = 2, yes = true, type = :bid, price = 30)]
+    @test model.order_books[bidx] == [Order(; id = 2, yes = true, type = :bid, price = 46)]
     @test agent.shares == shares
 end
 

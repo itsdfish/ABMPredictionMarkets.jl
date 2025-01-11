@@ -14,7 +14,6 @@
         η = 20.0,
         money = 1000,
         δ = 3,
-        n_markets = 5
     )
     run!(model, 100)
     money = map(a -> a.money, allagents(model))

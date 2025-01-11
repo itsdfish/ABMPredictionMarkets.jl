@@ -28,7 +28,6 @@ end
         η,
         δ,
         money,
-        n_markets,
         info_times = Int[]
     )
 
@@ -43,7 +42,6 @@ Initializes a model for sub-and-super-additivity in prediction markets.
 - `δ::Int`: range of bid and ask noise 
 - `money`: the initial amount of money in cents each agent is given
 - `info_times`: a vector of days on which new information is provided 
-- `n_markets`: the number of available markets in the simulation 
 """
 function initialize(
     ::Type{<:TestAgent};
@@ -53,9 +51,9 @@ function initialize(
     δ,
     money,
     info_times = Int[],
-    n_markets
 )
     space = nothing
+    n_markets = length(μ)
     model = StandardABM(
         TestAgent,
         space;
@@ -65,11 +63,10 @@ function initialize(
         scheduler = Schedulers.Randomly()
     )
     for _ ∈ 1:n_agents
-        judgments = rand(DiscreteDirichlet(μ, η))
-        push!(judgments, judgments[1] + judgments[2])
+        
         add_agent!(
             model;
-            judgments,
+            judgments = rand(DiscreteDirichlet(μ, η)),
             money,
             bid_reserve = 0,
             δ,

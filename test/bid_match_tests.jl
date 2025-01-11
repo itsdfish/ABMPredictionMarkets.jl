@@ -8,7 +8,7 @@
 
     include("test_agent.jl")
 
-    n_markets = 5
+    n_markets = 4
     bidx = 1
     model = initialize(
         TestAgent;
@@ -17,7 +17,6 @@
         η = 20.0,
         money = 10_000,
         δ = 1,
-        n_markets
     )
 
     remove_all!(model)
@@ -60,7 +59,7 @@ end
 
     include("test_agent.jl")
 
-    n_markets = 5
+    n_markets = 4
     bidx = 1
     model = initialize(
         TestAgent;
@@ -69,7 +68,6 @@ end
         η = 20.0,
         money = 10_000,
         δ = 1,
-        n_markets
     )
 
     remove_all!(model)
@@ -127,7 +125,7 @@ end
 
     include("test_agent.jl")
 
-    n_markets = 5
+    n_markets = 4
     bidx = 1
     model = initialize(
         TestAgent;
@@ -136,7 +134,6 @@ end
         η = 20.0,
         money = 10_000,
         δ = 1,
-        n_markets
     )
 
     remove_all!(model)
@@ -194,7 +191,7 @@ end
 
     include("test_agent.jl")
 
-    n_markets = 5
+    n_markets = 4
     bidx = 1
     model = initialize(
         TestAgent;
@@ -203,7 +200,6 @@ end
         η = 20.0,
         money = 10_000,
         δ = 1,
-        n_markets
     )
 
     remove_all!(model)
@@ -261,7 +257,7 @@ end
 
     include("test_agent.jl")
 
-    n_markets = 5
+    n_markets = 4
     bidx = 1
     model = initialize(
         TestAgent;
@@ -270,7 +266,6 @@ end
         η = 20.0,
         money = 10_000,
         δ = 1,
-        n_markets
     )
 
     remove_all!(model)
@@ -328,7 +323,7 @@ end
 
     include("test_agent.jl")
 
-    n_markets = 5
+    n_markets = 4
     bidx = 1
     model = initialize(
         TestAgent;
@@ -337,7 +332,6 @@ end
         η = 20.0,
         money = 10_000,
         δ = 1,
-        n_markets
     )
 
     remove_all!(model)

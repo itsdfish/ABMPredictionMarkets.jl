@@ -16,7 +16,6 @@
         η = 20.0,
         money = 10_000,
         δ = 3,
-        n_markets = 5
     )
 
     for _ ∈ 1:n_reps

@@ -131,13 +131,10 @@ function ask(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
     share.type = :ask
     max_bid, _ = get_market_info(order_book; yes = share.yes)
     judgment = share.yes ? agent.judgments[bidx] : (100 - agent.judgments[bidx])
-    # println("judgment $judgment share price $(share.price)")
     # expected value for keeping the share 
     ev1 = judgment - share.price
-    # println("max bid $max_bid share price $(share.price)")
     #expected value for sell at maximum bid 
     ev2 = max_bid - share.price
-    # println("ev1 $ev1 ev2 $ev2")
     share.price = ev2 > ev1 ? max_bid : sample_ask(judgment, agent.δ)
     return share
 end

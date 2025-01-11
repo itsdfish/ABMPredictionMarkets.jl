@@ -17,12 +17,11 @@
         η = 20.0,
         money = 10_000,
         δ = 3,
-        n_markets = 5
     )
 
     run!(model, n_days)
 
-    # market_prices = map(i -> model.market_prices[i][1:n_agents:end], 1:5)
+    # market_prices = map(i -> model.market_prices[i][1:n_agents:end], 1:4)
     # plot(
     #     market_prices,
     #     ylims = (0, 1),

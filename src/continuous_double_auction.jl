@@ -208,7 +208,7 @@ If `bₑᵢ = aₑⱼ`, then exchange.
 function ask_bid_match!(proposal, model, bidx, i)
     order = model.order_books[bidx][i]
     if (order.price == proposal.price) && (order.yes == proposal.yes) &&
-       (order.type ≠ proposal.type)
+       (order.type ≠ proposal.type) && (order.id ≠ proposal.id)
         buyer = proposal.type == :bid ? model[proposal.id] : model[order.id]
         seller = proposal.type == :ask ? model[proposal.id] : model[order.id]
 
@@ -251,7 +251,7 @@ If `bₑᵢ + b¬ₑⱼ = 1`, then create new shares for `i` and `j`.
 function bid_match!(proposal, model, bidx, i)
     order = model.order_books[bidx][i]
     if sums_to_100(proposal, order) && (order.yes ≠ proposal.yes) &&
-       (order.type == proposal.type == :bid)
+       (order.type == proposal.type == :bid) && (order.id ≠ proposal.id)
         buyer1 = model[proposal.id]
         buyer2 = model[order.id]
 
@@ -288,7 +288,7 @@ If `aₑᵢ + a¬ₑⱼ = 1`, then remove shares and deduct ask amounts for `i` 
 function ask_match!(proposal, model, bidx, i)
     order = model.order_books[bidx][i]
     if sums_to_100(proposal, order) && (order.yes ≠ proposal.yes) &&
-       (order.type == proposal.type == :ask)
+       (order.type == proposal.type == :ask) && (order.id ≠ proposal.id)
         seller1 = model[proposal.id]
         seller2 = model[order.id]
 

@@ -1,7 +1,7 @@
 @testitem "smoke test" begin
     using ABMPredictionMarkets
     using Agents
-    #using Plots
+    # using Plots
     using Statistics
     using Test
 
@@ -16,8 +16,8 @@
         n_agents,
         μ,
         η = 20.0,
-        money = 4000,
-        δ = 3,
+        money = 10_000,
+        δ = 3
     )
 
     run!(model, n_days)

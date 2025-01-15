@@ -50,7 +50,7 @@ function initialize(
     η,
     δ,
     money,
-    info_times = Int[],
+    info_times = Int[]
 )
     space = nothing
     n_markets = length(μ)
@@ -63,7 +63,6 @@ function initialize(
         scheduler = Schedulers.Randomly()
     )
     for _ ∈ 1:n_agents
-        
         add_agent!(
             model;
             judgments = rand(DiscreteDirichlet(μ, η)),

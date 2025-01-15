@@ -41,11 +41,34 @@ Computes trade volume for a set of time intervals
 - `trade_made`: indicates whether a trade is made on each agent step 
 - `interval_length`: the length of the interval in which trade volume is computed
 """
-function compute_trade_volume(trade_made, interval_length)
+function compute_trade_volume(trade_made, interval_length::Int)
     n = div(length(trade_made), interval_length)
     return map(
         i -> sum(trade_made[((i - 1) * interval_length + 1):(i * interval_length)]),
         1:n
+    )
+end
+
+"""
+    summarize_by_iteration(values, iteration_ids; fun = x -> x[end])
+
+Summarize by iteration using `fun`
+
+# Arguments
+
+- `values`: a vector of values after each agent step 
+- `iteration_ids`: a vector containing the indices of iterations for each agent step 
+
+# Keywords 
+
+- `fun = x -> x[end]`: a function applied to market prices of each iteration. By default,
+the ending price is used. 
+"""
+function summarize_by_iteration(values, iteration_ids; fun = x -> x[end])
+    unique_ids = unique(iteration_ids)
+    return map(
+        i -> fun(values[iteration_ids .== i]),
+        unique_ids
     )
 end
 
@@ -66,6 +89,6 @@ end
 
 function rand(dist::DiscreteDirichlet)
     x = Int.(round.(rand(Dirichlet(dist.μ .* dist.η)) * 100))
-    x[4] = 100 - sum(x[1:3])
+    x[end] = 100 - sum(x[1:(end - 1)])
     return x
 end

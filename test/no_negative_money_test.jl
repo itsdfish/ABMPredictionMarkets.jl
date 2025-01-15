@@ -13,7 +13,7 @@
         μ = [0.20, 0.25, 0.10, 0.45],
         η = 20.0,
         money = 1000,
-        δ = 3,
+        δ = 3
     )
     run!(model, 100)
     money = map(a -> a.money, allagents(model))

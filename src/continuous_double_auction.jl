@@ -11,6 +11,7 @@ Holds data and order book for a continuous double auction prediction market simu
 - `info_times::Vector{Int}`: 
 - `info_times::Vector{Int}`: a vector of days on which new information is provided 
 - `trade_made::Vector{Vector{Bool}}`: on each agent step, indicates whether a trade was made
+- `iteration_ids`::Vector{Vector{Int}}`: iteration number on which market prices are recorded
 
 # Constructors
     
@@ -21,6 +22,7 @@ mutable struct CDA <: AbstractCDA
     market_prices::Vector{Vector{Float64}}
     info_times::Vector{Int}
     trade_made::Vector{Vector{Bool}}
+    iteration_ids::Vector{Vector{Int}}
 end
 
 function CDA(; n_markets, info_times)
@@ -28,7 +30,8 @@ function CDA(; n_markets, info_times)
         init(Order, n_markets),
         init(Float64, n_markets),
         info_times,
-        init(Bool, n_markets)
+        init(Bool, n_markets),
+        init(Int, n_markets)
     )
 end
 
@@ -230,7 +233,7 @@ function exchange!(buyer, seller, proposal, bidx)
     push!(buyer.shares[bidx], proposal)
     seller.money += proposal.price
     shares = filter(x -> x.yes == proposal.yes, seller.shares[bidx])
-    _,idx = findmax(x -> x.price, shares)
+    _, idx = findmax(x -> x.price, shares)
     filter!(x -> x ≠ shares[idx], seller.shares[bidx])
     return nothing
 end
@@ -294,17 +297,12 @@ function ask_match!(proposal, model, bidx, i)
 
         seller1.money += proposal.price
         shares = filter(x -> x.yes == proposal.yes, seller1.shares[bidx])
-        _,idx = findmax(x -> x.price, shares)
+        _, idx = findmax(x -> x.price, shares)
         filter!(x -> x ≠ shares[idx], seller1.shares[bidx])
-
-        # seller2.money += order.price
-        # idx = findfirst(x -> x.yes == order.yes, seller2.shares[bidx])
-        # println("share 1 $(seller2.shares[bidx][idx])")
-        # deleteat!(seller2.shares[bidx], idx)
 
         seller2.money += order.price
         shares = filter(x -> x.yes == order.yes, seller2.shares[bidx])
-        _,idx = findmax(x -> x.price, shares)
+        _, idx = findmax(x -> x.price, shares)
         filter!(x -> x ≠ shares[idx], seller2.shares[bidx])
 
         push!(

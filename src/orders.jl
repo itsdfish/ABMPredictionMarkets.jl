@@ -20,10 +20,11 @@ mutable struct Order <: AbstractOrder
     id::Int
     yes::Bool
     price::Int
+    quantity::Int
     type::Symbol
 end
 
-Order(; id, yes, price, type) = Order(id, yes, price, type)
+Order(; id, yes, price, quantity, type) = Order(id, yes, price, quantity, type)
 
 function ≠(s1::Order, s2::Order)
     for f ∈ fieldnames(Order)

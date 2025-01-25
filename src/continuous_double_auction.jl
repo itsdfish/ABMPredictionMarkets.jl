@@ -87,7 +87,7 @@ function bid(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
     price = min(price, agent.money)
     agent.money -= price
     agent.bid_reserve += price
-    return Order(; id = agent.id, yes, price, type = :bid)
+    return Order(; id = agent.id, yes, price, quantity = 1, type = :bid)
 end
 
 """
@@ -131,6 +131,7 @@ function ask(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
     order_book = model.order_books[bidx]
     _, idx = findmax(x -> x.yes ? x.price : (100 - x.price), agent.shares[bidx])
     share = deepcopy(agent.shares[bidx][idx])
+    share.quantity = 1
     share.type = :ask
     max_bid, _ = get_market_info(order_book; yes = share.yes)
     judgment = share.yes ? agent.judgments[bidx] : (100 - agent.judgments[bidx])
@@ -210,12 +211,13 @@ If `bₑᵢ = aₑⱼ`, then exchange.
 """
 function ask_bid_match!(proposal, model, bidx, i)
     order = model.order_books[bidx][i]
-    if (order.price == proposal.price) && (order.yes == proposal.yes) &&
-       (order.type ≠ proposal.type) && (order.id ≠ proposal.id)
+    if can_exchange(proposal, order)
         buyer = proposal.type == :bid ? model[proposal.id] : model[order.id]
         seller = proposal.type == :ask ? model[proposal.id] : model[order.id]
+        bid_order = proposal.type == :bid ? proposal : order
+        ask_order = proposal.type == :ask ? proposal : order
+        exchange!(buyer, seller, bid_order, ask_order, proposal, bidx)
 
-        exchange!(buyer, seller, proposal, bidx)
         push!(
             model.market_prices[bidx],
             proposal.yes ? proposal.price / 100 : (100 - proposal.price) / 100
@@ -226,15 +228,56 @@ function ask_bid_match!(proposal, model, bidx, i)
     return false
 end
 
-function exchange!(buyer, seller, proposal, bidx)
-    buyer.bid_reserve -= proposal.price
-    proposal.type = :share
-    proposal.id = buyer.id
-    push!(buyer.shares[bidx], proposal)
-    seller.money += proposal.price
+function can_exchange(proposal, order)
+    if (order.yes == proposal.yes) && (order.type ≠ proposal.type) &&
+       (order.id ≠ proposal.id)
+        if (order.type == :bid) && (proposal.type == :ask) && (order.price ≥ proposal.price)
+            return true
+        elseif (order.type == :ask) && (proposal.type == :bid) &&
+               (order.price ≤ proposal.price)
+            return true
+        end
+    end
+    return false
+end
+
+function exchange!(buyer, seller, bid_order, ask_order, proposal, bidx)
+    # 3 at price = bid = 40 
+    # 2 at ask = 30
+
+    # 3 at bid = 40 
+    # 2 at price = ask = 30
+    price = proposal.price
+    n_sold = min(bid_order.quantity, ask_order.quantity)
+    total_cost = price * n_sold
+    buyer.bid_reserve -= total_cost
+    new_share =
+        Order(; id = buyer.id, price, yes = bid_order.yes, quantity = n_sold, type = :share)
+    push!(buyer.shares[bidx], new_share)
+
+    ask_order.quantity -= n_sold
+    seller.money += total_cost
+    decrement_shares!(seller, proposal, n_sold, bidx)
+    return nothing
+end
+
+function decrement_shares!(seller, proposal, n_sold, bidx)
     shares = filter(x -> x.yes == proposal.yes, seller.shares[bidx])
-    _, idx = findmax(x -> x.price, shares)
-    filter!(x -> x ≠ shares[idx], seller.shares[bidx])
+    sort!(shares; by = x -> x.price)
+    i = 1
+    n_accounted = 0
+    removed_indices = Int[]
+    while n_accounted ≠ n_sold
+        share = shares[i]
+        n_remove = min(n_sold, share.quantity)
+        share.quantity -= n_remove
+        if share.quantity == 0
+            push!(removed_indices, findfirst(x -> x == share, seller.shares[bidx]))
+        end
+        n_accounted += n_remove
+        i += 1
+    end
+    isempty(removed_indices) ? nothing : deleteat!(seller.shares[bidx], removed_indices)
     return nothing
 end
 

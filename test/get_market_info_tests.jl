@@ -5,14 +5,14 @@
     using Test
 
     order_books = [
-        Order(; id = 1, yes = true, type = :bid, price = 30),
-        Order(; id = 1, yes = true, type = :bid, price = 31),
-        Order(; id = 1, yes = false, type = :bid, price = 71),
-        Order(; id = 1, yes = false, type = :bid, price = 68),
-        Order(; id = 1, yes = true, type = :ask, price = 32),
-        Order(; id = 1, yes = true, type = :ask, price = 33),
-        Order(; id = 1, yes = false, type = :ask, price = 68),
-        Order(; id = 1, yes = false, type = :ask, price = 73)
+        Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 30),
+        Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 31),
+        Order(; id = 1, yes = false, type = :bid, quantity = 1, price = 71),
+        Order(; id = 1, yes = false, type = :bid, quantity = 1, price = 68),
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 32),
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 33),
+        Order(; id = 1, yes = false, type = :ask, quantity = 1, price = 68),
+        Order(; id = 1, yes = false, type = :ask, quantity = 1, price = 73)
     ]
 
     max_yes_bid, min_yes_ask = get_market_info(order_books; yes = true)
@@ -27,14 +27,14 @@ end
     using Test
 
     order_books = [
-        Order(; id = 1, yes = true, type = :bid, price = 30),
-        Order(; id = 1, yes = true, type = :bid, price = 31),
-        Order(; id = 1, yes = false, type = :bid, price = 71),
-        Order(; id = 1, yes = false, type = :bid, price = 68),
-        Order(; id = 1, yes = true, type = :ask, price = 32),
-        Order(; id = 1, yes = true, type = :ask, price = 33),
-        Order(; id = 1, yes = false, type = :ask, price = 68),
-        Order(; id = 1, yes = false, type = :ask, price = 73)
+        Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 30),
+        Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 31),
+        Order(; id = 1, yes = false, type = :bid, quantity = 1, price = 71),
+        Order(; id = 1, yes = false, type = :bid, quantity = 1, price = 68),
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 32),
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 33),
+        Order(; id = 1, yes = false, type = :ask, quantity = 1, price = 68),
+        Order(; id = 1, yes = false, type = :ask, quantity = 1, price = 73)
     ]
 
     max_yes_bid, min_yes_ask = get_market_info(order_books; yes = true)
@@ -51,14 +51,14 @@ end
     using Test
 
     order_books = [
-        Order(; id = 1, yes = true, type = :bid, price = 30),
-        Order(; id = 1, yes = true, type = :bid, price = 33),
-        Order(; id = 1, yes = false, type = :bid, price = 71),
-        Order(; id = 1, yes = false, type = :bid, price = 68),
-        Order(; id = 1, yes = true, type = :ask, price = 28),
-        Order(; id = 1, yes = true, type = :ask, price = 33),
-        Order(; id = 1, yes = false, type = :ask, price = 68),
-        Order(; id = 1, yes = false, type = :ask, price = 73)
+        Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 30),
+        Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 33),
+        Order(; id = 1, yes = false, type = :bid, quantity = 1, price = 71),
+        Order(; id = 1, yes = false, type = :bid, quantity = 1, price = 68),
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 28),
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 33),
+        Order(; id = 1, yes = false, type = :ask, quantity = 1, price = 68),
+        Order(; id = 1, yes = false, type = :ask, quantity = 1, price = 73)
     ]
 
     max_yes_bid, min_yes_ask = get_market_info(order_books; yes = true)
@@ -73,14 +73,14 @@ end
     using Test
 
     order_books = [
-        Order(; id = 1, yes = true, type = :bid, price = 30),
-        Order(; id = 1, yes = true, type = :bid, price = 33),
-        Order(; id = 1, yes = false, type = :bid, price = 71),
-        Order(; id = 1, yes = false, type = :bid, price = 68),
-        Order(; id = 1, yes = true, type = :ask, price = 28),
-        Order(; id = 1, yes = true, type = :ask, price = 33),
-        Order(; id = 1, yes = false, type = :ask, price = 68),
-        Order(; id = 1, yes = false, type = :ask, price = 73)
+        Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 30),
+        Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 33),
+        Order(; id = 1, yes = false, type = :bid, quantity = 1, price = 71),
+        Order(; id = 1, yes = false, type = :bid, quantity = 1, price = 68),
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 28),
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 33),
+        Order(; id = 1, yes = false, type = :ask, quantity = 1, price = 68),
+        Order(; id = 1, yes = false, type = :ask, quantity = 1, price = 73)
     ]
 
     max_yes_bid, min_yes_ask = get_market_info(order_books; yes = true)

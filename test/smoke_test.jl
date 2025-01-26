@@ -1,7 +1,7 @@
 @testitem "smoke test" begin
     using ABMPredictionMarkets
     using Agents
-    # using Plots
+    using Plots
     using Statistics
     using Test
 
@@ -32,8 +32,8 @@
     )
     hline!(μ, color = :black, linestyle = :dash)
 
-    depth_charts = plot_depth_chart.(model.order_books; ylims = (0, 50))
-    plot(depth_charts...)
+    # depth_charts = plot_depth_chart.(model.order_books; ylims = (0, 50))
+    # plot(depth_charts...)
 
     # trade_volume = compute_trade_volume.(model.trade_made, n_agents)
     # layout = @layout [grid(2, 2)]

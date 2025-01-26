@@ -20,8 +20,8 @@
     remove_all!(model)
 
     shares = [[
-        Order(; id = 1, yes = true, type = :share, price = 20),
-        Order(; id = 1, yes = true, type = :share, price = 15)
+        Order(; id = 1, yes = true, type = :share, quantity = 1, price = 20),
+        Order(; id = 1, yes = true, type = :share, quantity = 1, price = 15)
     ]]
 
     agent = add_agent!(
@@ -34,8 +34,8 @@
     )
 
     model.order_books[bidx] = [
-        Order(; id = 1, yes = true, type = :ask, price = 20),
-        Order(; id = 2, yes = false, type = :ask, price = 10)
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 20),
+        Order(; id = 2, yes = false, type = :ask, quantity = 1, price = 10)
     ]
 
     for i ∈ 1:20
@@ -76,8 +76,8 @@ end
     )
 
     model.order_books[1] = [
-        Order(; id = 1, yes = true, type = :ask, price = 20),
-        Order(; id = 2, yes = false, type = :ask, price = 10)
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 20),
+        Order(; id = 2, yes = false, type = :ask, quantity = 1, price = 10)
     ]
 
     #for i ∈ 1:20

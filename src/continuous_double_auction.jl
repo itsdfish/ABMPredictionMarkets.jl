@@ -189,34 +189,32 @@ function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
     for i ∈ eachindex(order_book)
         is_complete = ask_bid_match!(proposal, model, bidx, i)
         order_book[i].quantity == 0 ? push!(remove_idx, i) : nothing
-        is_complete ? break : nothing 
+        is_complete ? break : nothing
     end
     isempty(remove_idx) ? nothing : deleteat!(order_book, remove_idx)
-    is_complete ? (return true) : nothing 
+    is_complete ? (return true) : nothing
 
     remove_idx = Int[]
     for i ∈ eachindex(order_book)
         is_complete = ask_match!(proposal, model, bidx, i)
         order_book[i].quantity == 0 ? push!(remove_idx, i) : nothing
-        is_complete ? break : nothing 
+        is_complete ? break : nothing
     end
 
     isempty(remove_idx) ? nothing : deleteat!(order_book, remove_idx)
-    is_complete ? (return true) : nothing 
+    is_complete ? (return true) : nothing
 
     remove_idx = Int[]
     for i ∈ eachindex(order_book)
         is_complete = bid_match!(proposal, model, bidx, i)
         order_book[i].quantity == 0 ? push!(remove_idx, i) : nothing
-        is_complete ? break : nothing 
+        is_complete ? break : nothing
     end
     isempty(remove_idx) ? nothing : deleteat!(order_book, remove_idx)
-    is_complete ? (return true) : nothing 
+    is_complete ? (return true) : nothing
 
-    # add market prices inside functions ?
     market_prices = model.market_prices[bidx]
     proposal.quantity > 0 ? push!(order_book, proposal) : nothing
-    # may need to address this inside the match functions 
     isempty(market_prices) ? push!(market_prices, NaN) :
     push!(market_prices, market_prices[end])
     return false
@@ -329,12 +327,24 @@ function bid_match!(proposal, model, bidx, i)
 
         buyer1.bid_reserve -= buyer1_price
         proposal.type = :share
-        new_share1 = Order(; id = buyer1.id, price = buyer1_price, yes = proposal.yes, quantity = n_sold, type = :share)
+        new_share1 = Order(;
+            id = buyer1.id,
+            price = buyer1_price,
+            yes = proposal.yes,
+            quantity = n_sold,
+            type = :share
+        )
         push!(buyer1.shares[bidx], new_share1)
 
         buyer2_price = 100 - buyer1_price
         buyer2.bid_reserve -= buyer2_price
-        new_share2 = Order(; id = buyer2.id, price = buyer2_price, yes = order.yes, quantity = n_sold, type = :share)
+        new_share2 = Order(;
+            id = buyer2.id,
+            price = buyer2_price,
+            yes = order.yes,
+            quantity = n_sold,
+            type = :share
+        )
         push!(buyer2.shares[bidx], new_share2)
 
         push!(
@@ -368,17 +378,11 @@ function ask_match!(proposal, model, bidx, i)
         n_sold = min(proposal.quantity, order.quantity)
         proposal.quantity -= n_sold
         order.quantity -= n_sold
-        
+
         seller1.money += proposal.price
-        # shares = filter(x -> x.yes == proposal.yes, seller1.shares[bidx])
-        # _, idx = findmax(x -> x.price, shares)
-        # filter!(x -> x ≠ shares[idx], seller1.shares[bidx])
         decrement_shares!(seller1, proposal, n_sold, bidx)
 
         seller2.money += order.price
-        # shares = filter(x -> x.yes == order.yes, seller2.shares[bidx])
-        # _, idx = findmax(x -> x.price, shares)
-        # filter!(x -> x ≠ shares[idx], seller2.shares[bidx])
         decrement_shares!(seller2, order, n_sold, bidx)
 
         push!(

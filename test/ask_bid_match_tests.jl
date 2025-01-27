@@ -856,7 +856,7 @@ end
         Order(; id = 3, yes = true, type = :bid, quantity = 1, price = 40)
     )
 
-    model[2].money -= 40 
+    model[2].money -= 40
     model[2].bid_reserve += 40
 
     model[3].money -= 40

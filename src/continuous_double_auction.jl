@@ -334,10 +334,10 @@ end
 
 function get_max_bid(order_book; yes)
     bids1 = filter(x -> (x.yes == yes) && (x.type == :bid), order_book)
-    max_bid1, _ = isempty(bids1) ? (0.0, 0) : findmax(x -> x.price, bids1)
+    max_bid1, _ = isempty(bids1) ? (0, 0) : findmax(x -> x.price, bids1)
 
     bids2 = filter(x -> (x.yes ≠ yes) && (x.type == :ask), order_book)
-    max_bid2, _ = isempty(bids2) ? (0.0, 0) : findmax(x -> (100 - x.price), bids2)
+    max_bid2, _ = isempty(bids2) ? (0, 0) : findmax(x -> (100 - x.price), bids2)
     return max(max_bid1, max_bid2)
 end
 

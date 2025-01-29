@@ -195,21 +195,26 @@ function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
     is_complete ? (return true) : nothing
 
     remove_idx = Int[]
-    for i ∈ eachindex(order_book)
-        is_complete = ask_match!(proposal, model, bidx, i)
-        order_book[i].quantity == 0 ? push!(remove_idx, i) : nothing
-        is_complete ? break : nothing
+    if proposal.type == :ask 
+        for i ∈ eachindex(order_book)
+            is_complete = ask_match!(proposal, model, bidx, i)
+            order_book[i].quantity == 0 ? push!(remove_idx, i) : nothing
+            is_complete ? break : nothing
+        end
     end
 
     isempty(remove_idx) ? nothing : deleteat!(order_book, remove_idx)
     is_complete ? (return true) : nothing
 
     remove_idx = Int[]
-    for i ∈ eachindex(order_book)
-        is_complete = bid_match!(proposal, model, bidx, i)
-        order_book[i].quantity == 0 ? push!(remove_idx, i) : nothing
-        is_complete ? break : nothing
+    if proposal.type == :bid 
+        for i ∈ eachindex(order_book)
+            is_complete = bid_match!(proposal, model, bidx, i)
+            order_book[i].quantity == 0 ? push!(remove_idx, i) : nothing
+            is_complete ? break : nothing
+        end
     end
+
     isempty(remove_idx) ? nothing : deleteat!(order_book, remove_idx)
     is_complete ? (return true) : nothing
 
@@ -413,10 +418,10 @@ end
 
 function get_max_bid(order_book; yes)
     bids1 = filter(x -> (x.yes == yes) && (x.type == :bid), order_book)
-    max_bid1, _ = isempty(bids1) ? (0.0, 0) : findmax(x -> x.price, bids1)
+    max_bid1, _ = isempty(bids1) ? (0, 0) : findmax(x -> x.price, bids1)
 
     bids2 = filter(x -> (x.yes ≠ yes) && (x.type == :ask), order_book)
-    max_bid2, _ = isempty(bids2) ? (0.0, 0) : findmax(x -> (100 - x.price), bids2)
+    max_bid2, _ = isempty(bids2) ? (0, 0) : findmax(x -> (100 - x.price), bids2)
     return max(max_bid1, max_bid2)
 end
 

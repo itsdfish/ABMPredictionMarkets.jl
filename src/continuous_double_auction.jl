@@ -186,6 +186,7 @@ function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
     order_book = model.order_books[bidx]
     remove_idx = Int[]
     is_complete = false
+    sort!(order_book; by = x -> x.price, rev = proposal.type == :ask)
     for i ∈ eachindex(order_book)
         is_complete = ask_bid_match!(proposal, model, bidx, i)
         order_book[i].quantity == 0 ? push!(remove_idx, i) : nothing
@@ -195,7 +196,7 @@ function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
     is_complete ? (return true) : nothing
 
     remove_idx = Int[]
-    if proposal.type == :ask 
+    if proposal.type == :ask
         for i ∈ eachindex(order_book)
             is_complete = ask_match!(proposal, model, bidx, i)
             order_book[i].quantity == 0 ? push!(remove_idx, i) : nothing
@@ -207,7 +208,7 @@ function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
     is_complete ? (return true) : nothing
 
     remove_idx = Int[]
-    if proposal.type == :bid 
+    if proposal.type == :bid
         for i ∈ eachindex(order_book)
             is_complete = bid_match!(proposal, model, bidx, i)
             order_book[i].quantity == 0 ? push!(remove_idx, i) : nothing
@@ -245,11 +246,14 @@ function ask_bid_match!(proposal, model, bidx, i)
         seller = proposal.type == :ask ? model[proposal.id] : model[order.id]
         bid_order = proposal.type == :bid ? proposal : order
         ask_order = proposal.type == :ask ? proposal : order
+        price =
+            proposal.type == :bid ? min(bid_order.price, ask_order.price) :
+            max(bid_order.price, ask_order.price)
         exchange!(buyer, seller, bid_order, ask_order, proposal, bidx)
 
         push!(
             model.market_prices[bidx],
-            proposal.yes ? proposal.price / 100 : (100 - proposal.price) / 100
+            proposal.yes ? price / 100 : (100 - price) / 100
         )
         return proposal.quantity == 0
     end
@@ -269,9 +273,21 @@ function can_exchange(proposal, order)
     return false
 end
 
+# function can_exit_early(proposal, order)
+#     if (order.type == :bid) && (proposal.type == :ask) && (order.price < proposal.price)
+#         return true
+#     elseif (order.type == :ask) && (proposal.type == :bid) &&
+#            (order.price > proposal.price)
+#         return true
+#     end
+#     return false
+# end
+
 function exchange!(buyer, seller, bid_order, ask_order, proposal, bidx)
-    price = proposal.price
     n_sold = min(bid_order.quantity, ask_order.quantity)
+    price =
+        proposal.type == :bid ? min(bid_order.price, ask_order.price) :
+        max(bid_order.price, ask_order.price)
     total_cost = price * n_sold
     buyer.bid_reserve -= total_cost
     new_share =
@@ -320,7 +336,7 @@ If `bₑᵢ + b¬ₑⱼ = 1`, then create new shares for `i` and `j`.
 """
 function bid_match!(proposal, model, bidx, i)
     order = model.order_books[bidx][i]
-    if sums_to_100(proposal, order) && (order.yes ≠ proposal.yes) &&
+    if (order.yes ≠ proposal.yes) && sums_to_100(proposal, order) &&
        (order.type == proposal.type == :bid) && (order.id ≠ proposal.id)
         buyer1 = model[proposal.id]
         buyer2 = model[order.id]
@@ -375,7 +391,7 @@ If `aₑᵢ + a¬ₑⱼ = 1`, then remove shares and deduct ask amounts for `i` 
 """
 function ask_match!(proposal, model, bidx, i)
     order = model.order_books[bidx][i]
-    if sums_to_100(proposal, order) && (order.yes ≠ proposal.yes) &&
+    if (order.yes ≠ proposal.yes) && sums_to_100(proposal, order) &&
        (order.type == proposal.type == :ask) && (order.id ≠ proposal.id)
         seller1 = model[proposal.id]
         seller2 = model[order.id]

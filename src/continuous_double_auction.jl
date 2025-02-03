@@ -85,9 +85,10 @@ function bid(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
     judgment = yes ? agent.judgments[bidx] : (100 - agent.judgments[bidx])
     price = judgment > min_ask ? min_ask : sample_bid(judgment, agent.δ)
     price = min(price, agent.money)
-    agent.money -= price
-    agent.bid_reserve += price
-    return Order(; id = agent.id, yes, price, quantity = 1, type = :bid)
+    quantity = price == 0 ? 1 : min(agent.max_quantity, floor(agent.money / price))
+    agent.money -= price * quantity
+    agent.bid_reserve += price * quantity
+    return Order(; id = agent.id, yes, price, quantity, type = :bid)
 end
 
 """
@@ -131,7 +132,7 @@ function ask(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
     order_book = model.order_books[bidx]
     _, idx = findmax(x -> x.yes ? x.price : (100 - x.price), agent.shares[bidx])
     share = deepcopy(agent.shares[bidx][idx])
-    share.quantity = 1
+    share.quantity = min(share.quantity, agent.max_quantity)
     share.type = :ask
     max_bid, _ = get_market_info(order_book; yes = share.yes)
     judgment = share.yes ? agent.judgments[bidx] : (100 - agent.judgments[bidx])
@@ -186,6 +187,7 @@ function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
     order_book = model.order_books[bidx]
     remove_idx = Int[]
     is_complete = false
+    start_quantity = proposal.quantity
     sort!(order_book; by = x -> x.price, rev = proposal.type == :ask)
     for i ∈ eachindex(order_book)
         is_complete = ask_bid_match!(proposal, model, bidx, i)
@@ -203,7 +205,6 @@ function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
             is_complete ? break : nothing
         end
     end
-
     isempty(remove_idx) ? nothing : deleteat!(order_book, remove_idx)
     is_complete ? (return true) : nothing
 
@@ -215,14 +216,14 @@ function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
             is_complete ? break : nothing
         end
     end
-
     isempty(remove_idx) ? nothing : deleteat!(order_book, remove_idx)
     is_complete ? (return true) : nothing
-
     market_prices = model.market_prices[bidx]
     proposal.quantity > 0 ? push!(order_book, proposal) : nothing
-    isempty(market_prices) ? push!(market_prices, NaN) :
-    push!(market_prices, market_prices[end])
+    if proposal.quantity == start_quantity
+        isempty(market_prices) ? push!(market_prices, NaN) :
+        push!(market_prices, market_prices[end])
+    end
     return false
 end
 
@@ -296,17 +297,20 @@ function decrement_shares!(seller, proposal, n_sold, bidx)
     sort!(shares; by = x -> x.price)
     i = 1
     n_accounted = 0
+    n_remaining = n_sold
     removed_indices = Int[]
     while n_accounted ≠ n_sold
         share = shares[i]
-        n_remove = min(n_sold, share.quantity)
+        n_remove = min(n_remaining, share.quantity)
         share.quantity -= n_remove
         if share.quantity == 0
             push!(removed_indices, findfirst(x -> x == share, seller.shares[bidx]))
         end
         n_accounted += n_remove
+        n_remaining -= n_remove
         i += 1
     end
+    sort!(removed_indices)
     isempty(removed_indices) ? nothing : deleteat!(seller.shares[bidx], removed_indices)
     return nothing
 end
@@ -336,7 +340,7 @@ function bid_match!(proposal, model, bidx, i)
         order.quantity -= n_sold
         buyer1_price = proposal.price
 
-        buyer1.bid_reserve -= buyer1_price
+        buyer1.bid_reserve -= buyer1_price * n_sold
         proposal.type = :share
         new_share1 = Order(;
             id = buyer1.id,
@@ -348,7 +352,7 @@ function bid_match!(proposal, model, bidx, i)
         add_shares!(buyer1.shares[bidx], new_share1)
 
         buyer2_price = 100 - buyer1_price
-        buyer2.bid_reserve -= buyer2_price
+        buyer2.bid_reserve -= buyer2_price * n_sold
         new_share2 = Order(;
             id = buyer2.id,
             price = buyer2_price,
@@ -379,14 +383,14 @@ If an entry with the target price exists, the quantity is added to that entry
 - `share`: a share to be added to `shares`
 """
 function add_shares!(shares, share)
-    for s ∈ shares 
+    for s ∈ shares
         if (s.price == share.price) && (s.yes == share.yes)
             s.quantity += share.quantity
-            return nothing 
+            return nothing
         end
     end
     push!(shares, share)
-    return nothing 
+    return nothing
 end
 
 """

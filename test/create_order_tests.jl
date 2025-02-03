@@ -30,6 +30,7 @@
         judgments = [50, 20, 30, 20, 30],
         money = 0,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = shares
     )
 
@@ -72,6 +73,7 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 

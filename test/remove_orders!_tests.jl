@@ -36,6 +36,7 @@
         judgments = [50, 20, 30, 20, 30],
         money = 45,
         bid_reserve = 55,
+        max_quantity = 1,
         shares = shares
     )
 

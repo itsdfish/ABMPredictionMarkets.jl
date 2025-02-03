@@ -10,6 +10,7 @@ An agent that sells and buys shares in a prediction market.
 - `δ::Int`: range of bid and ask noise 
 - `money::Int`: the agent's current money available in cents
 - `bid_reserve`: bid amount is accounted here to ensure sufficient funds
+- `max_quantity`: maximum quantity traded per iteration
 - `shares::Vector{Order}`: the shares owned by the agent 
 """
 @agent struct TestAgent(NoSpaceAgent) <: MarketAgent
@@ -17,6 +18,7 @@ An agent that sells and buys shares in a prediction market.
     δ::Int
     money::Int
     bid_reserve::Int
+    max_quantity::Int
     shares::Vector{Vector{Order}}
 end
 
@@ -50,6 +52,7 @@ function initialize(
     η,
     δ,
     money,
+    max_quantity = 1,
     info_times = Int[]
 )
     space = nothing
@@ -69,6 +72,7 @@ function initialize(
             money,
             bid_reserve = 0,
             δ,
+            max_quantity,
             shares = init(Order, n_markets)
         )
     end

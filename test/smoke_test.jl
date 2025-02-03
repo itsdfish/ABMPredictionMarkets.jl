@@ -1,7 +1,7 @@
 @testitem "smoke test" begin
     using ABMPredictionMarkets
     using Agents
-    using Plots
+    # using Plots
     using Statistics
     using Test
 
@@ -16,21 +16,22 @@
         n_agents,
         μ,
         η = 20.0,
-        money = 10_000,
-        δ = 3
+        money = 20_000,
+        δ = 3,
+        max_quantity = 3
     )
 
     run!(model, n_days)
 
-    market_prices = map(i -> model.market_prices[i][1:n_agents:end], 1:n_markets)
-    plot(
-        market_prices,
-        ylims = (0, 1),
-        ylabel = "Price",
-        grid = false,
-        legendtitle = "Markets"
-    )
-    hline!(μ, color = :black, linestyle = :dash, label = nothing)
+    # market_prices = map(i -> model.market_prices[i][1:n_agents:end], 1:n_markets)
+    # plot(
+    #     market_prices,
+    #     ylims = (0, 1),
+    #     ylabel = "Price",
+    #     grid = false,
+    #     legendtitle = "Markets"
+    # )
+    # hline!(μ, color = :black, linestyle = :dash, label = nothing)
 
     # depth_charts = plot_depth_chart.(model.order_books; ylims = (0, 50))
     # plot(depth_charts...)

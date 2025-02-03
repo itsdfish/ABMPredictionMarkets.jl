@@ -26,10 +26,11 @@
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    bid = Order(; id = 1, yes = true, type = :bid, price = 20)
+    bid = Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 20)
     bidx = 1
     success = transact!(bid, model, bidx)
 
@@ -75,6 +76,7 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
@@ -84,14 +86,21 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    push!(model[2].shares[bidx], Order(; id = 2, yes = true, type = :share, price = 20))
+    push!(
+        model[2].shares[bidx],
+        Order(; id = 2, yes = true, type = :share, quantity = 1, price = 20)
+    )
 
-    push!(model.order_books[bidx], Order(; id = 2, yes = true, type = :ask, price = 39))
+    push!(
+        model.order_books[bidx],
+        Order(; id = 2, yes = true, type = :ask, quantity = 1, price = 41)
+    )
 
-    bid = Order(; id = 1, yes = true, type = :bid, price = 40)
+    bid = Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 40)
 
     success = transact!(bid, model, bidx)
 
@@ -141,6 +150,7 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
@@ -150,14 +160,21 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    push!(model[2].shares[bidx], Order(; id = 2, yes = true, type = :share, price = 20))
+    push!(
+        model[2].shares[bidx],
+        Order(; id = 2, yes = true, type = :share, quantity = 1, price = 20)
+    )
 
-    push!(model.order_books[bidx], Order(; id = 2, yes = true, type = :ask, price = 40))
+    push!(
+        model.order_books[bidx],
+        Order(; id = 2, yes = true, type = :ask, quantity = 1, price = 40)
+    )
 
-    bid = Order(; id = 1, yes = false, type = :bid, price = 40)
+    bid = Order(; id = 1, yes = false, type = :bid, quantity = 1, price = 40)
 
     success = transact!(bid, model, bidx)
 
@@ -207,6 +224,7 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
@@ -216,14 +234,21 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    push!(model[2].shares[bidx], Order(; id = 2, yes = true, type = :share, price = 20))
+    push!(
+        model[2].shares[bidx],
+        Order(; id = 2, yes = true, type = :share, quantity = 1, price = 20)
+    )
 
-    push!(model.order_books[bidx], Order(; id = 2, yes = true, type = :ask, price = 40))
+    push!(
+        model.order_books[bidx],
+        Order(; id = 2, yes = true, type = :ask, quantity = 1, price = 40)
+    )
 
-    bid = Order(; id = 1, yes = true, type = :ask, price = 40)
+    bid = Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 40)
 
     success = transact!(bid, model, bidx)
 
@@ -243,7 +268,7 @@ end
     @test !success
 end
 
-@testitem "does not match 5" begin
+@testitem "no not match 5" begin
     using Agents
     using ABMPredictionMarkets
     using ABMPredictionMarkets: ask_bid_match!
@@ -273,6 +298,7 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
@@ -282,14 +308,21 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    push!(model[2].shares[bidx], Order(; id = 2, yes = true, type = :share, price = 20))
+    push!(
+        model[2].shares[bidx],
+        Order(; id = 2, yes = true, type = :share, quantity = 1, price = 20)
+    )
 
-    push!(model.order_books[bidx + 1], Order(; id = 2, yes = true, type = :ask, price = 40))
+    push!(
+        model.order_books[bidx + 1],
+        Order(; id = 2, yes = true, type = :ask, quantity = 1, price = 40)
+    )
 
-    bid = Order(; id = 1, yes = true, type = :bid, price = 40)
+    bid = Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 40)
 
     success = transact!(bid, model, bidx)
 
@@ -341,6 +374,7 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
@@ -350,14 +384,21 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    push!(model[2].shares[bidx], Order(; id = 2, yes = true, type = :share, price = 20))
+    push!(
+        model[2].shares[bidx],
+        Order(; id = 2, yes = true, type = :share, quantity = 1, price = 20)
+    )
 
-    push!(model.order_books[bidx], Order(; id = 2, yes = true, type = :ask, price = 40))
+    push!(
+        model.order_books[bidx],
+        Order(; id = 2, yes = true, type = :ask, quantity = 1, price = 40)
+    )
 
-    bid = Order(; id = 1, yes = true, type = :bid, price = 40)
+    bid = Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 40)
     model[1].money -= bid.price
     model[1].bid_reserve += bid.price
 
@@ -370,7 +411,7 @@ end
         @test isempty(model.order_books[i])
         if i == bidx
             @test model[1].shares[i] ==
-                  [Order(; id = 1, yes = true, type = :share, price = 40)]
+                  [Order(; id = 1, yes = true, type = :share, quantity = 1, price = 40)]
         else
             @test isempty(model[1].shares[i])
             @test isempty(model[2].shares[i])
@@ -409,6 +450,7 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
@@ -418,16 +460,23 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    push!(model[1].shares[bidx], Order(; id = 1, yes = true, type = :share, price = 20))
+    push!(
+        model[1].shares[bidx],
+        Order(; id = 1, yes = true, type = :share, quantity = 1, price = 20)
+    )
 
-    push!(model.order_books[bidx], Order(; id = 2, yes = true, type = :bid, price = 40))
+    push!(
+        model.order_books[bidx],
+        Order(; id = 2, yes = true, type = :bid, quantity = 1, price = 40)
+    )
     model[2].money -= 40
     model[2].bid_reserve += 40
 
-    ask = Order(; id = 1, yes = true, type = :ask, price = 40)
+    ask = Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 40)
 
     success = transact!(ask, model, bidx)
 
@@ -438,8 +487,688 @@ end
         @test isempty(model.order_books[i])
         if i == bidx
             @test model[2].shares[i] ==
-                  [Order(; id = 2, yes = true, type = :share, price = 40)]
+                  [Order(; id = 2, yes = true, type = :share, quantity = 1, price = 40)]
         else
+            @test isempty(model[1].shares[i])
+            @test isempty(model[2].shares[i])
+        end
+    end
+    @test success
+end
+
+@testitem "match bid partial fulfillment" begin
+    using Agents
+    using ABMPredictionMarkets
+    using ABMPredictionMarkets: ask_bid_match!
+    using ABMPredictionMarkets: transact!
+    using ABMPredictionMarkets: init
+    using Test
+
+    include("test_agent.jl")
+
+    n_markets = 4
+    bidx = 1
+
+    model = initialize(
+        TestAgent;
+        n_agents = 4,
+        μ = [0.20, 0.25, 0.10, 0.45],
+        η = 20.0,
+        money = 10_000,
+        δ = 1
+    )
+
+    remove_all!(model)
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    push!(
+        model[2].shares[bidx],
+        Order(; id = 2, yes = true, type = :share, quantity = 4, price = 20)
+    )
+
+    push!(
+        model.order_books[bidx],
+        Order(; id = 2, yes = true, type = :ask, quantity = 2, price = 40)
+    )
+    model[1].money -= 40 * 2
+    model[1].bid_reserve += 40 * 2
+
+    bid = Order(; id = 1, yes = true, type = :bid, quantity = 3, price = 40)
+
+    success = transact!(bid, model, bidx)
+
+    @test model[2].money ≈ 280
+    @test model[1].money ≈ 120
+    @test model[1].bid_reserve == 0
+    @test bid.quantity == 1
+    for i ∈ 1:n_markets
+        if i == bidx
+            @test model[1].shares[i] ==
+                  [Order(; id = 1, yes = true, type = :share, quantity = 2, price = 40)]
+
+            @test model.order_books[i] ==
+                  [Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 40)]
+        else
+            @test isempty(model.order_books[i])
+            @test isempty(model[1].shares[i])
+            @test isempty(model[2].shares[i])
+        end
+    end
+    @test !success
+end
+
+@testitem "match ask partial fulfillment" begin
+    using Agents
+    using ABMPredictionMarkets
+    using ABMPredictionMarkets: ask_bid_match!
+    using ABMPredictionMarkets: transact!
+    using ABMPredictionMarkets: init
+    using Test
+
+    include("test_agent.jl")
+
+    n_markets = 4
+    bidx = 1
+
+    model = initialize(
+        TestAgent;
+        n_agents = 4,
+        μ = [0.20, 0.25, 0.10, 0.45],
+        η = 20.0,
+        money = 10_000,
+        δ = 1
+    )
+
+    remove_all!(model)
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    push!(
+        model[1].shares[bidx],
+        Order(; id = 1, yes = true, type = :share, quantity = 4, price = 20)
+    )
+
+    push!(
+        model.order_books[bidx],
+        Order(; id = 2, yes = true, type = :bid, quantity = 2, price = 40)
+    )
+    model[2].money -= 40 * 2
+    model[2].bid_reserve += 40 * 2
+
+    ask = Order(; id = 1, yes = true, type = :ask, quantity = 3, price = 40)
+
+    success = transact!(ask, model, bidx)
+
+    @test model[1].money ≈ 280
+    @test model[2].money ≈ 120
+    @test model[2].bid_reserve == 0
+    @test ask.quantity == 1
+    for i ∈ 1:n_markets
+        if i == bidx
+            @test model[2].shares[i] ==
+                  [Order(; id = 2, yes = true, type = :share, quantity = 2, price = 40)]
+
+            @test model.order_books[i] ==
+                  [Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 40)]
+        else
+            @test isempty(model.order_books[i])
+            @test isempty(model[1].shares[i])
+            @test isempty(model[2].shares[i])
+        end
+    end
+    @test !success
+end
+
+@testitem "match ask crossing limit" begin
+    using Agents
+    using ABMPredictionMarkets
+    using ABMPredictionMarkets: ask_bid_match!
+    using ABMPredictionMarkets: transact!
+    using ABMPredictionMarkets: init
+    using Test
+
+    include("test_agent.jl")
+
+    n_markets = 4
+    bidx = 1
+
+    model = initialize(
+        TestAgent;
+        n_agents = 4,
+        μ = [0.20, 0.25, 0.10, 0.45],
+        η = 20.0,
+        money = 10_000,
+        δ = 1
+    )
+
+    remove_all!(model)
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    push!(
+        model[1].shares[bidx],
+        Order(; id = 1, yes = true, type = :share, quantity = 4, price = 20)
+    )
+
+    push!(
+        model.order_books[bidx],
+        Order(; id = 2, yes = true, type = :bid, quantity = 2, price = 40)
+    )
+
+    push!(
+        model.order_books[bidx],
+        Order(; id = 3, yes = true, type = :bid, quantity = 2, price = 35)
+    )
+
+    model[2].money -= 40 * 2
+    model[2].bid_reserve += 40 * 2
+
+    model[3].money -= 35 * 2
+    model[3].bid_reserve += 35 * 2
+
+    ask = Order(; id = 1, yes = true, type = :ask, quantity = 2, price = 30)
+
+    success = transact!(ask, model, bidx)
+
+    @test model[1].money ≈ 280
+    @test model[2].money ≈ 120
+    @test model[3].money ≈ 130
+    @test model[2].bid_reserve == 0
+    @test model[3].bid_reserve == 70
+    @test ask.quantity == 0
+    for i ∈ 1:n_markets
+        if i == bidx
+            @test model[1].shares[i] ==
+                  [Order(; id = 1, yes = true, type = :share, quantity = 2, price = 20)]
+            @test model[2].shares[i] ==
+                  [Order(; id = 2, yes = true, type = :share, quantity = 2, price = 40)]
+            @test isempty(model[3].shares[i])
+            @test model.order_books[i] ==
+                  [Order(; id = 3, yes = true, type = :bid, quantity = 2, price = 35)]
+        else
+            @test isempty(model[1].shares[i])
+            @test isempty(model[2].shares[i])
+        end
+    end
+    @test success
+end
+
+@testitem "match bid crossing limit" begin
+    using Agents
+    using ABMPredictionMarkets
+    using ABMPredictionMarkets: ask_bid_match!
+    using ABMPredictionMarkets: transact!
+    using ABMPredictionMarkets: init
+    using Test
+
+    include("test_agent.jl")
+
+    n_markets = 4
+    bidx = 1
+
+    model = initialize(
+        TestAgent;
+        n_agents = 4,
+        μ = [0.20, 0.25, 0.10, 0.45],
+        η = 20.0,
+        money = 10_000,
+        δ = 1
+    )
+
+    remove_all!(model)
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    push!(
+        model[2].shares[bidx],
+        Order(; id = 2, yes = true, type = :share, quantity = 4, price = 20)
+    )
+
+    push!(
+        model[3].shares[bidx],
+        Order(; id = 3, yes = true, type = :share, quantity = 4, price = 20)
+    )
+
+    push!(
+        model.order_books[bidx],
+        Order(; id = 3, yes = true, type = :ask, quantity = 2, price = 45)
+    )
+
+    push!(
+        model.order_books[bidx],
+        Order(; id = 2, yes = true, type = :ask, quantity = 2, price = 40)
+    )
+
+    model[1].money -= 50 * 2
+    model[1].bid_reserve += 50 * 2
+
+    bid = Order(; id = 1, yes = true, type = :bid, quantity = 2, price = 50)
+
+    success = transact!(bid, model, bidx)
+
+    @test model[1].money ≈ 100
+    @test model[2].money ≈ 280
+    @test model[3].money ≈ 200
+    @test model[1].bid_reserve == 20
+    @test bid.quantity == 0
+    for i ∈ 1:n_markets
+        if i == bidx
+            @test model[1].shares[i] ==
+                  [Order(; id = 1, yes = true, type = :share, quantity = 2, price = 40)]
+            @test model[2].shares[i] ==
+                  [Order(; id = 2, yes = true, type = :share, quantity = 2, price = 20)]
+            @test model[3].shares[i] ==
+                  [Order(; id = 3, yes = true, type = :share, quantity = 4, price = 20)]
+            @test model.order_books[i] ==
+                  [Order(; id = 3, yes = true, type = :ask, quantity = 2, price = 45)]
+        else
+            @test isempty(model[1].shares[i])
+            @test isempty(model[2].shares[i])
+        end
+    end
+    @test success
+end
+
+@testitem "multiple match ask partial fulfillment" begin
+    using Agents
+    using ABMPredictionMarkets
+    using ABMPredictionMarkets: ask_bid_match!
+    using ABMPredictionMarkets: transact!
+    using ABMPredictionMarkets: init
+    using Test
+
+    include("test_agent.jl")
+
+    n_markets = 4
+    bidx = 1
+
+    model = initialize(
+        TestAgent;
+        n_agents = 4,
+        μ = [0.20, 0.25, 0.10, 0.45],
+        η = 20.0,
+        money = 10_000,
+        δ = 1
+    )
+
+    remove_all!(model)
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    push!(
+        model[1].shares[bidx],
+        Order(; id = 1, yes = true, type = :share, quantity = 3, price = 20)
+    )
+
+    push!(
+        model.order_books[bidx],
+        Order(; id = 2, yes = true, type = :bid, quantity = 1, price = 40)
+    )
+
+    push!(
+        model.order_books[bidx],
+        Order(; id = 3, yes = true, type = :bid, quantity = 1, price = 40)
+    )
+
+    model[2].money -= 40
+    model[2].bid_reserve += 40
+
+    model[3].money -= 40
+    model[3].bid_reserve += 40
+
+    ask = Order(; id = 1, yes = true, type = :ask, quantity = 3, price = 40)
+
+    success = transact!(ask, model, bidx)
+
+    @test model[1].money ≈ 280
+    @test model[2].money ≈ 160
+    @test model[2].bid_reserve == 0
+    @test model[3].money ≈ 160
+    @test model[3].bid_reserve == 0
+    @test ask.quantity == 1
+    for i ∈ 1:n_markets
+        if i == bidx
+            @test model[2].shares[i] ==
+                  [Order(; id = 2, yes = true, type = :share, quantity = 1, price = 40)]
+            @test model[3].shares[i] ==
+                  [Order(; id = 3, yes = true, type = :share, quantity = 1, price = 40)]
+            @test model.order_books[i] ==
+                  [Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 40)]
+        else
+            @test isempty(model.order_books[i])
+            @test isempty(model[1].shares[i])
+            @test isempty(model[2].shares[i])
+        end
+    end
+    @test !success
+end
+
+@testitem "crossing limit bid multiple order" begin
+    using Agents
+    using ABMPredictionMarkets
+    using ABMPredictionMarkets: ask_bid_match!
+    using ABMPredictionMarkets: transact!
+    using ABMPredictionMarkets: init
+    using Test
+
+    include("test_agent.jl")
+
+    n_markets = 4
+    bidx = 1
+
+    model = initialize(
+        TestAgent;
+        n_agents = 4,
+        μ = [0.20, 0.25, 0.10, 0.45],
+        η = 20.0,
+        money = 10_000,
+        δ = 1
+    )
+
+    remove_all!(model)
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    push!(
+        model[2].shares[bidx],
+        Order(; id = 2, yes = true, type = :share, quantity = 3, price = 20)
+    )
+
+    push!(
+        model[3].shares[bidx],
+        Order(; id = 3, yes = true, type = :share, quantity = 3, price = 15)
+    )
+
+    push!(
+        model.order_books[bidx],
+        Order(; id = 2, yes = true, type = :ask, quantity = 3, price = 40)
+    )
+
+    push!(
+        model.order_books[bidx],
+        Order(; id = 3, yes = true, type = :ask, quantity = 3, price = 35)
+    )
+
+    model[1].money -= 40 * 4
+    model[1].bid_reserve += 40 * 4
+
+    bid = Order(; id = 1, yes = true, type = :bid, quantity = 4, price = 40)
+
+    success = transact!(bid, model, bidx)
+
+    @test model[1].money ≈ 40
+    @test model[2].money ≈ 240
+    @test model[3].money ≈ 305
+    @test model[1].bid_reserve == 15
+    @test bid.quantity == 0
+    for i ∈ 1:n_markets
+        if i == bidx
+            @test model[1].shares[i] ==
+                  [
+                Order(; id = 1, yes = true, type = :share, quantity = 3, price = 35),
+                Order(; id = 1, yes = true, type = :share, quantity = 1, price = 40)
+            ]
+            @test model[2].shares[i] ==
+                  [Order(; id = 2, yes = true, type = :share, quantity = 2, price = 20)]
+            @test isempty(model[3].shares[i])
+            @test model.order_books[i] ==
+                  [Order(; id = 2, yes = true, type = :ask, quantity = 2, price = 40)]
+        else
+            @test isempty(model.order_books[i])
+            @test isempty(model[1].shares[i])
+            @test isempty(model[2].shares[i])
+            @test isempty(model[3].shares[i])
+        end
+    end
+    @test success
+end
+
+@testitem "crossing limit ask multiple order" begin
+    using Agents
+    using ABMPredictionMarkets
+    using ABMPredictionMarkets: ask_bid_match!
+    using ABMPredictionMarkets: transact!
+    using ABMPredictionMarkets: init
+    using Test
+
+    include("test_agent.jl")
+
+    n_markets = 4
+    bidx = 1
+
+    model = initialize(
+        TestAgent;
+        n_agents = 4,
+        μ = [0.20, 0.25, 0.10, 0.45],
+        η = 20.0,
+        money = 10_000,
+        δ = 1
+    )
+
+    remove_all!(model)
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    add_agent!(
+        model;
+        δ = 3,
+        judgments = [50, 20, 30, 20, 30],
+        money = 200,
+        bid_reserve = 0,
+        max_quantity = 1,
+        shares = init(Order, n_markets)
+    )
+
+    push!(
+        model[1].shares[bidx],
+        Order(; id = 1, yes = true, type = :share, quantity = 3, price = 20)
+    )
+
+    push!(
+        model.order_books[bidx],
+        Order(; id = 2, yes = true, type = :bid, quantity = 3, price = 40)
+    )
+
+    push!(
+        model.order_books[bidx],
+        Order(; id = 3, yes = true, type = :bid, quantity = 2, price = 50)
+    )
+
+    model[2].money -= 40 * 3
+    model[2].bid_reserve += 40 * 3
+
+    model[3].money -= 50 * 2
+    model[3].bid_reserve += 50 * 2
+
+    ask = Order(; id = 1, yes = true, type = :ask, quantity = 3, price = 40)
+
+    success = transact!(ask, model, bidx)
+
+    @test model[1].money ≈ 340
+    @test model[2].money ≈ 80
+    @test model[3].money ≈ 100
+    @test model[1].bid_reserve == 0
+    @test model[2].bid_reserve == 80
+    @test model[3].bid_reserve == 0
+    @test ask.quantity == 0
+    for i ∈ 1:n_markets
+        if i == bidx
+            @test isempty(model[1].shares[i])
+            @test model[2].shares[i] ==
+                  [Order(; id = 2, yes = true, type = :share, quantity = 1, price = 40)]
+            @test model[3].shares[i] ==
+                  [Order(; id = 3, yes = true, type = :share, quantity = 2, price = 50)]
+            @test model.order_books[i] ==
+                  [Order(; id = 2, yes = true, type = :bid, quantity = 2, price = 40)]
+        else
+            @test isempty(model.order_books[i])
             @test isempty(model[1].shares[i])
             @test isempty(model[2].shares[i])
         end

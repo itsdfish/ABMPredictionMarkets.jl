@@ -64,8 +64,9 @@ function remove_orders!(agent::MarketAgent, model, bidx)
     filter!(x -> x.id ≠ agent.id, order_book)
     for order ∈ removed_orders
         if order.type == :bid
-            agent.bid_reserve -= order.price
-            agent.money += order.price
+            price = order.price * order.quantity
+            agent.bid_reserve -= price
+            agent.money += price
         end
     end
     return nothing

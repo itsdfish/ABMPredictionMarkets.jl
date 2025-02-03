@@ -27,12 +27,13 @@
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    share = Order(; id = 1, yes = false, type = :share, price = 20)
+    share = Order(; id = 1, yes = false, type = :share, quantity = 1, price = 20)
     push!(agent.shares[bidx], share)
-    ask = Order(; id = 1, yes = true, type = :ask, price = 20)
+    ask = Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 20)
 
     success = transact!(ask, model, bidx)
 
@@ -78,6 +79,7 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
@@ -87,16 +89,17 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    share1 = Order(; id = 1, yes = false, type = :share, price = 20)
+    share1 = Order(; id = 1, yes = false, type = :share, quantity = 1, price = 20)
     push!(model[1].shares[bidx], share1)
 
-    share2 = Order(; id = 2, yes = true, type = :share, price = 20)
+    share2 = Order(; id = 2, yes = true, type = :share, quantity = 1, price = 20)
     push!(model[2].shares[bidx], share2)
 
-    ask = Order(; id = 1, yes = false, type = :ask, price = 39)
+    ask = Order(; id = 1, yes = false, type = :ask, quantity = 1, price = 39)
 
     success = transact!(ask, model, bidx)
 
@@ -145,6 +148,7 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
@@ -154,19 +158,20 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    share1 = Order(; id = 1, yes = false, type = :share, price = 20)
+    share1 = Order(; id = 1, yes = false, type = :share, quantity = 1, price = 20)
     push!(model[1].shares[bidx], share1)
 
-    share2 = Order(; id = 2, yes = true, type = :share, price = 20)
+    share2 = Order(; id = 2, yes = true, type = :share, quantity = 1, price = 20)
     push!(model[2].shares[bidx], share2)
 
-    share = Order(; id = 2, yes = true, type = :ask, price = 60)
+    share = Order(; id = 2, yes = true, type = :ask, quantity = 1, price = 60)
     push!(model.order_books[bidx], share)
 
-    ask = Order(; id = 1, yes = true, type = :ask, price = 40)
+    ask = Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 40)
 
     success = transact!(ask, model, bidx)
 
@@ -215,6 +220,7 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
@@ -224,19 +230,20 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    share1 = Order(; id = 1, yes = false, type = :share, price = 20)
+    share1 = Order(; id = 1, yes = false, type = :share, quantity = 1, price = 20)
     push!(model[1].shares[bidx], share1)
 
-    share2 = Order(; id = 2, yes = true, type = :share, price = 20)
+    share2 = Order(; id = 2, yes = true, type = :share, quantity = 1, price = 20)
     push!(model[2].shares[bidx], share2)
 
-    share = Order(; id = 2, yes = false, type = :bid, price = 60)
+    share = Order(; id = 2, yes = false, type = :bid, quantity = 1, price = 60)
     push!(model.order_books[bidx], share)
 
-    ask = Order(; id = 1, yes = true, type = :ask, price = 40)
+    ask = Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 40)
 
     success = transact!(ask, model, bidx)
 
@@ -285,6 +292,7 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
@@ -294,19 +302,20 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    share1 = Order(; id = 1, yes = false, type = :share, price = 20)
+    share1 = Order(; id = 1, yes = false, type = :share, quantity = 1, price = 20)
     push!(model[1].shares[bidx], share1)
 
-    share2 = Order(; id = 2, yes = true, type = :share, price = 20)
+    share2 = Order(; id = 2, yes = true, type = :share, quantity = 1, price = 20)
     push!(model[2].shares[bidx], share2)
 
-    share = Order(; id = 2, yes = false, type = :bid, price = 60)
+    share = Order(; id = 2, yes = false, type = :bid, quantity = 1, price = 60)
     push!(model.order_books[bidx + 1], share)
 
-    ask = Order(; id = 1, yes = true, type = :ask, price = 40)
+    ask = Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 40)
 
     success = transact!(ask, model, bidx)
 
@@ -356,6 +365,7 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
@@ -365,23 +375,24 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = init(Order, n_markets)
     )
 
-    share1a = Order(; id = 1, yes = true, type = :share, price = 20)
-    share1b = Order(; id = 1, yes = false, type = :share, price = 20)
+    share1a = Order(; id = 1, yes = true, type = :share, quantity = 1, price = 20)
+    share1b = Order(; id = 1, yes = false, type = :share, quantity = 1, price = 20)
     push!(model[1].shares[bidx], share1a)
     push!(model[1].shares[bidx], share1b)
 
-    share2a = Order(; id = 2, yes = true, type = :share, price = 20)
-    share2b = Order(; id = 2, yes = false, type = :share, price = 20)
+    share2a = Order(; id = 2, yes = true, type = :share, quantity = 1, price = 20)
+    share2b = Order(; id = 2, yes = false, type = :share, quantity = 1, price = 20)
     push!(model[2].shares[bidx], share2a)
     push!(model[2].shares[bidx], share2b)
 
-    share = Order(; id = 2, yes = false, type = :ask, price = 60)
+    share = Order(; id = 2, yes = false, type = :ask, quantity = 1, price = 60)
     push!(model.order_books[bidx], share)
 
-    ask = Order(; id = 1, yes = true, type = :ask, price = 40)
+    ask = Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 40)
 
     success = transact!(ask, model, bidx)
 

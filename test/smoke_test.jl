@@ -16,8 +16,9 @@
         n_agents,
         μ,
         η = 20.0,
-        money = 10_000,
-        δ = 3
+        money = 20_000,
+        δ = 3,
+        max_quantity = 3
     )
 
     run!(model, n_days)
@@ -28,9 +29,9 @@
     #     ylims = (0, 1),
     #     ylabel = "Price",
     #     grid = false,
-    #     legendtitle = "Markets",
+    #     legendtitle = "Markets"
     # )
-    # hline!(μ, color = :black, linestyle = :dash)
+    # hline!(μ, color = :black, linestyle = :dash, label = nothing)
 
     # depth_charts = plot_depth_chart.(model.order_books; ylims = (0, 50))
     # plot(depth_charts...)

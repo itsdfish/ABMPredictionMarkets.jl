@@ -26,8 +26,8 @@
     remove_all!(model)
 
     shares = [[
-        Order(; id = 1, yes = true, type = :share, price = 20),
-        Order(; id = 1, yes = true, type = :share, price = 15)
+        Order(; id = 1, yes = true, type = :share, quantity = 1, price = 20),
+        Order(; id = 1, yes = true, type = :share, quantity = 1, price = 15)
     ]]
 
     agent = add_agent!(
@@ -36,18 +36,20 @@
         judgments = [50, 20, 30, 20, 30],
         money = 45,
         bid_reserve = 55,
+        max_quantity = 1,
         shares = shares
     )
 
     model.order_books[bidx] = [
-        Order(; id = 1, yes = true, type = :bid, price = 55),
-        Order(; id = 1, yes = true, type = :ask, price = 45),
-        Order(; id = 2, yes = true, type = :bid, price = 40)
+        Order(; id = 1, yes = true, type = :bid, quantity = 1, price = 55),
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 45),
+        Order(; id = 2, yes = true, type = :bid, quantity = 1, price = 40)
     ]
 
     remove_orders!(agent, model, bidx)
 
-    @test model.order_books[bidx] == [Order(; id = 2, yes = true, type = :bid, price = 40)]
+    @test model.order_books[bidx] ==
+          [Order(; id = 2, yes = true, type = :bid, quantity = 1, price = 40)]
     @test agent.money == 100
     @test agent.bid_reserve == 0
 end

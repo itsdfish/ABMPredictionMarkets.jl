@@ -24,8 +24,8 @@
     remove_all!(model)
 
     shares = [[
-        Order(; id = 1, yes = true, type = :share, price = 20),
-        Order(; id = 1, yes = true, type = :share, price = 15)
+        Order(; id = 1, yes = true, type = :share, quantity = 1, price = 20),
+        Order(; id = 1, yes = true, type = :share, quantity = 1, price = 15)
     ]]
 
     agent = add_agent!(
@@ -34,12 +34,13 @@
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = shares
     )
 
     model.order_books[bidx] = [
-        Order(; id = 1, yes = true, type = :ask, price = 20),
-        Order(; id = 2, yes = true, type = :ask, price = 10)
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 20),
+        Order(; id = 2, yes = true, type = :ask, quantity = 1, price = 10)
     ]
 
     remove_orders!(agent, model, bidx)
@@ -49,7 +50,8 @@
     @test proposal.yes
     @test proposal.id == 1
     @test proposal.type == :bid
-    @test model.order_books[bidx] == [Order(; id = 2, yes = true, type = :ask, price = 10)]
+    @test model.order_books[bidx] ==
+          [Order(; id = 2, yes = true, type = :ask, quantity = 1, price = 10)]
     @test agent.shares == shares
     @test agent.money == 90
     @test agent.bid_reserve == 10
@@ -82,8 +84,8 @@ end
     remove_all!(model)
 
     shares = [[
-        Order(; id = 1, yes = true, type = :share, price = 20),
-        Order(; id = 1, yes = true, type = :share, price = 15)
+        Order(; id = 1, yes = true, type = :share, quantity = 1, price = 20),
+        Order(; id = 1, yes = true, type = :share, quantity = 1, price = 15)
     ]]
 
     agent = add_agent!(
@@ -92,12 +94,13 @@ end
         judgments = [50, 20, 30, 20, 30],
         money = 100,
         bid_reserve = 0,
+        max_quantity = 1,
         shares = shares
     )
 
     model.order_books[bidx] = [
-        Order(; id = 1, yes = true, type = :ask, price = 55),
-        Order(; id = 2, yes = true, type = :ask, price = 60)
+        Order(; id = 1, yes = true, type = :ask, quantity = 1, price = 55),
+        Order(; id = 2, yes = true, type = :ask, quantity = 1, price = 60)
     ]
 
     remove_orders!(agent, model, bidx)
@@ -107,7 +110,8 @@ end
     @test proposal.yes
     @test proposal.id == 1
     @test proposal.type == :bid
-    @test model.order_books[bidx] == [Order(; id = 2, yes = true, type = :ask, price = 60)]
+    @test model.order_books[bidx] ==
+          [Order(; id = 2, yes = true, type = :ask, quantity = 1, price = 60)]
     @test agent.shares == shares
     @test agent.money == (100 - proposal.price[bidx])
     @test agent.bid_reserve == proposal.price[bidx]

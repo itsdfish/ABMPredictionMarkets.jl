@@ -30,14 +30,19 @@ function plot_depth_chart(order_book::Vector{Order}; config...)
 
     bids = map(b -> b.price / 100, bid_shares1)
     push!(bids, map(b -> (100 - b.price) / 100, bid_shares2)...)
+    bid_weights = map(b -> b.quantity, bid_shares1)
+    push!(bid_weights, map(b -> b.quantity, bid_shares2)...)
 
     asks_shares1 = filter(x -> x.yes && (x.type == :ask), order_book)
     asks_shares2 = filter(x -> !x.yes && (x.type == :bid), order_book)
+
     asks = map(a -> a.price / 100, asks_shares1)
     push!(asks, map(a -> (100 - a.price) / 100, asks_shares2)...)
+    ask_weights = map(b -> b.quantity, asks_shares1)
+    push!(ask_weights, map(b -> b.quantity, asks_shares2)...)
 
-    ask_ecdf = ecdf(asks)
-    bid_ecdf = ecdf(bids)
+    ask_ecdf = ecdf(asks; weights = Weights(ask_weights))
+    bid_ecdf = ecdf(bids; weights = Weights(bid_weights))
     p_ask = isempty(asks) ? range(0, 0, 0) : range(extrema(asks)..., length = 100)
     p_bid = isempty(bids) ? range(0, 0, 0) : range(extrema(bids)..., length = 100)
 

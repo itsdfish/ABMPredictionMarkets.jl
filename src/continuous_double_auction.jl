@@ -273,16 +273,6 @@ function can_exchange(proposal, order)
     return false
 end
 
-# function can_exit_early(proposal, order)
-#     if (order.type == :bid) && (proposal.type == :ask) && (order.price < proposal.price)
-#         return true
-#     elseif (order.type == :ask) && (proposal.type == :bid) &&
-#            (order.price > proposal.price)
-#         return true
-#     end
-#     return false
-# end
-
 function exchange!(buyer, seller, bid_order, ask_order, proposal, bidx)
     n_sold = min(bid_order.quantity, ask_order.quantity)
     price =
@@ -292,7 +282,7 @@ function exchange!(buyer, seller, bid_order, ask_order, proposal, bidx)
     buyer.bid_reserve -= total_cost
     new_share =
         Order(; id = buyer.id, price, yes = bid_order.yes, quantity = n_sold, type = :share)
-    push!(buyer.shares[bidx], new_share)
+    add_shares!(buyer.shares[bidx], new_share)
 
     ask_order.quantity -= n_sold
     bid_order.quantity -= n_sold
@@ -355,7 +345,7 @@ function bid_match!(proposal, model, bidx, i)
             quantity = n_sold,
             type = :share
         )
-        push!(buyer1.shares[bidx], new_share1)
+        add_shares!(buyer1.shares[bidx], new_share1)
 
         buyer2_price = 100 - buyer1_price
         buyer2.bid_reserve -= buyer2_price
@@ -366,7 +356,7 @@ function bid_match!(proposal, model, bidx, i)
             quantity = n_sold,
             type = :share
         )
-        push!(buyer2.shares[bidx], new_share2)
+        add_shares!(buyer2.shares[bidx], new_share2)
 
         push!(
             model.market_prices[bidx],
@@ -375,6 +365,28 @@ function bid_match!(proposal, model, bidx, i)
         return proposal.quantity == 0
     end
     return false
+end
+
+"""
+    add_shares!(shares, share)
+
+Adds a share to a vector of shares. A new element is add if the shares do not have an entry with the target price. 
+If an entry with the target price exists, the quantity is added to that entry 
+
+# Arguments
+
+- `shares`: a vector of current shares 
+- `share`: a share to be added to `shares`
+"""
+function add_shares!(shares, share)
+    for s ∈ shares 
+        if (s.price == share.price) && (s.yes == share.yes)
+            s.quantity += share.quantity
+            return nothing 
+        end
+    end
+    push!(shares, share)
+    return nothing 
 end
 
 """

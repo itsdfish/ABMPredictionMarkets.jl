@@ -35,13 +35,13 @@ function agent_step!(agent::MarketAgent, ::Type{<:AbstractPredictionMarket}, mod
         order = create_order(agent, model, bidx)
         if order.type == :empty
             push!(model.trade_made[bidx], false)
+            push!(model.iteration_ids[bidx], abmtime(model))
             market_prices = model.market_prices[bidx]
             isempty(market_prices) ? push!(market_prices, NaN) :
             push!(market_prices, market_prices[end])
         else
-            push!(model.trade_made[bidx], transact!(order, model, bidx))
+            transact!(order, model, bidx)
         end
-        push!(model.iteration_ids[bidx], abmtime(model))
     end
     return nothing
 end

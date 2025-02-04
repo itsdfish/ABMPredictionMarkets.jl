@@ -221,6 +221,8 @@ function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
     market_prices = model.market_prices[bidx]
     proposal.quantity > 0 ? push!(order_book, proposal) : nothing
     if proposal.quantity == start_quantity
+        push!(model.iteration_ids[bidx], abmtime(model))
+        push!(model.trade_made[bidx], false)
         isempty(market_prices) ? push!(market_prices, NaN) :
         push!(market_prices, market_prices[end])
     end
@@ -256,6 +258,8 @@ function ask_bid_match!(proposal, model, bidx, i)
             model.market_prices[bidx],
             proposal.yes ? price / 100 : (100 - price) / 100
         )
+        push!(model.iteration_ids[bidx], abmtime(model))
+        push!(model.trade_made[bidx], true)
         return proposal.quantity == 0
     end
     return false
@@ -366,6 +370,8 @@ function bid_match!(proposal, model, bidx, i)
             model.market_prices[bidx],
             proposal.yes ? proposal.price / 100 : (100 - proposal.price) / 100
         )
+        push!(model.iteration_ids[bidx], abmtime(model))
+        push!(model.trade_made[bidx], true)
         return proposal.quantity == 0
     end
     return false
@@ -426,6 +432,8 @@ function ask_match!(proposal, model, bidx, i)
             model.market_prices[bidx],
             proposal.yes ? proposal.price / 100 : (100 - proposal.price) / 100
         )
+        push!(model.iteration_ids[bidx], abmtime(model))
+        push!(model.trade_made[bidx], true)
         return proposal.quantity == 0
     end
     return false

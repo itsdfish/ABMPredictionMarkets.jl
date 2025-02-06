@@ -23,6 +23,6 @@
 
     lengths = fill(n_agents * n_days, n_markets)
     @test length.(model.market_prices) == lengths
-    @test length.(model.trade_made) == lengths
+    @test length.(model.trade_counts) == lengths
     @test length.(model.iteration_ids) == lengths
 end

@@ -32,19 +32,19 @@ function compute_returns(shares, p_true)
 end
 
 """
-    compute_trade_volume(trade_made, interval_length)
+    compute_trade_volume(trade_counts, interval_length)
 
 Computes trade volume for a set of time intervals 
 
 # Arguments
 
-- `trade_made`: indicates whether a trade is made on each agent step 
+- `trade_counts`: indicates number of trades per step
 - `interval_length`: the length of the interval in which trade volume is computed
 """
-function compute_trade_volume(trade_made, interval_length::Int)
-    n = div(length(trade_made), interval_length)
+function compute_trade_volume(trade_counts, interval_length::Int)
+    n = div(length(trade_counts), interval_length)
     return map(
-        i -> sum(trade_made[((i - 1) * interval_length + 1):(i * interval_length)]),
+        i -> sum(trade_counts[((i - 1) * interval_length + 1):(i * interval_length)]),
         1:n
     )
 end

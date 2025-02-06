@@ -10,7 +10,7 @@ Holds data and order book for a continuous double auction prediction market simu
     if a transaction does not occur. Each sub-vector corresponds to a different market
 - `info_times::Vector{Int}`: 
 - `info_times::Vector{Int}`: a vector of days on which new information is provided 
-- `trade_made::Vector{Vector{Bool}}`: on each agent step, indicates whether a trade was made
+- `trade_counts::Vector{Vector{Int}}`: each elements represents the number of trades made per step
 - `iteration_ids`::Vector{Vector{Int}}`: iteration number on which market prices are recorded
 
 # Constructors
@@ -21,7 +21,7 @@ mutable struct CDA <: AbstractCDA
     order_books::Vector{Vector{Order}}
     market_prices::Vector{Vector{Float64}}
     info_times::Vector{Int}
-    trade_made::Vector{Vector{Bool}}
+    trade_counts::Vector{Vector{Int}}
     iteration_ids::Vector{Vector{Int}}
 end
 
@@ -30,7 +30,7 @@ function CDA(; n_markets, info_times)
         init(Order, n_markets),
         init(Float64, n_markets),
         info_times,
-        init(Bool, n_markets),
+        init(Int, n_markets),
         init(Int, n_markets)
     )
 end
@@ -222,7 +222,7 @@ function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
     proposal.quantity > 0 ? push!(order_book, proposal) : nothing
     if proposal.quantity == start_quantity
         push!(model.iteration_ids[bidx], abmtime(model))
-        push!(model.trade_made[bidx], false)
+        push!(model.trade_counts[bidx], 0)
         isempty(market_prices) ? push!(market_prices, NaN) :
         push!(market_prices, market_prices[end])
     end
@@ -249,6 +249,7 @@ function ask_bid_match!(proposal, model, bidx, i)
         seller = proposal.type == :ask ? model[proposal.id] : model[order.id]
         bid_order = proposal.type == :bid ? proposal : order
         ask_order = proposal.type == :ask ? proposal : order
+        n_sold = min(bid_order.quantity, ask_order.quantity)
         price =
             proposal.type == :bid ? min(bid_order.price, ask_order.price) :
             max(bid_order.price, ask_order.price)
@@ -259,7 +260,7 @@ function ask_bid_match!(proposal, model, bidx, i)
             proposal.yes ? price / 100 : (100 - price) / 100
         )
         push!(model.iteration_ids[bidx], abmtime(model))
-        push!(model.trade_made[bidx], true)
+        push!(model.trade_counts[bidx], n_sold)
         return proposal.quantity == 0
     end
     return false
@@ -371,7 +372,7 @@ function bid_match!(proposal, model, bidx, i)
             proposal.yes ? proposal.price / 100 : (100 - proposal.price) / 100
         )
         push!(model.iteration_ids[bidx], abmtime(model))
-        push!(model.trade_made[bidx], true)
+        push!(model.trade_counts[bidx], n_sold)
         return proposal.quantity == 0
     end
     return false
@@ -433,7 +434,7 @@ function ask_match!(proposal, model, bidx, i)
             proposal.yes ? proposal.price / 100 : (100 - proposal.price) / 100
         )
         push!(model.iteration_ids[bidx], abmtime(model))
-        push!(model.trade_made[bidx], true)
+        push!(model.trade_counts[bidx], n_sold)
         return proposal.quantity == 0
     end
     return false

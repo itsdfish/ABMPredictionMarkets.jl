@@ -346,7 +346,6 @@ function bid_match!(proposal, model, bidx, i)
         buyer1_price = proposal.price
 
         buyer1.bid_reserve -= buyer1_price * n_sold
-        proposal.type = :share
         new_share1 = Order(;
             id = buyer1.id,
             price = buyer1_price,
@@ -356,7 +355,7 @@ function bid_match!(proposal, model, bidx, i)
         )
         add_shares!(buyer1.shares[bidx], new_share1)
 
-        buyer2_price = 100 - buyer1_price
+        buyer2_price = order.price
         buyer2.bid_reserve -= buyer2_price * n_sold
         new_share2 = Order(;
             id = buyer2.id,

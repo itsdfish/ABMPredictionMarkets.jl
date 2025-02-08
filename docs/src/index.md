@@ -1,6 +1,6 @@
 # ABMPredictionMarkets
 
-This project contains an agent-based simulation of unpacking effects in prediction markets. 
+This project contains an API for creating agent-based models of prediction markets. More details can be found by navigating the menu on the left-hand side.
 
 ```@raw html
 <img src="assets/temp.gif" width=1200 height=800>

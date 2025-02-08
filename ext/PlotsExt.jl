@@ -76,15 +76,17 @@ function plot_depth_chart(order_book::Vector{Order}; config...)
     return depth_plot
 end
 
+make_layout(x) = (Int(ceil(sqrt(length(x)))), Int(ceil(sqrt(length(x)))))
+make_title(x) = reshape([L"e_{%$i}" for i ∈ 1:length(x)], 1, length(x))
 """
     plot_dashboard(
         model;
-        title = [j(B ∧ A)...],
-        size = (1200, 800),
-        layout = [
-            Plots.GridLayout(2, 2),
-            (label = :a, width = :auto, height = 0.20)
-        ],
+        title = make_title(model.market_prices),
+        size = (1200, 1000),
+        depth_chart_layout = make_layout(model.market_prices),
+        outer_layout = [(label = :a, width = :auto, height = 0.70), (label = :b, width = :auto, height = 0.30)],
+        add_unpacking_factor = false,
+        n_days = 1,
         kwargs...
     )
 
@@ -92,7 +94,7 @@ Plots an animated dashboard containing the following:
 
 1. A depth chart for each market. 
 2. Historical price for each market.
-3. The unpacking factor based on two market sets. 
+3. Optional unpacking factor based on two market sets. 
 
 # Arguments
 
@@ -100,19 +102,22 @@ Plots an animated dashboard containing the following:
 
 # Keywords
 
-- `title = [(B ∧ A)...]`: a 1×n vector of labels for each market. 
+- `title`: a 1×n vector of labels for each market. By default, each element is eᵢ
+- `depth_chart_layout`: the layout of the depth charts. By default, the smallest possible 2D grid is used.
 - `size = (1200, 1000)`: size of dashboard animation 
-- `layout`: the layout for the dashboard
+- `outer_layout`: the layout for the dashboard
+- `add_unpacking_factor = false`: includes unpacking factor plot if true. If set to true, default layouts will need to be overwritten.
+- `n_days = 1`: the number of days to simulate the prediction market
 - `kwargs...`: optional keyword arguments for the plots
 """
 function plot_dashboard(
     model;
-    title = [L"j(B \wedge A)" L"j(\bar{B} \wedge A)" L"j(B \wedge \bar{A})" L"j(\bar{B} \wedge \bar{A})" L"j(A)"],
+    title = make_title(model.market_prices),
     size = (1200, 1000),
-    layout = [
-        Plots.GridLayout(2, 2),
-        (label = :a, width = :auto, height = 0.20)
-    ],
+    depth_chart_layout = make_layout(model.market_prices),
+    outer_layout = [(label = :a, width = :auto, height = 0.70), (label = :b, width = :auto, height = 0.30)],
+    add_unpacking_factor = false,
+    n_days = 1,
     kwargs...
 )
     default_config = (
@@ -125,47 +130,51 @@ function plot_dashboard(
     )
 
     n_agents = nagents(model)
-    animation = @animate for id ∈ Agents.schedule(model)
+    animation = @animate for day ∈ 1:n_days, id ∈ Agents.schedule(model)
         agent_step!(model[id], model)
         p1 =
             plot_depth_chart.(
                 model.order_books;
                 xlims = (0, 1),
-                ylims = (0, 60),
+                ylims = (0, n_agents / 2),
                 default_config...,
                 kwargs...
             )
-        p2 = plot(
-            model.market_prices;
-            xlabel = "Time",
-            ylabel = "Price",
-            xlims = (1, n_agents),
-            ylims = (0, 1),
-            label = title,
-            legend = :outerright,
-            linewidth = 1.5,
-            palette = :Dark2_5,
-            default_config...
-        )
-        p3 = plot(
-            compute_unpacking_factor(model);
-            ylabel = "Unpacking Factor",
-            xlims = (1, n_agents),
-            leg = false,
-            linewidth = 1.5,
-            color = RGB(158 / 255, 120 / 255, 158 / 255),
-            default_config...
-        )
-        hline!(p3, [1], color = :black, leg = false)
-        plot(
-            plot(p1...; title, layout = deepcopy(layout)),
+        p2 = Plots.Plot[]
+        push!(
             p2,
-            p3;
-            layout = [
-                (label = :a, width = :auto, height = 0.70),
-                (label = :b, width = :auto, height = 0.15),
-                (label = :c, width = :auto, height = 0.15)
-            ],
+            plot(
+                model.market_prices;
+                xlabel = "Steps",
+                ylabel = "Price",
+                xlims = (1, n_agents * n_days),
+                ylims = (0, 1),
+                label = title,
+                legend = :outerright,
+                linewidth = 1.5,
+                palette = :Dark2_5,
+                default_config...
+            )
+        )
+        if add_unpacking_factor
+            push!(
+                p2,
+                plot(
+                    compute_unpacking_factor(model);
+                    ylabel = "Unpacking Factor",
+                    xlims = (1, n_agents),
+                    leg = false,
+                    linewidth = 1.5,
+                    color = RGB(158 / 255, 120 / 255, 158 / 255),
+                    default_config...
+                )
+            )
+            hline!(p2[end], [1], color = :black, leg = false)
+        end
+        plot(
+            plot(p1...; title, layout = deepcopy(depth_chart_layout)),
+            p2...;
+            layout = outer_layout,
             size,
             kwargs...
         )

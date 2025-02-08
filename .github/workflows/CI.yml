@@ -49,7 +49,7 @@ jobs:
         - run: |
             julia --project=docs -e '
               using Pkg
-              Pkg.add(url = "https://github.com/itsdfish/TuringUtilities.jl")
+              Pkg.add(url = "https://github.com/itsdfish/ABMPredictionMarkets.jl")
               Pkg.develop(PackageSpec(path=pwd()))
               Pkg.instantiate()'
         - run: julia --project=docs docs/make.jl

@@ -32,12 +32,12 @@ plot(
     market_prices,
     xticks = nothing,
     yticks = nothing,
-    ylims = (0, .70),
+    ylims = (0, 0.70),
     grid = false,
     label = false,
-    background_color=:transparent,
-    color = [RGB(.251, .388, .847) RGB(.584, .345, .698) RGB(.796, .235, .20)],
-    size = (600,300)
+    background_color = :transparent,
+    color = [RGB(0.251, 0.388, 0.847) RGB(0.584, 0.345, 0.698) RGB(0.796, 0.235, 0.20)],
+    size = (600, 300)
 )
 
 savefig("logo.svg")

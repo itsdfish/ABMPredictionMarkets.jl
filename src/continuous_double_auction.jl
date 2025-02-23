@@ -62,11 +62,11 @@ end
 """
     bid(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
 
-Generates an ask amount according to
+Generates an ask amount according to 
 
-`v ~ Uniform(p - δ, p, - 1)`,
+`v ~ Uniform(p - δ, p - 1)`,
 
-where `p` is the agent's subject probability of the event. The bid price is subtracted from 
+where `p` is the agent's subject probability of the event, expressed on a scale ranging from 0 100 (cents). The bid price is subtracted from 
 money and added to the bid reserve to ensure the agent has sufficient funds when making bids 
 in multiple markets. 
 
@@ -171,8 +171,8 @@ end
 """
     transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
 
-Attempts to find a possible trade for a submitted proposal (bid or ask). Returns `true` if a 
-trade was found and performed. Otherwise, `false` is returned. If no trade is performed, the proposal is added to 
+Attempts to find a possible trade for a submitted proposal (bid or ask). Returns `true` if the proposal trade was performed.
+Otherwise, `false` is returned. If the proposed trade is not completed, the proposal is added to 
 the order book.
 
 # Arguments

@@ -7,14 +7,15 @@ An object representing a bid, ask, or share.
 
 - `id::Int`: agent id 
 - `yes::Bool`: true if represents a `yes` share 
-- `price::Int`: the price of the share, price ∈ [0,100]
+- `price::Int`: the price of a single share, price ∈ [0,100]
+- `quantity::Int`: the number of shares at a given price 
 - `type::Symbol`: object type type ∈ [bid,ask,share]
 
 # Constructors 
 
-    Order(id, yes, price, type)
+    Order(id, yes, price, quantity, type)
 
-    Order(; id, yes, price, type)
+    Order(; id, yes, price, quantity, type)
 """
 mutable struct Order <: AbstractOrder
     id::Int

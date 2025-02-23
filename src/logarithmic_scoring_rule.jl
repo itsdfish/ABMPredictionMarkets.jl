@@ -61,14 +61,12 @@ function transact!(agent::MarketAgent, market::AbstractLSR, model, bidx)
             amount = max(cost, -agent.money)
         end
         n_shares = cost_to_shares(market, amount, prices[idx], bidx)
-        # println("agent id $(agent.id) n_shares $n_shares cost $cost amount $amount price $(prices[idx])")
         agent.money += amount
         agent.shares[bidx][idx] += n_shares
         market.n_shares[bidx][idx] += n_shares
 
         prices = compute_prices(market, bidx)
         push!(model.market_prices[bidx], prices)
-        #println("")
     end
     return nothing
 end

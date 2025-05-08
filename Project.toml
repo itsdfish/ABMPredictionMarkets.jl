@@ -1,7 +1,7 @@
 name = "ABMPredictionMarkets"
 uuid = "f93c7831-927e-41b2-8014-b29c2a7d30aa"
 authors = ["itsdfish"]
-version = "0.7.3"
+version = "0.7.4"
 
 [deps]
 Agents = "46ada45e-f475-11e8-01d0-f70cc89e6671"

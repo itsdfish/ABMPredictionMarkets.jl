@@ -108,7 +108,8 @@ Plots an animated dashboard containing the following:
 - `outer_layout`: the layout for the dashboard
 - `add_unpacking_factor = false`: includes unpacking factor plot if true. If set to true, default layouts will need to be overwritten.
 - `n_days = 1`: the number of days to simulate the prediction market
-- `kwargs...`: optional keyword arguments for the plots
+- `depth_chart_config = ()`: optional keyword arguments for the depth charts
+- `price_chart_config = ()`: optional keyword arguments for price charts
 """
 function plot_dashboard(
     model;
@@ -121,7 +122,8 @@ function plot_dashboard(
     ],
     add_unpacking_factor = false,
     n_days = 1,
-    kwargs...
+    depth_chart_config = (),
+    price_chart_config = (),
 )
     default_config = (
         legendfontsize = 10,
@@ -141,7 +143,7 @@ function plot_dashboard(
                 xlims = (0, 1),
                 ylims = (0, n_agents / 2),
                 default_config...,
-                kwargs...
+                depth_chart_config...
             )
         p2 = Plots.Plot[]
         push!(
@@ -156,7 +158,8 @@ function plot_dashboard(
                 legend = :outerright,
                 linewidth = 1.5,
                 palette = :Dark2_5,
-                default_config...
+                default_config...,
+                price_chart_config...
             )
         )
         if add_unpacking_factor
@@ -179,7 +182,6 @@ function plot_dashboard(
             p2...;
             layout = outer_layout,
             size,
-            kwargs...
         )
     end
     return animation

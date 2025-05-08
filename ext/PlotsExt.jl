@@ -123,7 +123,7 @@ function plot_dashboard(
     add_unpacking_factor = false,
     n_days = 1,
     depth_chart_config = (),
-    price_chart_config = (),
+    price_chart_config = ()
 )
     default_config = (
         legendfontsize = 10,
@@ -181,7 +181,7 @@ function plot_dashboard(
             plot(p1...; title, layout = deepcopy(depth_chart_layout)),
             p2...;
             layout = outer_layout,
-            size,
+            size
         )
     end
     return animation

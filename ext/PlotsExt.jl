@@ -84,10 +84,14 @@ make_title(x) = reshape([L"e_{%$i}" for i ∈ 1:length(x)], 1, length(x))
         title = make_title(model.market_prices),
         size = (1200, 1000),
         depth_chart_layout = make_layout(model.market_prices),
-        outer_layout = [(label = :a, width = :auto, height = 0.70), (label = :b, width = :auto, height = 0.30)],
+        outer_layout = [
+            (label = :a, width = :auto, height = 0.70),
+            (label = :b, width = :auto, height = 0.30)
+        ],
         add_unpacking_factor = false,
         n_days = 1,
-        kwargs...
+        depth_chart_config = (),
+        price_chart_config = (),
     )
 
 Plots an animated dashboard containing the following:

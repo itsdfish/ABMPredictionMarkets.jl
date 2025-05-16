@@ -7,7 +7,7 @@ import Base: ==
 import Base: ≠
 import Distributions: rand
 import Distributions: ContinuousUnivariateDistribution
-import LightSumTypes: variant 
+import LightSumTypes: variant
 import LightSumTypes: variantof
 
 export AbstractOrder

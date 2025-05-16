@@ -38,7 +38,7 @@ function LSR(; elasticity, n_options, info_times)
     )
 end
 
-function agent_step!(agent::MarketAgent, ::Type{<:AbstractLSR}, model)
+function agent_step!(agent, ::MarketAgent, market::AbstractLSR, model)
     market = abmproperties(model)
     n_markets = length(market.market_prices)
     for bidx ∈ shuffle(1:n_markets)
@@ -47,7 +47,7 @@ function agent_step!(agent::MarketAgent, ::Type{<:AbstractLSR}, model)
     return nothing
 end
 
-function transact!(agent::MarketAgent, market::AbstractLSR, model, bidx)
+function transact!(agent, market::AbstractLSR, model, bidx)
     prices = compute_prices(market, bidx)
     judgments = agent.judgments[bidx]
     diffs = judgments .- prices

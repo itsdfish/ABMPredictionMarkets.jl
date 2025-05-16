@@ -1,12 +1,13 @@
 name = "ABMPredictionMarkets"
 uuid = "f93c7831-927e-41b2-8014-b29c2a7d30aa"
 authors = ["itsdfish"]
-version = "0.7.4"
+version = "0.7.5"
 
 [deps]
 Agents = "46ada45e-f475-11e8-01d0-f70cc89e6671"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
+LightSumTypes = "f56206fc-af4c-5561-a72a-43fe2ca5a923"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
@@ -19,6 +20,7 @@ PlotsExt = "Plots"
 Agents = "6.2.0"
 Distributions = "0.25.115"
 LaTeXStrings = "1.4.0"
+LightSumTypes = "5.2.0"
 Plots = "1.40.9"
 Random = "1.11.0"
 Statistics = "1.11.1"

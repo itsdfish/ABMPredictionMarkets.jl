@@ -35,7 +35,7 @@ function CDA(; n_markets, info_times)
 end
 
 """
-    create_order(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
+    create_order(agent, ::MarketAgent, ::AbstractCDA, model, bidx)
 
 Creates and returns a bid or ask. The function `bid` is called if the agent has no shares. The function `ask`
 is called if the agent has no money. If the agent has money and shares, `bid` and `ask` are called with equal probability. 
@@ -43,11 +43,12 @@ is called if the agent has no money. If the agent has money and shares, `bid` an
 # Arguments
 
 - `agent::MarketAgent`: an agent participating in the prediction market
-- `::Type{<:AbstractCDA}`: a double continuous auction prediction market type 
+- `::MarketAgent`: variant of agent possibly of the same type as `agent`
+- `::AbstractPredictionMarket`: a prediction market type 
 - `model`: an abm object for the prediction market simulation 
 - `bidx`: the index of the current order book
 """
-function create_order(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
+function create_order(agent, ::MarketAgent, ::AbstractCDA, model, bidx)
     if can_bid(agent) && can_ask(agent, bidx)
         return rand() ≤ 0.50 ? bid(agent, model, bidx) : ask(agent, model, bidx)
     elseif can_bid(agent) && !can_ask(agent, bidx)
@@ -60,7 +61,7 @@ function create_order(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
 end
 
 """
-    bid(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
+    bid(agent, ::MarketAgent, ::AbstractCDA, model, bidx)
 
 Generates an ask amount according to 
 
@@ -72,12 +73,13 @@ in multiple markets.
 
 # Arguments
 
-- `agent::MarketAgent`: an agent participating in the prediction market
-- `::Type{<:DoubleContinuousAuction}`: a double continuous auction prediction market type 
+- `agent`: an agent participating in the prediction market
+- `::MarketAgent`: variant of agent possibly of the same type as `agent`
+- `::AbstractPredictionMarket`: a prediction market type 
 - `model`: an abm object for the prediction market simulation 
 - `bidx`: the index of the current order book
 """
-function bid(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
+function bid(agent, ::MarketAgent, ::AbstractCDA, model, bidx)
     order_book = model.order_books[bidx]
     yes = rand(Bool)
     _, min_ask = get_market_info(order_book; yes)
@@ -112,7 +114,7 @@ function sample_bid(judgment, δ)
 end
 
 """
-    ask(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
+    ask(agent, ::MarketAgent, ::AbstractCDA, model, bidx)
 
 Generates an ask amount according to 
 
@@ -122,12 +124,13 @@ where `p` is the maximum share price.
 
 # Arguments
 
-- `agent::MarketAgent`: an agent participating in the prediction market
-- `::Type{<:AbstractCDA}`: a double continuous auction prediction market type 
+- `agent`: an agent participating in the prediction market
+- `::MarketAgent`: variant of agent possibly of the same type as `agent`
+- `::AbstractPredictionMarket`: a prediction market type 
 - `model`: an abm object for the prediction market simulation 
 - `bidx`: the index of the current order book
 """
-function ask(agent::MarketAgent, ::Type{<:AbstractCDA}, model, bidx)
+function ask(agent, ::MarketAgent, ::AbstractCDA, model, bidx)
     order_book = model.order_books[bidx]
     _, idx = findmax(x -> x.yes ? x.price : (100 - x.price), agent.shares[bidx])
     share = deepcopy(agent.shares[bidx][idx])
@@ -165,11 +168,11 @@ function sample_ask(p, δ)
 end
 
 function transact!(proposal, model, bidx)
-    return transact!(proposal, get_market_type(model), model, bidx)
+    return transact!(proposal, get_market(model), model, bidx)
 end
 
 """
-    transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
+    transact!(proposal, ::AbstractCDA, model, bidx)
 
 Attempts to find a possible trade for a submitted proposal (bid or ask). Returns `true` if the proposal trade was performed.
 Otherwise, `false` is returned. If the proposed trade is not completed, the proposal is added to 
@@ -178,11 +181,11 @@ the order book.
 # Arguments
 
 - `proposal`: a proposal bid or ask 
-- `::Type{<:AbstractCDA}`: a double continuous auction prediction market type 
+- `::AbstractCDA`: a double continuous auction prediction market
 - `model`: an abm object for the prediction market simulation 
 - `bidx`: the index of the current order book
 """
-function transact!(proposal, ::Type{<:AbstractCDA}, model, bidx)
+function transact!(proposal, ::AbstractCDA, model, bidx)
     order_book = model.order_books[bidx]
     remove_idx = Int[]
     is_complete = false

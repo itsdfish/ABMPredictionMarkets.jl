@@ -1,6 +1,6 @@
 using ABMPredictionMarkets: init
 """
-    TestAgent(NoSpaceAgent)
+    TestAgent(NoSpaceAgent) <: MarketAgent
 
 An agent that sells and buys shares in a prediction market. 
 
@@ -101,7 +101,7 @@ end
 
 """
     initialize(
-        ::Type{<:TestAgent};
+        ::Type{<:LSRAgent};
         n_agents,
         μ,
         η,
@@ -154,6 +154,115 @@ function initialize(
             money,
             shares = zeros.(n_options)
         )
+    end
+    return model
+end
+
+"""
+    Agent1(NoSpaceAgent) <: MarketAgent
+
+An agent that sells and buys shares in a prediction market. 
+
+# Fields
+
+- `judgments::Vector{Int}`: the agent's judgment for probability event e will occur [0, 100]
+- `δ::Int`: range of bid and ask noise 
+- `money::Int`: the agent's current money available in cents
+- `shares::Vector{Vector{Int}}`: the shares owned by the agent 
+"""
+@agent struct Agent1(NoSpaceAgent) <: MarketAgent
+    judgments::Vector{Int}
+    δ::Int
+    money::Int
+    bid_reserve::Int
+    max_quantity::Int
+    shares::Vector{Vector{Order}}
+end
+
+"""
+    Agent2(NoSpaceAgent) <: MarketAgent
+
+An agent that sells and buys shares in a prediction market. 
+
+# Fields
+
+- `judgments::Vector{Int}`: the agent's judgment for probability event e will occur [0, 100]
+- `δ::Int`: range of bid and ask noise 
+- `money::Int`: the agent's current money available in cents
+- `shares::Vector{Vector{Int}}`: the shares owned by the agent 
+"""
+@agent struct Agent2(NoSpaceAgent) <: MarketAgent
+    judgments::Vector{Int}
+    δ::Int
+    money::Int
+    bid_reserve::Int
+    max_quantity::Int
+    shares::Vector{Vector{Order}}
+end
+
+@multiagent MultiAgent(Agent1, Agent2) <: MarketAgent
+
+"""
+    initialize(
+        agent_type1::Type{<:Agent1},
+        agent_type2::Type{<:Agent2};
+        n_agents,
+        μ,
+        η,
+        δ,
+        money,
+        max_quantity = 1,
+        info_times = Int[]
+    )
+
+Initializes a model for sub-and-super-additivity in prediction markets. 
+
+# Keywords
+
+- `::Type{<:TestAgent}`: a quantum agent type with compatible beliefs
+- `n_agents`: the number of agents
+- `μ`: mean belief for yes event
+- `σ`: standard deviation of belief for yes event across agents
+- `δ::Int`: range of bid and ask noise 
+- `money`: the initial amount of money in cents each agent is given
+- `info_times`: a vector of days on which new information is provided 
+- `n_markets`: the number of available markets in the simulation 
+"""
+function initialize(
+    agent_type1::Type{<:Agent1},
+    agent_type2::Type{<:Agent2};
+    n_agents,
+    μ,
+    η,
+    δ,
+    money,
+    max_quantity = 1,
+    info_times = Int[]
+)
+    space = nothing
+    n_markets = length(μ)
+    model = StandardABM(
+        MultiAgent,
+        space;
+        properties = CDA(; n_markets, info_times),
+        agent_step!,
+        model_step!,
+        scheduler = Schedulers.Randomly()
+    )
+    id = 0
+    for _ ∈ 1:n_agents
+        id += 1
+        agent_type = rand() ≤ .5 ? agent_type1 : agent_type2
+        agent = (MultiAgent ∘ agent_type)(;
+            id,      
+            judgments = rand(DiscreteDirichlet(μ, η)),
+            money,
+            bid_reserve = 0,
+            δ,
+            max_quantity,
+            shares = init(Order, n_markets)
+        )
+        add_agent!(agent, model)
     end
     return model
 end

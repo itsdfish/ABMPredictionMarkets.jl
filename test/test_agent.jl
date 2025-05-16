@@ -252,9 +252,9 @@ function initialize(
     id = 0
     for _ ∈ 1:n_agents
         id += 1
-        agent_type = rand() ≤ .5 ? agent_type1 : agent_type2
+        agent_type = rand() ≤ 0.5 ? agent_type1 : agent_type2
         agent = (MultiAgent ∘ agent_type)(;
-            id,      
+            id,
             judgments = rand(DiscreteDirichlet(μ, η)),
             money,
             bid_reserve = 0,

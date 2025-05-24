@@ -7,6 +7,7 @@ using ABMPredictionMarkets: init
 using ABMPredictionMarkets: transact!
 using Agents
 using Plots
+using Random
 using Statistics
 import ABMPredictionMarkets: agent_step!
 
@@ -33,7 +34,10 @@ function agent_step!(agent, ::ArbitrageAgent, ::AbstractPredictionMarket, model)
     cost, win = eval_arbitrage(no_prices, 0)
     if (cost &lt; win) &amp;&amp; (agent.money ≥ cost)
         for bidx ∈ 1:length(model.order_books)
-            order = Order(;id = agent.id, yes = false, price = no_prices[bidx], quantity = 1, type = :bid)
+            price = no_prices[bidx]
+            agent.bid_reserve += price
+            agent.money -= price
+            order = Order(;id = agent.id, yes = false, price, quantity = 1, type = :bid)
             transact!(order, model, bidx)
         end
     else
@@ -162,6 +166,7 @@ using ABMPredictionMarkets: init
 using ABMPredictionMarkets: transact!
 using Agents
 using Plots
+using Random
 using Statistics
 import ABMPredictionMarkets: agent_step!</code></pre><h2 id="Define-Agents"><a class="docs-heading-anchor" href="#Define-Agents">Define Agents</a><a id="Define-Agents-1"></a><a class="docs-heading-anchor-permalink" href="#Define-Agents" title="Permalink"></a></h2><p>Below, we define agent types which is are subtype of <code>MarketAgent</code>. </p><h3 id="Subadditive-Agents"><a class="docs-heading-anchor" href="#Subadditive-Agents">Subadditive Agents</a><a id="Subadditive-Agents-1"></a><a class="docs-heading-anchor-permalink" href="#Subadditive-Agents" title="Permalink"></a></h3><p>As the name implies, the probability judgments of the subadditive agent are subadditive. The subadditive agent has the following fields:</p><ul><li><code>judgments::Vector{Int}</code>: a vector of probabilities for each event expressed in cents, which sum to a value greater than 100 because they are subadditive. </li><li><code>δ::Int</code>: the degree of variability in bids and asks expressed in cents. </li><li><code>money::Int</code>: the amount of money available to the agent expressed in cents. </li><li><code>bid_reserve::Int</code>: the amount of money reserved for bids in the order book for ensuring sufficient funds</li><li><code>max_quantity::Int</code> the maximum quantity of shares per order</li><li><code>shares::Vector{Vector{Order}}</code>: a constaining for storing the shares owned by the agent. Each sub-vector corresponds to a shares for a sub-event. </li></ul><p>On each simulated day when the function <code>agent_step!</code> is called for a subadditive agent, it submits a bid or ask in each available market. Roughly speaking, it accepts the maximum bid or minimum ask if it is advantageous. Otherwise, it submits an order for an ask or bid with uniform variable and a range of <span>$\delta$</span> cents. </p><pre><code class="language-julia hljs">@agent struct SubadditiveAgent(NoSpaceAgent) &lt;: MarketAgent
     judgments::Vector{Int}
@@ -180,7 +185,10 @@ end</code></pre><h3 id="Multi-Agent"><a class="docs-heading-anchor" href="#Multi
     cost, win = eval_arbitrage(no_prices, 0)
     if (cost &lt; win) &amp;&amp; (agent.money ≥ cost)
         for bidx ∈ 1:length(model.order_books)
-            order = Order(;id = agent.id, yes = false, price = no_prices[bidx], quantity = 1, type = :bid)
+            price = no_prices[bidx]
+            agent.bid_reserve += price
+            agent.money -= price
+            order = Order(;id = agent.id, yes = false, price, quantity = 1, type = :bid)
             transact!(order, model, bidx)
         end
     else
@@ -253,7 +261,7 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
         add_agent!(agent, model)
     end
     return model
-end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">initialize (generic function with 1 method)</code></pre><h3 id="Set-RNG-Seed"><a class="docs-heading-anchor" href="#Set-RNG-Seed">Set RNG Seed</a><a id="Set-RNG-Seed-1"></a><a class="docs-heading-anchor-permalink" href="#Set-RNG-Seed" title="Permalink"></a></h3><p>The next code block sets the seed for the random number generator to ensure the results are reproducible. </p><pre><code class="language- hljs">Random.seed!(5064)</code></pre><h2 id="Initialize-Models"><a class="docs-heading-anchor" href="#Initialize-Models">Initialize Models</a><a id="Initialize-Models-1"></a><a class="docs-heading-anchor-permalink" href="#Initialize-Models" title="Permalink"></a></h2><p>In this section, we create models for the <em>no arbitrage condition</em> and the <em>arbitrage condition</em> with the function called <code>initialize</code>. The code block below defines a <code>NamedTuple</code> of the common parameters for each model. </p><pre><code class="language-julia hljs">config = (
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">initialize (generic function with 1 method)</code></pre><h3 id="Set-RNG-Seed"><a class="docs-heading-anchor" href="#Set-RNG-Seed">Set RNG Seed</a><a id="Set-RNG-Seed-1"></a><a class="docs-heading-anchor-permalink" href="#Set-RNG-Seed" title="Permalink"></a></h3><p>The next code block sets the seed for the random number generator to ensure the results are reproducible. </p><pre><code class="language-julia hljs">Random.seed!(5064)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Random.TaskLocalRNG()</code></pre><h2 id="Initialize-Models"><a class="docs-heading-anchor" href="#Initialize-Models">Initialize Models</a><a id="Initialize-Models-1"></a><a class="docs-heading-anchor-permalink" href="#Initialize-Models" title="Permalink"></a></h2><p>In this section, we create models for the <em>no arbitrage condition</em> and the <em>arbitrage condition</em> with the function called <code>initialize</code>. The code block below defines a <code>NamedTuple</code> of the common parameters for each model. </p><pre><code class="language-julia hljs">config = (
     μ = [0.45, 0.20, 0.25, 0.10],
     η = 20.0,
     unpacking_factor = 1.3,
@@ -292,4 +300,4 @@ plot(
 )
 hline!([1], color = :black, linestyle = :dash, label = nothing)
 arbitrage_market_prices = summarize_by_iteration.(arbitrage_model.market_prices, arbitrage_model.iteration_ids)
-plot!(sum(arbitrage_market_prices), label = &quot;Arbitriage&quot;)</code></pre><img src="1820868b.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../basic_example/">« Basic Example</a><a class="docs-footer-nextpage" href="../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.11.4 on <span class="colophon-date" title="Saturday 24 May 2025 12:41">Saturday 24 May 2025</span>. Using Julia version 1.11.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+plot!(sum(arbitrage_market_prices), label = &quot;Arbitriage&quot;)</code></pre><img src="89847269.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../basic_example/">« Basic Example</a><a class="docs-footer-nextpage" href="../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.11.4 on <span class="colophon-date" title="Saturday 24 May 2025 13:24">Saturday 24 May 2025</span>. Using Julia version 1.11.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

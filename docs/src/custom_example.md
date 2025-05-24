@@ -33,6 +33,7 @@ using ABMPredictionMarkets: init
 using ABMPredictionMarkets: transact!
 using Agents
 using Plots
+using Random
 using Statistics
 import ABMPredictionMarkets: agent_step!
 
@@ -59,7 +60,10 @@ function agent_step!(agent, ::ArbitrageAgent, ::AbstractPredictionMarket, model)
     cost, win = eval_arbitrage(no_prices, 0)
     if (cost < win) && (agent.money ≥ cost)
         for bidx ∈ 1:length(model.order_books)
-            order = Order(;id = agent.id, yes = false, price = no_prices[bidx], quantity = 1, type = :bid)
+            price = no_prices[bidx]
+            agent.bid_reserve += price
+            agent.money -= price
+            order = Order(;id = agent.id, yes = false, price, quantity = 1, type = :bid)
             transact!(order, model, bidx)
         end
     else
@@ -199,6 +203,7 @@ using ABMPredictionMarkets: init
 using ABMPredictionMarkets: transact!
 using Agents
 using Plots
+using Random
 using Statistics
 import ABMPredictionMarkets: agent_step!
 ```
@@ -282,7 +287,10 @@ function agent_step!(agent, ::ArbitrageAgent, ::AbstractPredictionMarket, model)
     cost, win = eval_arbitrage(no_prices, 0)
     if (cost < win) && (agent.money ≥ cost)
         for bidx ∈ 1:length(model.order_books)
-            order = Order(;id = agent.id, yes = false, price = no_prices[bidx], quantity = 1, type = :bid)
+            price = no_prices[bidx]
+            agent.bid_reserve += price
+            agent.money -= price
+            order = Order(;id = agent.id, yes = false, price, quantity = 1, type = :bid)
             transact!(order, model, bidx)
         end
     else

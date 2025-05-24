@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Basic Example · ABMPredictionMarkets</title><meta name="title" content="Basic Example · ABMPredictionMarkets"/><meta property="og:title" content="Basic Example · ABMPredictionMarkets"/><meta property="twitter:title" content="Basic Example · ABMPredictionMarkets"/><meta name="description" content="Documentation for ABMPredictionMarkets."/><meta property="og:description" content="Documentation for ABMPredictionMarkets."/><meta property="twitter:description" content="Documentation for ABMPredictionMarkets."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&amp;display=swap" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.svg" alt="ABMPredictionMarkets logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../">ABMPredictionMarkets</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox" checked/><label class="tocitem" for="menuitem-2"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li class="is-active"><a class="tocitem" href>Basic Example</a><ul class="internal"><li><a class="tocitem" href="#Load-Dependencies"><span>Load Dependencies</span></a></li><li><a class="tocitem" href="#Define-Agent"><span>Define Agent</span></a></li><li><a class="tocitem" href="#Initialize-Model"><span>Initialize Model</span></a></li><li><a class="tocitem" href="#Run-Model"><span>Run Model</span></a></li><li><a class="tocitem" href="#Plot-Prices"><span>Plot Prices</span></a></li><li><a class="tocitem" href="#Plot-Trade-Volume"><span>Plot Trade Volume</span></a></li><li><a class="tocitem" href="#Plot-Depth-Chart"><span>Plot Depth Chart</span></a></li><li><a class="tocitem" href="#Plot-Autocorrelation"><span>Plot Autocorrelation</span></a></li><li class="toplevel"><a class="tocitem" href="#Plot-Dashboard"><span>Plot Dashboard</span></a></li></ul></li><li><a class="tocitem" href="../custom_example/">Custom Example</a></li></ul></li><li><a class="tocitem" href="../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Basic Example</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Basic Example</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/itsdfish/ABMPredictionMarkets.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/itsdfish/ABMPredictionMarkets.jl/blob/main/docs/src/basic_example.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Basic-Example"><a class="docs-heading-anchor" href="#Basic-Example">Basic Example</a><a id="Basic-Example-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Example" title="Permalink"></a></h1><p>The page provides a working example of simulating a prediction market with <code>ABMPredictionMarkets.jl</code>. In the example below, 100 agents trade shares in four prediction markets. The belief distributions across agents are distributed such that the sum of prices is approximately 1. Click on the ▶ icon to reveal a full version of the code.  </p><details>
+<summary><b>Full Code</b></summary><pre><code class="language-julia hljs">using ABMPredictionMarkets
+using ABMPredictionMarkets: init
+using Agents
+using Distributions
+using LaTeXStrings
+using Plots
+using Random
+using StatsBase
+Random.seed!(93)
+
+@agent struct TestAgent(NoSpaceAgent) &lt;: MarketAgent
+    judgments::Vector{Int}
+    δ::Int
+    money::Int
+    bid_reserve::Int
+    max_quantity::Int
+    shares::Vector{Vector{Order}}
+end
+
+import ABMPredictionMarkets: initialize
+function initialize(
+    ::Type{&lt;:TestAgent};
+    n_agents,
+    μ,
+    η,
+    δ,
+    money,
+    max_quantity = 1,
+    info_times = Int[]
+)
+    space = nothing
+    n_markets = length(μ)
+    model = StandardABM(
+        TestAgent,
+        space;
+        properties = CDA(; n_markets, info_times),
+        agent_step!,
+        scheduler = Schedulers.Randomly()
+    )
+    for _ ∈ 1:n_agents
+        add_agent!(
+            model;
+            judgments = rand(DiscreteDirichlet(μ, η)),
+            money,
+            bid_reserve = 0,
+            δ,
+            max_quantity,
+            shares = init(Order, n_markets)
+        )
+    end
+    return model
+end
+
+n_agents = 100
+μ = [0.20, 0.25, 0.10, 0.45]
+model = initialize(
+    TestAgent;
+    n_agents,
+    μ,
+    η = 20.0,
+    money = 10_000,
+    δ = 3
+)
+run!(model, 50)
+
+market_titles = [L&quot;e_{1}&quot; L&quot;e_{2}&quot; L&quot;e_{3}&quot; L&quot;e_{4}&quot;]
+market_prices = summarize_by_iteration.(model.market_prices, model.iteration_ids)
+plot(
+    market_prices,
+    ylims = (0, 1),
+    ylabel = &quot;Market Price&quot;,
+    grid = false,
+    legendtitle = &quot;Markets&quot;,
+    label = market_titles
+)
+hline!(μ, color = :black, linestyle = :dash, label = nothing)
+
+trade_volume = summarize_by_iteration.(model.trade_counts, model.iteration_ids; fun = sum)
+
+plot(
+    trade_volume;
+    layout = (2,2),
+    grid = false,
+    label = false,
+    title = market_titles,
+    ylims = (0, 100),
+    plot_title = &quot;Trade Volume&quot;
+)
+
+depth_charts = plot_depth_chart.(model.order_books)
+plot(depth_charts...; layout = (2, 2), title = market_titles)
+
+autocors = @. (autocor(filter(x -&gt; !isnan(x), model.market_prices)))
+plot(
+    autocors;
+    xlabel = &quot;lag&quot;,
+    leg = false,
+    grid = false,
+    layout = (2, 2),
+    title = market_titles,
+    plot_title = &quot;Autocorrelation&quot;
+)
+
+model = initialize(
+    TestAgent;
+    n_agents,
+    μ,
+    η = 20.0,
+    money = 10_000,
+    δ = 3,
+    max_quantity = 5
+)
+
+animation = plot_dashboard(model; n_days = 2)
+gif(animation, &quot;temp.gif&quot;, fps = 8)</code></pre></details><h2 id="Load-Dependencies"><a class="docs-heading-anchor" href="#Load-Dependencies">Load Dependencies</a><a id="Load-Dependencies-1"></a><a class="docs-heading-anchor-permalink" href="#Load-Dependencies" title="Permalink"></a></h2><p>The next step is to load the required dependencies for simulation and plotting.</p><pre><code class="language-julia hljs">using ABMPredictionMarkets
+using ABMPredictionMarkets: init
+using Agents
+using Distributions
+using LaTeXStrings
+using Plots
+using Random
+using StatsBase
+Random.seed!(93)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Random.TaskLocalRNG()</code></pre><h2 id="Define-Agent"><a class="docs-heading-anchor" href="#Define-Agent">Define Agent</a><a id="Define-Agent-1"></a><a class="docs-heading-anchor-permalink" href="#Define-Agent" title="Permalink"></a></h2><p>Below, we define an agent type which is a subtype of <code>MarketAgent</code>. The subjective judgments are stored in the field <code>judgements</code> for each market on a scale of 0 to 100 (e.g., cents). The money and bid reserve are also expressed in terms of cents. The maximum quantity is the maximum number of shares traded per day per agent. Finally, the field <code>shares</code> stores shares in separate sub-vectors for each market. </p><pre><code class="language-julia hljs">@agent struct TestAgent(NoSpaceAgent) &lt;: MarketAgent
+    judgments::Vector{Int}
+    δ::Int
+    money::Int
+    bid_reserve::Int
+    max_quantity::Int
+    shares::Vector{Vector{Order}}
+end</code></pre><h2 id="Initialize-Model"><a class="docs-heading-anchor" href="#Initialize-Model">Initialize Model</a><a id="Initialize-Model-1"></a><a class="docs-heading-anchor-permalink" href="#Initialize-Model" title="Permalink"></a></h2><p>The function defined below initializes the agent-based model.</p><pre><code class="language-julia hljs">import ABMPredictionMarkets: initialize
+function initialize(
+    ::Type{&lt;:TestAgent};
+    n_agents,
+    μ,
+    η,
+    δ,
+    money,
+    max_quantity = 1,
+    info_times = Int[]
+)
+    space = nothing
+    n_markets = length(μ)
+    model = StandardABM(
+        TestAgent,
+        space;
+        properties = CDA(; n_markets, info_times),
+        agent_step!,
+        scheduler = Schedulers.Randomly()
+    )
+    for _ ∈ 1:n_agents
+        add_agent!(
+            model;
+            judgments = rand(DiscreteDirichlet(μ, η)),
+            money,
+            bid_reserve = 0,
+            δ,
+            max_quantity,
+            shares = init(Order, n_markets)
+        )
+    end
+    return model
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">initialize (generic function with 1 method)</code></pre><h2 id="Run-Model"><a class="docs-heading-anchor" href="#Run-Model">Run Model</a><a id="Run-Model-1"></a><a class="docs-heading-anchor-permalink" href="#Run-Model" title="Permalink"></a></h2><p>In the code block below, we will initialize the agent-based model for the prediction market and run the simulation for 50 days. The keywords are defined as follows:</p><ul><li><code>n_agents</code>: the number of agents participating in the prediction market</li><li><code>μ</code>: a vector of mean beliefs sampled from a Dirichlet distribution</li><li><code>η</code>: the precision or inverse variance in the beliefs across agents </li><li><code>money</code>: the size of each agent&#39;s budget in cents </li><li><code>δ</code>: the variability in asks/bids in cents </li></ul><pre><code class="language-julia hljs">n_agents = 100
+μ = [0.20, 0.25, 0.10, 0.45]
+model = initialize(
+    TestAgent;
+    n_agents,
+    μ,
+    η = 20.0,
+    money = 10_000,
+    δ = 3
+)
+run!(model, 50)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(<span class="sgr1">0×0 DataFrame, 0×0 DataFrame)</span></code></pre><h2 id="Plot-Prices"><a class="docs-heading-anchor" href="#Plot-Prices">Plot Prices</a><a id="Plot-Prices-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-Prices" title="Permalink"></a></h2><p>In the following code, we will plot the market prices as a function of time. Each line represents the market price for a different prediction market, which are down sampled to the final price each day. The black horizontal lines represent the expected market prices based on μ defined above. Notice that the market prices approximate the expected values. </p><pre><code class="language-julia hljs">market_titles = [L&quot;e_{1}&quot; L&quot;e_{2}&quot; L&quot;e_{3}&quot; L&quot;e_{4}&quot;]
+market_prices = summarize_by_iteration.(model.market_prices, model.iteration_ids)
+plot(
+    market_prices,
+    ylims = (0, 1),
+    ylabel = &quot;Market Price&quot;,
+    grid = false,
+    legendtitle = &quot;Markets&quot;,
+    label = market_titles
+)
+hline!(μ, color = :black, linestyle = :dash, label = nothing)</code></pre><img src="6c468025.svg" alt="Example block output"/><h2 id="Plot-Trade-Volume"><a class="docs-heading-anchor" href="#Plot-Trade-Volume">Plot Trade Volume</a><a id="Plot-Trade-Volume-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-Trade-Volume" title="Permalink"></a></h2><p>The plot below shows trade volume computed as the sum of trades per day.</p><pre><code class="language-julia hljs">trade_volume = summarize_by_iteration.(model.trade_counts, model.iteration_ids; fun = sum)
+
+plot(
+    trade_volume;
+    layout = (2,2),
+    grid = false,
+    label = false,
+    title = market_titles,
+    ylims = (0, 100),
+    plot_title = &quot;Trade Volume&quot;
+)</code></pre><img src="77d04844.svg" alt="Example block output"/><h2 id="Plot-Depth-Chart"><a class="docs-heading-anchor" href="#Plot-Depth-Chart">Plot Depth Chart</a><a id="Plot-Depth-Chart-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-Depth-Chart" title="Permalink"></a></h2><p>In the code block below, we plot the <a href="https://www.fusioncharts.com/blog/detailed-guide-on-how-to-read-a-depth-chart/">depth chart</a> for each prediction market. </p><pre><code class="language-julia hljs">depth_charts = plot_depth_chart.(model.order_books)
+plot(depth_charts...; layout = (2, 2), title = market_titles)</code></pre><img src="e9adb998.svg" alt="Example block output"/><h2 id="Plot-Autocorrelation"><a class="docs-heading-anchor" href="#Plot-Autocorrelation">Plot Autocorrelation</a><a id="Plot-Autocorrelation-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-Autocorrelation" title="Permalink"></a></h2><p>The plot below shows the autocorrelation between market prices for each prediction market. </p><pre><code class="language-julia hljs">autocors = @. (autocor(filter(x -&gt; !isnan(x), model.market_prices)))
+plot(
+    autocors;
+    xlabel = &quot;lag&quot;,
+    leg = false,
+    grid = false,
+    layout = (2, 2),
+    title = market_titles,
+    plot_title = &quot;Autocorrelation&quot;
+)</code></pre><img src="d84ba755.svg" alt="Example block output"/><h1 id="Plot-Dashboard"><a class="docs-heading-anchor" href="#Plot-Dashboard">Plot Dashboard</a><a id="Plot-Dashboard-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-Dashboard" title="Permalink"></a></h1><p>In the example below, we create an animated dashboard consisting of depth charts and market prices. </p><pre><code class="language-julia hljs">model = initialize(
+    TestAgent;
+    n_agents,
+    μ,
+    η = 20.0,
+    money = 10_000,
+    δ = 3,
+    max_quantity = 5
+)
+
+animation = plot_dashboard(model; n_days = 2)
+gif(animation, &quot;temp.gif&quot;, fps = 8)</code></pre><img src="ae3bee07.gif" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../custom_example/">Custom Example »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.11.4 on <span class="colophon-date" title="Saturday 24 May 2025 12:41">Saturday 24 May 2025</span>. Using Julia version 1.11.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

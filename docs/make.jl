@@ -20,7 +20,10 @@ makedocs(;
     ],
     pages = [
         "Home" => "index.md",
-        "Example" => "example.md",
+        "Examples" => [
+            "Basic Example" => "basic_example.md",
+            "Custom Example" => "custom_example.md"
+        ],
         "API" => "api.md"
     ]
 )

@@ -442,7 +442,7 @@ function ask_match!(proposal, model, bidx, i)
 end
 
 """
-    get_market_info(model; yes)
+    get_market_info(order_book; yes)
 
 Returns the maximum bid and minimum ask in the order book. 
 

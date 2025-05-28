@@ -32,3 +32,10 @@ abstract type AbstractCDA <: AbstractPredictionMarket end
 An abstract type for a prediction market using a logarithmic scoring rule. 
 """
 abstract type AbstractLSR <: AbstractPredictionMarket end
+
+"""
+    AbstractCPMM <: AbstractPredictionMarket
+
+An abstract type for a prediction market using a constant product market maker. 
+"""
+abstract type AbstractCPMM <: AbstractPredictionMarket end

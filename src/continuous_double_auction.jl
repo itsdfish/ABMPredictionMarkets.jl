@@ -8,27 +8,24 @@ Holds data and order book for a continuous double auction prediction market simu
 - `order_books::Vector{Vector{Order}}`: outstanding orders (bids and asks). Each sub-vector corresponds to a different market
 - `market_prices::Vector{Vector{Float64}}`: the market price in dollars after each interaction. The market price stays the same
     if a transaction does not occur. Each sub-vector corresponds to a different market
-- `info_times::Vector{Int}`: a vector of days on which new information is provided 
 - `trade_counts::Vector{Vector{Int}}`: each elements represents the number of trades made per step
 - `iteration_ids`::Vector{Vector{Int}}`: iteration number on which market prices are recorded
 
 # Constructors
     
-    CDA(; order_book, market_prices)
+    CDA(; order_book)
 """
 mutable struct CDA <: AbstractCDA
     order_books::Vector{Vector{Order}}
     market_prices::Vector{Vector{Float64}}
-    info_times::Vector{Int}
     trade_counts::Vector{Vector{Int}}
     iteration_ids::Vector{Vector{Int}}
 end
 
-function CDA(; n_markets, info_times)
+function CDA(; n_markets)
     return CDA(
         init(Order, n_markets),
         init(Float64, n_markets),
-        info_times,
         init(Int, n_markets),
         init(Int, n_markets)
     )

@@ -13,8 +13,10 @@ import LightSumTypes: variantof
 export AbstractOrder
 export AbstractPredictionMarket
 export AbstractCDA
+export AbstractCPMM
 export AbstractLSR
 export CDA
+export CPMM
 export LSR
 export DiscreteDirichlet
 export MarketAgent
@@ -31,6 +33,7 @@ export compute_trade_volume
 include("type_system.jl")
 include("orders.jl")
 include("continuous_double_auction.jl")
+include("constant_product_market_maker.jl")
 include("logarithmic_scoring_rule.jl")
 include("market_agent.jl")
 include("utilities.jl")

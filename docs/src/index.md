@@ -28,7 +28,6 @@ model = initialize(
     η = 20.0,
     money = 50000,
     δ = 3,
-    info_times = Int[],
     n_markets = 5
 )
 

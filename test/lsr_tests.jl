@@ -4,11 +4,10 @@
     using ABMPredictionMarkets: compute_prices
     using Test
 
-    b = 100
-    n = fill(0, 2)
-    money = 100
-    maker = 0
-    prices = compute_prices(n, b)
+    elasticity = fill(100.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
+    prices = compute_prices(market, 1)
 
     @test prices ≈ [0.50, 0.50]
 end
@@ -19,11 +18,11 @@ end
     using ABMPredictionMarkets: compute_prices
     using Test
 
-    b = 100
-    n = [10, 0]
-    money = 100
-    maker = 0
-    prices = compute_prices(n, b)
+    elasticity = fill(100.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
+    market.n_shares[1] = [10, 0]
+    prices = compute_prices(market, 1)
 
     @test prices ≈ [0.5250, 0.4750] atol = 1e-3
 end
@@ -34,11 +33,11 @@ end
     using ABMPredictionMarkets: compute_prices
     using Test
 
-    b = Inf
-    n = [10, 0]
-    money = 100
-    maker = 0
-    prices = compute_prices(n, b)
+    elasticity = fill(Inf, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
+    market.n_shares[1] = [10, 0]
+    prices = compute_prices(market, 1)
 
     @test prices ≈ [0.50, 0.50] atol = 1e-3
 end
@@ -49,11 +48,13 @@ end
     using ABMPredictionMarkets: shares_to_cost
     using Test
 
-    b = 100
     n_buy = 1
     price = 0.50
-
-    cost = shares_to_cost(price, n_buy, b)
+    elasticity = fill(100.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
+    market.n_shares[1] = [10, 0]
+    cost = shares_to_cost(market, price, n_buy, 1)
 
     @test cost ≈ -0.5012 atol = 1e-3
 end
@@ -64,11 +65,13 @@ end
     using ABMPredictionMarkets: shares_to_cost
     using Test
 
-    b = 100
     n_buy = -1
     price = 0.50
-
-    cost = shares_to_cost(price, n_buy, b)
+    elasticity = fill(100.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
+    market.n_shares[1] = [10, 0]
+    cost = shares_to_cost(market, price, n_buy, 1)
 
     @test cost ≈ 0.4988 atol = 1e-3
 end
@@ -79,40 +82,44 @@ end
     using ABMPredictionMarkets: shares_to_cost
     using Test
 
-    b = 0
     n_buy = -1
     price = 0.50
-
-    cost = shares_to_cost(price, n_buy, b)
+    elasticity = fill(0.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
+    market.n_shares[1] = [10, 0]
+    cost = shares_to_cost(market, price, n_buy, 1)
 
     @test cost ≈ 0
 end
 
-@testitem "buy  sell" begin
+@testitem "buy sell" begin
     using Agents
     using ABMPredictionMarkets
     using ABMPredictionMarkets: shares_to_cost
     using ABMPredictionMarkets: compute_prices
     using Test
 
-    b = 100
-    n = fill(0, 2)
     money = 100
-    prices = compute_prices(n, b)
+    price = 0.50
+    elasticity = fill(100.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
+    prices = compute_prices(market, 1)
 
     idx = 1
     n_buy = 100
-    cost = shares_to_cost(prices[idx], n_buy, b)
-    n[idx] += n_buy
+    cost = shares_to_cost(market, prices[idx], n_buy, 1)
+    market.n_shares[1][idx] += n_buy
     money += ceil(cost * 100) / 100
-    prices = compute_prices(n, b)
+    prices = compute_prices(market, 1)
 
     idx = 1
     n_buy = -100
-    cost = shares_to_cost(prices[idx], n_buy, b)
-    n[idx] += n_buy
+    cost = shares_to_cost(market, prices[idx], n_buy, 1)
+    market.n_shares[1][idx] += n_buy
     money += floor(cost * 100) / 100
-    prices = compute_prices(n, b)
+    prices = compute_prices(market, 1)
 
     @test money ≈ 100
     @test prices ≈ [0.50, 0.50]
@@ -125,24 +132,26 @@ end
     using ABMPredictionMarkets: compute_prices
     using Test
 
-    b = 100
-    n = fill(0, 2)
     money = 100
-    prices = compute_prices(n, b)
+    price = 0.50
+    elasticity = fill(100.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
+    prices = compute_prices(market, 1)
 
     idx = 1
     n_buy = 100
-    cost = shares_to_cost(prices[idx], n_buy, b)
-    n[idx] += n_buy
+    cost = shares_to_cost(market, prices[idx], n_buy, 1)
+    market.n_shares[1][idx] += n_buy
     money += ceil(cost * 100) / 100
-    prices = compute_prices(n, b)
+    prices = compute_prices(market, 1)
 
     idx = 2
     n_buy = 100
-    cost = shares_to_cost(prices[idx], n_buy, b)
-    n[idx] += n_buy
+    cost = shares_to_cost(market, prices[idx], n_buy, 1)
+    market.n_shares[1][idx] += n_buy
     money += floor(cost * 100) / 100
-    prices = compute_prices(n, b)
+    prices = compute_prices(market, 1)
 
     @test money ≈ 0
     @test prices ≈ [0.50, 0.50]
@@ -155,12 +164,14 @@ end
     using ABMPredictionMarkets: cost_to_shares
     using Test
 
-    b = 300
     price = 0.25
     cost = -100
+    elasticity = fill(300.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
 
-    shares = cost_to_shares(cost, price, b)
-    cost1 = shares_to_cost(price, shares, b)
+    shares = cost_to_shares(market, cost, price, 1)
+    cost1 = shares_to_cost(market, price, shares, 1)
 
     @test cost ≈ cost1
 end
@@ -172,13 +183,15 @@ end
     using ABMPredictionMarkets: cost_to_shares
     using Test
 
-    b = 300
     price = 0.25
     shares = 20
+    elasticity = fill(300.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
 
-    cost = shares_to_cost(price, shares, b)
-    shares1 = cost_to_shares(cost, price, b)
+    cost = shares_to_cost(market, price, shares, 1)
 
+    shares1 = cost_to_shares(market, cost, price, 1)
     @test shares ≈ shares1
 end
 
@@ -190,13 +203,15 @@ end
     using ABMPredictionMarkets: cost_to_shares
     using Test
 
-    b = 300
     price = 0.30
     cost = 20
+    elasticity = fill(300.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
 
-    shares = cost_to_shares(cost, price, b)
-    new_price = shares_to_price(price, shares, b)
-    cost1 = price_to_cost(new_price, price, b)
+    shares = cost_to_shares(market, cost, price, 1)
+    new_price = shares_to_price(market, price, shares, 1)
+    cost1 = price_to_cost(market, new_price, price, 1)
 
     @test cost ≈ cost1
 end
@@ -209,14 +224,16 @@ end
     using ABMPredictionMarkets: cost_to_shares
     using Test
 
-    b = 300
     price = 0.30
     cost = 20
     shares = 25
+    elasticity = fill(300.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
 
-    new_price = shares_to_price(price, shares, b)
-    cost = price_to_cost(new_price, price, b)
-    shares1 = cost_to_shares(cost, price, b)
+    new_price = shares_to_price(market, price, shares, 1)
+    cost = price_to_cost(market, new_price, price, 1)
+    shares1 = cost_to_shares(market, cost, price, 1)
 
     @test shares ≈ shares1
 end
@@ -228,12 +245,14 @@ end
     using ABMPredictionMarkets: shares_to_price
     using Test
 
-    b = 300
     price = 0.30
     new_price = 0.35
+    elasticity = fill(300.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
 
-    shares = price_to_shares(new_price, price, b)
-    new_price1 = shares_to_price(price, shares, b)
+    shares = price_to_shares(market, new_price, price, 1)
+    new_price1 = shares_to_price(market, price, shares, 1)
 
     @test new_price ≈ new_price1
 end
@@ -245,12 +264,14 @@ end
     using ABMPredictionMarkets: shares_to_price
     using Test
 
-    b = 300
     price = 0.30
     shares = 16
+    elasticity = fill(300.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
 
-    new_price = shares_to_price(price, shares, b)
-    shares1 = price_to_shares(new_price, price, b)
+    new_price = shares_to_price(market, price, shares, 1)
+    shares1 = price_to_shares(market, new_price, price, 1)
 
     @test shares ≈ shares1
 end
@@ -264,13 +285,17 @@ end
     using Test
 
     money = 1000
-    n_options = 2
+    n = 2
     upper_price = 0.98
     n_shares = fill(0.0, 2)
+    elasticity = fill(300.0, 2)
+    n_options = fill(2, 2)
+    market = LSR(; elasticity, n_options)
 
-    b = set_elasticity(money, n_options, upper_price)
-    n_shares[1] = cost_to_shares(-money, 0.50, b)
-    prices = compute_prices(n_shares, b)
+    b = set_elasticity(money, n, upper_price)
+    market.elasticity[1] = b
+    market.n_shares[1][1] = cost_to_shares(market, -money, 0.50, 1)
+    prices = compute_prices(market, 1)
 
     @test prices[1] ≈ upper_price
 end

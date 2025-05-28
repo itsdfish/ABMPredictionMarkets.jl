@@ -46,14 +46,13 @@ function initialize(
     δ,
     money,
     max_quantity = 1,
-    info_times = Int[]
 )
     space = nothing
     n_markets = length(μ)
     model = StandardABM(
         TestAgent,
         space;
-        properties = CDA(; n_markets, info_times),
+        properties = CDA(; n_markets),
         agent_step!,
         scheduler = Schedulers.Randomly()
     )
@@ -183,14 +182,13 @@ function initialize(
     δ,
     money,
     max_quantity = 1,
-    info_times = Int[]
 )
     space = nothing
     n_markets = length(μ)
     model = StandardABM(
         TestAgent,
         space;
-        properties = CDA(; n_markets, info_times),
+        properties = CDA(; n_markets),
         agent_step!,
         scheduler = Schedulers.Randomly()
     )

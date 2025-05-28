@@ -30,7 +30,6 @@ end
         η,
         δ,
         money,
-        info_times = Int[]
     )
 
 Initializes a model for sub-and-super-additivity in prediction markets. 
@@ -43,7 +42,6 @@ Initializes a model for sub-and-super-additivity in prediction markets.
 - `σ`: standard deviation of belief for yes event across agents
 - `δ::Int`: range of bid and ask noise 
 - `money`: the initial amount of money in cents each agent is given
-- `info_times`: a vector of days on which new information is provided 
 """
 function initialize(
     ::Type{<:TestAgent};
@@ -53,14 +51,13 @@ function initialize(
     δ,
     money,
     max_quantity = 1,
-    info_times = Int[]
 )
     space = nothing
     n_markets = length(μ)
     model = StandardABM(
         TestAgent,
         space;
-        properties = CDA(; n_markets, info_times),
+        properties = CDA(; n_markets),
         agent_step!,
         model_step!,
         scheduler = Schedulers.Randomly()
@@ -108,7 +105,6 @@ end
         δ,
         money,
         n_markets,
-        info_times = Int[]
     )
 
 Initializes a model for sub-and-super-additivity in prediction markets. 
@@ -121,7 +117,6 @@ Initializes a model for sub-and-super-additivity in prediction markets.
 - `σ`: standard deviation of belief for yes event across agents
 - `δ::Int`: range of bid and ask noise 
 - `money`: the initial amount of money in cents each agent is given
-- `info_times`: a vector of days on which new information is provided 
 - `n_markets`: the number of available markets in the simulation 
 """
 function initialize(
@@ -130,17 +125,16 @@ function initialize(
     μ,
     η,
     money,
-    info_times = Int[]
 )
     space = nothing
     total_money = money * n_agents
     n_options = [4, 2]
     elasticity = set_elasticity.(total_money, n_options, 0.99)
-    LSR(; elasticity, n_options, info_times)
+    LSR(; elasticity, n_options)
     model = StandardABM(
         LSRAgent,
         space;
-        properties = LSR(; elasticity, n_options, info_times),
+        properties = LSR(; elasticity, n_options),
         agent_step!,
         scheduler = Schedulers.Randomly()
     )
@@ -212,7 +206,6 @@ end
         δ,
         money,
         max_quantity = 1,
-        info_times = Int[]
     )
 
 Initializes a model for sub-and-super-additivity in prediction markets. 
@@ -225,7 +218,6 @@ Initializes a model for sub-and-super-additivity in prediction markets.
 - `σ`: standard deviation of belief for yes event across agents
 - `δ::Int`: range of bid and ask noise 
 - `money`: the initial amount of money in cents each agent is given
-- `info_times`: a vector of days on which new information is provided 
 - `n_markets`: the number of available markets in the simulation 
 """
 function initialize(
@@ -237,14 +229,13 @@ function initialize(
     δ,
     money,
     max_quantity = 1,
-    info_times = Int[]
 )
     space = nothing
     n_markets = length(μ)
     model = StandardABM(
         MultiAgent,
         space;
-        properties = CDA(; n_markets, info_times),
+        properties = CDA(; n_markets),
         agent_step!,
         model_step!,
         scheduler = Schedulers.Randomly()

@@ -40,3 +40,32 @@ function ==(s1::Order, s2::Order)
     end
     return true
 end
+
+"""
+    Order <: AbstractOrder
+
+An object representing a bid, ask, or share. 
+
+# Fields 
+
+- `id::Int`: agent id 
+- `option_id`: option id
+- `cost::Float64`: total cost of order
+- `n_shares`: the number of shares in the order
+
+# Constructors 
+
+    LSROrder(id, option, cost, n_shares)
+
+    LSROrder(; id, option, cost, n_shares)
+"""
+mutable struct LSROrder <: AbstractOrder
+    id::Int
+    option::Int
+    cost::Float64
+    n_shares::Float64
+end
+
+function LSROrder(; id, option, cost, n_shares)
+    return LSROrder(id, option, cost, n_shares)
+end

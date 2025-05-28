@@ -103,14 +103,13 @@ function initialize(
     money,
     max_quantity = 1,
     unpacking_factor,
-    info_times = Int[]
 )
     space = nothing
     n_markets = length(μ)
     model = StandardABM(
         MultiAgent,
         space;
-        properties = CDA(; n_markets, info_times),
+        properties = CDA(; n_markets),
         agent_step!,
         scheduler = Schedulers.Randomly()
     )
@@ -338,7 +337,6 @@ In the code block below, we define a function that initializes the model and add
 - `money`: the initial amount of money given to each agent
 - `max_quantity = 1`: the maximum number of shares per order for each agent per day
 - `unpacking_factor`: controls the degree of subadditivity in the judgments of the subadditive agents
-- `info_times = Int[]`: required keyword argument that is not needed for this model
 
 ```@example advanced_example 
 function initialize(
@@ -352,14 +350,13 @@ function initialize(
     money,
     max_quantity = 1,
     unpacking_factor,
-    info_times = Int[]
 )
     space = nothing
     n_markets = length(μ)
     model = StandardABM(
         MultiAgent,
         space;
-        properties = CDA(; n_markets, info_times),
+        properties = CDA(; n_markets),
         agent_step!,
         scheduler = Schedulers.Randomly()
     )

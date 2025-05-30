@@ -50,7 +50,7 @@ function initialize(
     η,
     δ,
     money,
-    max_quantity = 1,
+    max_quantity = 1
 )
     space = nothing
     n_markets = length(μ)
@@ -124,7 +124,7 @@ function initialize(
     n_agents,
     μ,
     η,
-    money,
+    money
 )
     space = nothing
     total_money = money * n_agents
@@ -228,7 +228,7 @@ function initialize(
     η,
     δ,
     money,
-    max_quantity = 1,
+    max_quantity = 1
 )
     space = nothing
     n_markets = length(μ)

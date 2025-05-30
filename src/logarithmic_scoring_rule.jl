@@ -51,20 +51,30 @@ function agent_step!(agent, ::MarketAgent, market::AbstractLSR, model)
         judgments = agent.judgments[bidx]
         diffs = abs.(judgments .- prices)
         for idx ∈ sortperm(diffs)
-            cost = price_to_cost(market, judgments[idx], prices[idx], bidx)
-            if cost ≥ 0
-                n_shares = agent.shares[bidx][idx]
-                share_value = shares_to_cost(market, prices[idx], -n_shares, bidx)
-                amount = min(share_value, cost)
-            else
-                amount = max(cost, -agent.money)
-            end
-            n_shares = cost_to_shares(market, amount, prices[idx], bidx)
-            order = LSROrder(; id = agent.id, n_shares, cost = amount, option = idx)
+            order = create_order(agent, model, bidx, idx)
             transact!(order, market, model, bidx)
         end
     end
-    return nothing 
+    return nothing
+end
+
+function create_order(agent::MarketAgent, model, bidx, idx)
+    return create_order(agent, variant(agent), get_market(model), model, bidx, idx)
+end
+
+function create_order(agent, ::MarketAgent, market::AbstractLSR, model, bidx, idx)
+    prices = compute_prices(market, bidx)
+    judgments = agent.judgments[bidx]
+    cost = price_to_cost(market, judgments[idx], prices[idx], bidx)
+    if cost ≥ 0
+        n_shares = agent.shares[bidx][idx]
+        share_value = shares_to_cost(market, prices[idx], -n_shares, bidx)
+        amount = min(share_value, cost)
+    else
+        amount = max(cost, -agent.money)
+    end
+    n_shares = cost_to_shares(market, amount, prices[idx], bidx)
+    return LSROrder(; id = agent.id, n_shares, cost = amount, option = idx)
 end
 
 function transact!(order, market::AbstractLSR, model, bidx)

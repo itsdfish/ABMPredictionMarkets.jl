@@ -1,4 +1,4 @@
-@testitem "shares to cost 1" begin 
+@testitem "shares to cost 1" begin
     using ABMPredictionMarkets
     using ABMPredictionMarkets: shares_to_cost
     using Test
@@ -20,7 +20,7 @@
     @test cost ≈ -4.743926019914241
 end
 
-@testitem "shares to cost 2" begin 
+@testitem "shares to cost 2" begin
     using ABMPredictionMarkets
     using ABMPredictionMarkets: shares_to_cost
     using Test
@@ -42,7 +42,7 @@ end
     @test cost ≈ 5
 end
 
-@testitem "shares to cost 3" begin 
+@testitem "shares to cost 3" begin
     using ABMPredictionMarkets
     using ABMPredictionMarkets: shares_to_cost
     using Test
@@ -64,7 +64,7 @@ end
     @test cost ≈ -5
 end
 
-@testitem "shares to cost 4" begin 
+@testitem "shares to cost 4" begin
     using ABMPredictionMarkets
     using ABMPredictionMarkets: shares_to_cost
     using Test

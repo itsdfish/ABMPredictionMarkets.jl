@@ -35,21 +35,44 @@ function CPMM(; yes_reserves, no_reserves)
     )
 end
 
-function get_price(market::AbstractCPMM, midx, yes)
+"""
+    get_price(market::AbstractCPMM, midx, yes::Bool)
+
+Returns the current price of the specified share. 
+
+# Arguments 
+
+- `market::AbstractCPMM`: an abstract constant product market maker object 
+- `midx`: market index
+- `yes::Bool`: corresponds to a yes share if true; otherwise, corresponds to a no share
+"""
+function get_price(market::AbstractCPMM, midx, yes::Bool)
     y = market.yes_reserves[midx]
     n = market.no_reserves[midx]
     # yes price goes up as n goes up and y goes down
     return yes ? n / (y + n) : y / (y + n)
 end
 
-function update_reserves!(market::AbstractCPMM, midx, n_shares, cost, yes)
-    new_y, new_n = update_reserves(market, midx, n_shares, cost, yes)
+"""
+    update_reserves!(market::AbstractCPMM, n_shares, cost, midx, yes::Bool)
+
+Updates the reserves given a transaction with a specified number of shares and total cost. 
+
+# Arguments 
+
+- `market::AbstractCPMM`: an abstract constant product market maker object 
+- `cost`: the total cost of the shares
+- `midx`: market index
+- `yes::Bool`: corresponds to a yes share if true; otherwise, corresponds to a no share
+"""
+function update_reserves!(market::AbstractCPMM, n_shares, cost, midx, yes::Bool)
+    new_y, new_n = update_reserves(market, n_shares, cost, midx, yes)
     market.yes_reserves[midx] = new_y
     market.no_reserves[midx] = new_n
     return new_y, new_n
 end
 
-function update_reserves(market::AbstractCPMM, midx, n_shares, cost, yes)
+function update_reserves(market::AbstractCPMM, n_shares, cost, midx, yes)
     y, n = get_reserves(market, midx)
     return yes ? (y - n_shares + cost, n + cost) : (y + cost, n - n_shares + cost)
 end
@@ -64,30 +87,37 @@ Computes the total cost associated with a given number of shares of shares.
 - `market::AbstractCPMM`: an abstract constant product market maker object 
 - `n_shares`: the number of shares
 - `midx`: market index
+- `yes::Bool`: corresponds to a yes share if true; otherwise, corresponds to a no share
 """
 function shares_to_cost(market::AbstractCPMM, n_shares, midx, yes::Bool)
-    y, n = get_reserves(market, midx)
-    if yes 
-        return -0.5 * (-sqrt(n_shares^2 + 2*n_shares*(n - y) + (n+y)^2) - n_shares + n + y)
-    else
-        return -0.5 * (-sqrt(n_shares^2 + 2*n_shares*(y - n) + (n+y)^2) - n_shares + n + y)
-    end
-    #return (√((n - n_shares + y)^2 + 4 * n * n_shares) + n_shares - n - y) / 2
+    reserves = get_reserves(market, midx)
+    y, n = yes ? reserves : reserves[[2, 1]]
+    return (√((n - n_shares + y)^2 + 4 * n * n_shares) + n_shares - n - y) / 2
 end
 
 function shares_to_cost(::AbstractCPMM, n_shares, y, n)
     return (√((n - n_shares + y)^2 + 4 * n * n_shares) + n_shares - n - y) / 2
 end
 
-function price_to_cost(market::AbstractCPMM, new_price, midx, yes)
-    y, n = get_reserves(market, midx)
-    D = new_price - get_price(market, midx, yes)
-    numerator =
-        -√(max(0, -D^2 * n^3 * y - 2 * D^2 * n^2 * y^2 - D^2 * n * y^3 - D * n^3 * y +
-           D * n * y^3 + n^2 * y^2)) - D * n^2 - D * n * y + n * y
-    denominator = D*n + D*y - y
-    println("numerator $numerator denominator $denominator D $D n $n y $y")
-    cost = numerator / denominator
+"""
+    price_to_cost(market::AbstractCPMM, target_price, midx, yes::Bool)
+
+Computes the total cost required to achieve a target price. 
+
+# Arguments 
+
+- `market::AbstractCPMM`: an abstract constant product market maker object 
+- `target_price`: the number of shares
+- `midx`: market index
+- `yes::Bool`: corresponds to a yes share if true; otherwise, corresponds to a no share
+"""
+function price_to_cost(market::AbstractCPMM, target_price, midx, yes::Bool)
+    reserves = get_reserves(market, midx)
+    y, n = yes ? reserves : reserves[[2, 1]]
+    d = target_price - get_price(market, midx, yes)
+    cost =
+        (-√(-d^2 * n^3 * y - 2 * d^2 * n^2 * y^2 - d^2 * n * y^3 - d * n^3 * y +
+            d * n * y^3 + n^2 * y^2) - d * n^2 - d * n * y + n * y) / (d * n + d * y - y)
     return cost
 end
 
@@ -116,8 +146,9 @@ Computes the number of shares required to achieve a given cost.
 # Arguments 
 
 - `market::AbstractCPMM`: an abstract constant product market maker object 
-- `cost`: the cost of the shares
+- `cost`: the total cost of the shares
 - `midx`: market index
+- `yes::Bool`: corresponds to a yes share if true; otherwise, corresponds to a no share
 """
 function cost_to_shares(market::AbstractCPMM, cost, midx, yes::Bool)
     y, n = get_reserves(market, midx)

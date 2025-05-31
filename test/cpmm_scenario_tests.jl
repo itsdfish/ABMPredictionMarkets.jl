@@ -1,4 +1,4 @@
-@testitem "scenario 1" begin 
+@testitem "scenario 1" begin
     using ABMPredictionMarkets
     using ABMPredictionMarkets: get_price
     using ABMPredictionMarkets: shares_to_cost
@@ -6,8 +6,8 @@
     using ABMPredictionMarkets: update_reserves
     using ABMPredictionMarkets: cost_to_shares
     using ABMPredictionMarkets: price_to_cost
-
     using Test
+
     yes_reserves = 100
     no_reserves = 95
     market = CPMM(
@@ -26,7 +26,7 @@
     yes_reserves1, no_reserves1 = update_reserves!(market, midx, n_shares, cost, yes)
     money -= cost
     price2 = get_price(market, midx, yes)
-    @test price2 > price1 
+    @test price2 > price1
     @test yes_reserves * no_reserves ≈ yes_reserves1 * no_reserves1
 
     # sell n_shares 
@@ -34,14 +34,14 @@
     yes_reserves2, no_reserves2 = update_reserves!(market, midx, -n_shares, cost, yes)
     money -= cost
     price3 = get_price(market, midx, yes)
-    @test price1 ≈ price3 
+    @test price1 ≈ price3
     @test yes_reserves ≈ yes_reserves2
     @test no_reserves ≈ no_reserves2
     @test money ≈ initial_money
     @test yes_reserves * no_reserves ≈ yes_reserves2 * no_reserves2
 end
 
-@testitem "scenario 2" begin 
+@testitem "scenario 2" begin
     using ABMPredictionMarkets
     using ABMPredictionMarkets: get_price
     using ABMPredictionMarkets: shares_to_cost
@@ -50,7 +50,7 @@ end
     using ABMPredictionMarkets: cost_to_shares
     using ABMPredictionMarkets: price_to_cost
     using Test
-    
+
     yes_reserves = 100
     no_reserves = 95
     market = CPMM(
@@ -69,7 +69,7 @@ end
     yes_reserves1, no_reserves1 = update_reserves!(market, midx, n_shares, cost, yes)
     money -= cost
     price2 = get_price(market, midx, yes)
-    @test price2 > price1 
+    @test price2 > price1
     @test yes_reserves * no_reserves ≈ yes_reserves1 * no_reserves1
 
     # sell n_shares 
@@ -77,7 +77,7 @@ end
     yes_reserves2, no_reserves2 = update_reserves!(market, midx, -n_shares, cost, yes)
     money -= cost
     price3 = get_price(market, midx, yes)
-    @test price1 ≈ price3 
+    @test price1 ≈ price3
     @test yes_reserves ≈ yes_reserves2
     @test no_reserves ≈ no_reserves2
     @test money ≈ initial_money

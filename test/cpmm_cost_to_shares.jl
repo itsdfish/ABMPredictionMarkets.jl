@@ -1,4 +1,4 @@
-@testitem "cost to shares 1" begin 
+@testitem "cost to shares 1" begin
     using ABMPredictionMarkets
     using ABMPredictionMarkets: cost_to_shares
     using Test
@@ -19,7 +19,7 @@
     @test n_shares ≈ 2.5322594160358616
 end
 
-@testitem "cost to shares 2" begin 
+@testitem "cost to shares 2" begin
     using ABMPredictionMarkets
     using ABMPredictionMarkets: cost_to_shares
     using Test

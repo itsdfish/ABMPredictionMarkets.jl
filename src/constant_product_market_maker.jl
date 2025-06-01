@@ -173,7 +173,6 @@ function cost_to_shares(market::AbstractCPMM, cost, midx, yes::Bool)
     return cost * (n + cost + y) / denom
 end
 
-
 """
     compute_optimal_purchase(agent, market::CPMM, belief, midx, yes)
 

@@ -21,7 +21,7 @@
         money,
         no_reserves = [yes_reserves],
         yes_reserves = [no_reserves],
-        manipulate_time = 100,
+        manipulate_time = 100
     )
 
     model = initialize(CPMMAgent; config...)
@@ -29,8 +29,8 @@
     agent = model[1]
 
     midx = 1
-    yes = true 
-    belief = .55
+    yes = true
+    belief = 0.55
     cost = compute_optimal_purchase(agent, market, belief, midx, yes)
     n_shares = cost_to_shares(market, cost, midx, yes)
     order = AMMOrder(; id = agent.id, option = yes, cost, n_shares)
@@ -40,8 +40,6 @@
     @test agent.money ≈ 100 - cost
     @test agent.shares[1][1] == n_shares
     @test yes_reserves * no_reserves ≈ yes_reserves1 * no_reserves1
-
-
 end
 
 @testitem "transact! 2" begin
@@ -67,7 +65,7 @@ end
         money,
         no_reserves = [yes_reserves],
         yes_reserves = [no_reserves],
-        manipulate_time = 100,
+        manipulate_time = 100
     )
 
     model = initialize(CPMMAgent; config...)
@@ -75,8 +73,8 @@ end
     agent = model[1]
 
     midx = 1
-    yes = false 
-    belief = .40
+    yes = false
+    belief = 0.40
     cost = compute_optimal_purchase(agent, market, belief, midx, yes)
     n_shares = cost_to_shares(market, cost, midx, yes)
     order = AMMOrder(; id = agent.id, option = yes, cost, n_shares)
@@ -92,11 +90,10 @@ end
     @test yes_reserves * no_reserves ≈ yes_reserves1 * no_reserves1
     @test compute_price(market, 1, true) ≈ 0.4908940134786863
 
-
     agent = model[3]
     midx = 1
-    yes = true 
-    belief = .60
+    yes = true
+    belief = 0.60
     cost = compute_optimal_purchase(agent, market, belief, midx, yes)
     n_shares = cost_to_shares(market, cost, midx, yes)
     order = AMMOrder(; id = agent.id, option = yes, cost, n_shares)
@@ -113,11 +110,10 @@ end
     @test yes_reserves * no_reserves ≈ yes_reserves1 * no_reserves1
     @test compute_price(market, 1, true) ≈ 0.5008291923838587
 
-
     agent = model[2]
     midx = 1
-    yes = false 
-    belief = .50
+    yes = false
+    belief = 0.50
     cost = compute_optimal_purchase(agent, market, belief, midx, yes)
     n_shares = cost_to_shares(market, cost, midx, yes)
     order = AMMOrder(; id = agent.id, option = yes, cost, n_shares)

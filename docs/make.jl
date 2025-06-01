@@ -22,7 +22,8 @@ makedocs(;
         "Home" => "index.md",
         "Examples" => [
             "Basic Example" => "basic_example.md",
-            "Custom Example" => "custom_example.md"
+            "Arbitrage Example" => "arbitrage_example.md",
+            "Manipulation Example" => "manipulation_example.md"
         ],
         "API" => "api.md"
     ]

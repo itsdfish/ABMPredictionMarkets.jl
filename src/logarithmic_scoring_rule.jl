@@ -10,8 +10,9 @@ An automated market maker using the logarithmic scoring rule.
 - `market_prices::Vector{Vector{Vector{Float64}}}`: the market price in dollars after each interaction. The market price stays the same
     if a transaction does not occur. Each sub-vector corresponds to a different market at a different iteration. 
 - `n_decimals::Int`: decimal places for rounding in favor of the automated market maker
-- `trade_counts::Vector{Vector{Int}}`: each elements represents the number of trades made per step
+- `trade_volume::Vector{Vector{Int}}`: each elements represents the number of trades made per step
 - `iteration_ids`::Vector{Vector{Int}}`: iteration number on which market prices are recorded
+- `times::Vector{Int} = Int[]`: times at which specific events may occur
 
 # Constructors
 
@@ -28,18 +29,20 @@ mutable struct LSR <: AbstractLSR
     n_shares::Vector{Vector{Float64}}
     market_prices::Vector{Vector{Vector{Float64}}}
     n_decimals::Int
-    trade_counts::Vector{Vector{Float64}}
+    trade_volume::Vector{Vector{Float64}}
     iteration_ids::Vector{Vector{Int}}
+    times::Vector{Int}
 end
 
-function LSR(; elasticity, n_options)
+function LSR(; elasticity, n_options, times = Int[])
     return LSR(
         elasticity,
         zeros.(n_options),
         init(Float64, length(n_options)),
         3,
         init(Float64, length(n_options)),
-        init(Int, length(n_options))
+        init(Int, length(n_options)),
+        times
     )
 end
 
@@ -74,7 +77,7 @@ function create_order(agent, ::MarketAgent, market::AbstractLSR, model, bidx, id
         amount = max(cost, -agent.money)
     end
     n_shares = cost_to_shares(market, amount, prices[idx], bidx)
-    return LSROrder(; id = agent.id, n_shares, cost = amount, option = idx)
+    return AMMOrder(; id = agent.id, n_shares, cost = amount, option = idx)
 end
 
 function transact!(order, market::AbstractLSR, model, bidx)
@@ -85,7 +88,7 @@ function transact!(order, market::AbstractLSR, model, bidx)
     market.n_shares[bidx][idx] += order.n_shares
     prices = compute_prices(market, bidx)
     push!(model.market_prices[bidx], prices)
-    push!(model.trade_counts[bidx], order.n_shares)
+    push!(model.trade_volume[bidx], order.n_shares)
     push!(model.iteration_ids[bidx], abmtime(model))
     return nothing
 end
@@ -148,35 +151,36 @@ function shares_to_price(market::AbstractLSR, price, n_shares, bidx)
 end
 
 """
-    price_to_shares(new_price, price, elasticity)   
+    price_to_shares(target_price, price, elasticity)   
 
 Finds the number of shares needed to change to a new price. 
 
 # Arguments 
 
-- `new_price`: the new price after purchacing shares
+- `target_price`: the new price after purchacing shares
 - `price`: the current price of a given share
 - `elasticity`: the elasticity parameter
 """
-function price_to_shares(market::AbstractLSR, new_price, price, bidx)
+function price_to_shares(market::AbstractLSR, target_price, price, bidx)
     (; elasticity) = market
-    return elasticity[bidx] * log((new_price * (1 - price)) / (price * (1 - new_price)))
+    return elasticity[bidx] *
+           log((target_price * (1 - price)) / (price * (1 - target_price)))
 end
 
 """
-    price_to_cost(new_price, price, elasticity)  
+    price_to_cost(target_price, price, elasticity)  
 
 Finds the number of shares needed to change to a new price. 
 
 # Arguments 
 
-- `new_price`: the new price after purchacing shares
+- `target_price`: the new price after purchacing shares
 - `price`: the current price of a given share
 - `elasticity`: the elasticity parameter
 """
-function price_to_cost(market::AbstractLSR, new_price, price, bidx)
+function price_to_cost(market::AbstractLSR, target_price, price, bidx)
     (; elasticity) = market
-    return -elasticity[bidx] * log((1 - price) / (1 - new_price))
+    return -elasticity[bidx] * log((1 - price) / (1 - target_price))
 end
 
 """

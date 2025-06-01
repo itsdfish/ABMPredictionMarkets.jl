@@ -38,7 +38,7 @@ function agent_step!(agent, ::MarketAgent, ::AbstractPredictionMarket, model)
         remove_orders!(agent, model, bidx)
         order = create_order(agent, model, bidx)
         if order.type == :empty
-            push!(model.trade_counts[bidx], 0)
+            push!(model.trade_volume[bidx], 0)
             push!(model.iteration_ids[bidx], abmtime(model))
             market_prices = model.market_prices[bidx]
             isempty(market_prices) ? push!(market_prices, NaN) :

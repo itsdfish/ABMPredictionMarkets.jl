@@ -130,7 +130,7 @@ function initialize(
     total_money = money * n_agents
     n_options = [4, 2]
     elasticity = set_elasticity.(total_money, n_options, 0.99)
-    LSR(; elasticity, n_options)
+
     model = StandardABM(
         LSRAgent,
         space;
@@ -254,6 +254,46 @@ function initialize(
             shares = init(Order, n_markets)
         )
         add_agent!(agent, model)
+    end
+    return model
+end
+
+@agent struct CPMMAgent(NoSpaceAgent) <: MarketAgent
+    judgments::Vector{Vector{Float64}}
+    money::Float64
+    shares::Vector{Vector{Float64}}
+    λ::Float64
+end
+
+function initialize(
+    agent_type::Type{<:CPMMAgent};
+    n_agents,
+    λ,
+    money,
+    yes_reserves,
+    no_reserves,
+    manipulate_time
+)
+    yes_reserves = deepcopy(yes_reserves)
+    no_reserves = deepcopy(no_reserves)
+    space = nothing
+    model = StandardABM(
+        agent_type,
+        space;
+        properties = CPMM(; yes_reserves, no_reserves, times = [manipulate_time]),
+        model_step!,
+        scheduler = Schedulers.Randomly()
+    )
+    for i ∈ 1:n_agents
+        p = (i - 1) / (n_agents - 1)
+        judgments = [[p, 1-p]]
+        add_agent!(
+            model;
+            judgments,
+            money,
+            λ,
+            shares = [zeros(2)]
+        )
     end
     return model
 end

@@ -68,7 +68,7 @@ function agent_step!(agent, ::ArbitrageAgent, ::AbstractPredictionMarket, model)
         end
     else
         for bidx ∈ 1:length(model.order_books) 
-            push!(model.trade_counts[bidx], 0)
+            push!(model.trade_volume[bidx], 0)
             push!(model.iteration_ids[bidx], abmtime(model))
             market_prices = model.market_prices[bidx]
             isempty(market_prices) ? push!(market_prices, NaN) :
@@ -243,17 +243,34 @@ The goal of the arbitrage agent is to exploit sub-additive prices by purchacing 
 <details>
 <summary><b>Mathematical Details</b></summary>
 ```
-To see why, note the cost $c$ is
+Below, we show that the cost $c$ is less than the pay out $n - 1$:
+
+$c < n - 1$
+
+First, we define $c$ as:
 
 $c = \sum_{i=1}^n \bar{e}_i$
+
+In a binary market, $\bar{e}_i = 1 - e_i$. Substituting $1 - e_i$ into the equation results in:
+
 $c = \sum_{i=1}^n 1 - e_i$
+
+The terms in the summation can be broken down into seperate summations of the same index set:
+
 $c = \sum_{i=1}^n 1 - \sum_{i=1}^n e_i$
+
+Substitute $\sum_{i=1}^n 1 = n$ into the equation above, resulting in:
+
 $c = n - \sum_{i=1}^n e_i.$
 
 Substituting $n - \sum_{i=1}^n e_i$ into $c < n-1$, we have
 
 $n - \sum_{i=1}^n e_i < n - 1$
+
+Subtract $n$ from both sides:
+
 $\sum_{i=1}^n e_i > 1,$
+
 which is consistent with our assumption of sub-additivity.
 ```@raw html
 </details>
@@ -294,7 +311,7 @@ function agent_step!(agent, ::ArbitrageAgent, ::AbstractPredictionMarket, model)
         end
     else
         for bidx ∈ 1:length(model.order_books) 
-            push!(model.trade_counts[bidx], 0)
+            push!(model.trade_volume[bidx], 0)
             push!(model.iteration_ids[bidx], abmtime(model))
             market_prices = model.market_prices[bidx]
             isempty(market_prices) ? push!(market_prices, NaN) :

@@ -94,7 +94,7 @@ plot(
 )
 hline!(μ, color = :black, linestyle = :dash, label = nothing)
 
-trade_volume = summarize_by_iteration.(model.trade_counts, model.iteration_ids; fun = sum)
+trade_volume = summarize_by_iteration.(model.trade_volume, model.iteration_ids; fun = sum)
 
 plot(
     trade_volume;
@@ -254,7 +254,7 @@ hline!(μ, color = :black, linestyle = :dash, label = nothing)
 The plot below shows trade volume computed as the sum of trades per day.
 
 ```@example example
-trade_volume = summarize_by_iteration.(model.trade_counts, model.iteration_ids; fun = sum)
+trade_volume = summarize_by_iteration.(model.trade_volume, model.iteration_ids; fun = sum)
 
 plot(
     trade_volume;

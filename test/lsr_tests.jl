@@ -210,8 +210,8 @@ end
     market = LSR(; elasticity, n_options)
 
     shares = cost_to_shares(market, cost, price, 1)
-    new_price = shares_to_price(market, price, shares, 1)
-    cost1 = price_to_cost(market, new_price, price, 1)
+    target_price = shares_to_price(market, price, shares, 1)
+    cost1 = price_to_cost(market, target_price, price, 1)
 
     @test cost ≈ cost1
 end
@@ -231,8 +231,8 @@ end
     n_options = fill(2, 2)
     market = LSR(; elasticity, n_options)
 
-    new_price = shares_to_price(market, price, shares, 1)
-    cost = price_to_cost(market, new_price, price, 1)
+    target_price = shares_to_price(market, price, shares, 1)
+    cost = price_to_cost(market, target_price, price, 1)
     shares1 = cost_to_shares(market, cost, price, 1)
 
     @test shares ≈ shares1
@@ -246,15 +246,15 @@ end
     using Test
 
     price = 0.30
-    new_price = 0.35
+    target_price = 0.35
     elasticity = fill(300.0, 2)
     n_options = fill(2, 2)
     market = LSR(; elasticity, n_options)
 
-    shares = price_to_shares(market, new_price, price, 1)
-    new_price1 = shares_to_price(market, price, shares, 1)
+    shares = price_to_shares(market, target_price, price, 1)
+    target_price1 = shares_to_price(market, price, shares, 1)
 
-    @test new_price ≈ new_price1
+    @test target_price ≈ target_price1
 end
 
 @testitem "shares to price conversions" begin
@@ -270,8 +270,8 @@ end
     n_options = fill(2, 2)
     market = LSR(; elasticity, n_options)
 
-    new_price = shares_to_price(market, price, shares, 1)
-    shares1 = price_to_shares(market, new_price, price, 1)
+    target_price = shares_to_price(market, price, shares, 1)
+    shares1 = price_to_shares(market, target_price, price, 1)
 
     @test shares ≈ shares1
 end

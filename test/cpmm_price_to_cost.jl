@@ -1,7 +1,7 @@
 @testitem "price_to_cost 1" begin
     using ABMPredictionMarkets
     using ABMPredictionMarkets: cost_to_shares
-    using ABMPredictionMarkets: get_price
+    using ABMPredictionMarkets: compute_price
     using ABMPredictionMarkets: get_reserves
     using ABMPredictionMarkets: price_to_cost
     using ABMPredictionMarkets: update_reserves!
@@ -16,25 +16,25 @@
 
     yes = true
     midx = 1
-    price = get_price(market, midx, yes)
-    target_price = price + 0.05
+    price = compute_price(market, midx, yes)
+    tarcompute_price = price + 0.05
 
-    cost = price_to_cost(market, target_price, midx, yes)
+    cost = price_to_cost(market, tarcompute_price, midx, yes)
     n_shares = cost_to_shares(market, cost, midx, yes)
-    yes_reserves1, no_reserves1 = update_reserves!(market, midx, n_shares, cost, yes)
-    target_price = get_price(market, midx, yes)
+    yes_reserves1, no_reserves1 = update_reserves!(market, n_shares, cost, midx, yes)
+    tarcompute_price = compute_price(market, midx, yes)
 
     @test cost ≈ 10.006265477226084
     @test yes_reserves1 ≈ 90.470791974412
     @test no_reserves1 ≈ 105.00626547722608
     @test yes_reserves * no_reserves ≈ yes_reserves1 * no_reserves1
-    @test target_price ≈ target_price
+    @test tarcompute_price ≈ tarcompute_price
 end
 
 @testitem "price_to_cost 2" begin
     using ABMPredictionMarkets
     using ABMPredictionMarkets: cost_to_shares
-    using ABMPredictionMarkets: get_price
+    using ABMPredictionMarkets: compute_price
     using ABMPredictionMarkets: get_reserves
     using ABMPredictionMarkets: price_to_cost
     using ABMPredictionMarkets: update_reserves!
@@ -49,25 +49,25 @@ end
 
     yes = true
     midx = 1
-    price = get_price(market, midx, yes)
-    target_price = price - 0.05
+    price = compute_price(market, midx, yes)
+    tarcompute_price = price - 0.05
 
-    cost = price_to_cost(market, target_price, midx, yes)
+    cost = price_to_cost(market, tarcompute_price, midx, yes)
     n_shares = cost_to_shares(market, cost, midx, yes)
-    yes_reserves1, no_reserves1 = update_reserves!(market, midx, n_shares, cost, yes)
-    target_price = get_price(market, midx, yes)
+    yes_reserves1, no_reserves1 = update_reserves!(market, n_shares, cost, midx, yes)
+    tarcompute_price = compute_price(market, midx, yes)
 
     @test cost ≈ -9.09731627815675
     @test yes_reserves1 ≈ 110.59025851580408
     @test no_reserves1 ≈ 85.90268372184325
     @test yes_reserves * no_reserves ≈ yes_reserves1 * no_reserves1
-    @test target_price ≈ target_price
+    @test tarcompute_price ≈ tarcompute_price
 end
 
 @testitem "price_to_cost 3" begin
     using ABMPredictionMarkets
     using ABMPredictionMarkets: cost_to_shares
-    using ABMPredictionMarkets: get_price
+    using ABMPredictionMarkets: compute_price
     using ABMPredictionMarkets: get_reserves
     using ABMPredictionMarkets: price_to_cost
     using ABMPredictionMarkets: update_reserves!
@@ -83,12 +83,12 @@ end
             no_reserves = [no_reserves]
         )
         yes = rand(Bool)
-        target_price = rand()
-        cost = price_to_cost(market, target_price, midx, yes)
+        tarcompute_price = rand()
+        cost = price_to_cost(market, tarcompute_price, midx, yes)
         n_shares = cost_to_shares(market, cost, midx, yes)
-        update_reserves!(market, midx, n_shares, cost, yes)
+        update_reserves!(market, n_shares, cost, midx, yes)
 
-        price = get_price(market, midx, yes)
-        @test price ≈ target_price
+        price = compute_price(market, midx, yes)
+        @test price ≈ tarcompute_price
     end
 end

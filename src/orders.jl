@@ -42,7 +42,7 @@ function ==(s1::Order, s2::Order)
 end
 
 """
-    Order <: AbstractOrder
+    AMMOrder <: AbstractOrder
 
 An object representing a bid, ask, or share. 
 
@@ -55,17 +55,17 @@ An object representing a bid, ask, or share.
 
 # Constructors 
 
-    LSROrder(id, option, cost, n_shares)
+    AMMOrder(id, option, cost, n_shares)
 
-    LSROrder(; id, option, cost, n_shares)
+    AMMOrder(; id, option, cost, n_shares)
 """
-mutable struct LSROrder <: AbstractOrder
+mutable struct AMMOrder{T} <: AbstractOrder
     id::Int
-    option::Int
+    option::T
     cost::Float64
     n_shares::Float64
 end
 
-function LSROrder(; id, option, cost, n_shares)
-    return LSROrder(id, option, cost, n_shares)
+function AMMOrder(; id, option, cost, n_shares)
+    return AMMOrder(id, option, cost, n_shares)
 end

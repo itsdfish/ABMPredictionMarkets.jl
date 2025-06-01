@@ -22,9 +22,9 @@
     run!(model, n_days)
     # agents make the same number of trades, so both methods are the same 
     for i ∈ 1:n_markets
-        volume1 = compute_trade_volume(model.trade_counts[i], n_agents)
+        volume1 = compute_trade_volume(model.trade_volume[i], n_agents)
         volume2 =
-            summarize_by_iteration(model.trade_counts[i], model.iteration_ids[i]; fun = sum)
+            summarize_by_iteration(model.trade_volume[i], model.iteration_ids[i]; fun = sum)
         @test volume1 == volume2
     end
 end

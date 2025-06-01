@@ -15,6 +15,7 @@ export AbstractPredictionMarket
 export AbstractCDA
 export AbstractCPMM
 export AbstractLSR
+export AMMOrder
 export CDA
 export CPMM
 export LSR

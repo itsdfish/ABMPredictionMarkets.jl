@@ -1,6 +1,6 @@
-# Custom Example 
+# Arbitrage Example 
 
-The purpose of this tutorial is to demonstrate how to create an agent with custom behavior. The example below consists of two agent types: 
+The purpose of this tutorial is to demonstrate how to simulate arbitrage in a set of prediction markets. The example below consists of two agent types: 
 
 1. `subadditive agent`: an agent whose beliefs about a set of prediction markets are subadditive (i.e., exceeds 1), and thus violate probability theory.
 2. `arbitrage agent`: an agent who exploits subadditive markets by purchasing *no shares* in each market.

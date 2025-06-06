@@ -23,7 +23,7 @@ makedocs(;
         "Examples" => [
             "Basic Example" => "basic_example.md",
             "Arbitrage Example" => "arbitrage_example.md",
-            "Manipulation Example" => "manipulation_example.md"
+            "Price Manipulation Example" => "price_manipulation_example.md"
         ],
         "API" => "api.md"
     ]

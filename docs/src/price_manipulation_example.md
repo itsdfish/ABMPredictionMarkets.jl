@@ -24,7 +24,6 @@ using Agents
 using Distributions
 using Plots
 using Random
-using Revise
 import ABMPredictionMarkets: agent_step!
 
 @agent struct CPMMAgent(NoSpaceAgent) <: MarketAgent
@@ -171,7 +170,6 @@ using Agents
 using Distributions
 using Plots
 using Random
-using Revise
 import ABMPredictionMarkets: agent_step!
 ```
 

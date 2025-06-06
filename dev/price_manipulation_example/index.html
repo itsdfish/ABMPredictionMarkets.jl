@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Price Manipulation Example · ABMPredictionMarkets</title><meta name="title" content="Price Manipulation Example · ABMPredictionMarkets"/><meta property="og:title" content="Price Manipulation Example · ABMPredictionMarkets"/><meta property="twitter:title" content="Price Manipulation Example · ABMPredictionMarkets"/><meta name="description" content="Documentation for ABMPredictionMarkets."/><meta property="og:description" content="Documentation for ABMPredictionMarkets."/><meta property="twitter:description" content="Documentation for ABMPredictionMarkets."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&amp;display=swap" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.svg" alt="ABMPredictionMarkets logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../">ABMPredictionMarkets</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox" checked/><label class="tocitem" for="menuitem-2"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../basic_example/">Basic Example</a></li><li><a class="tocitem" href="../arbitrage_example/">Arbitrage Example</a></li><li class="is-active"><a class="tocitem" href>Price Manipulation Example</a><ul class="internal"><li><a class="tocitem" href="#Load-Dependencies"><span>Load Dependencies</span></a></li><li><a class="tocitem" href="#CPMM-Agent"><span>CPMM Agent</span></a></li><li><a class="tocitem" href="#Constant-Product-Market-Maker"><span>Constant Product Market Maker</span></a></li><li><a class="tocitem" href="#Model-Step-Function"><span>Model Step Function</span></a></li><li><a class="tocitem" href="#Agent-Step-Function"><span>Agent Step Function</span></a></li><li><a class="tocitem" href="#Model-Initialization-Function"><span>Model Initialization Function</span></a></li><li><a class="tocitem" href="#Set-RNG-Seed"><span>Set RNG Seed</span></a></li><li><a class="tocitem" href="#Configure-Model"><span>Configure Model</span></a></li><li><a class="tocitem" href="#Simulate-the-Model"><span>Simulate the Model</span></a></li><li><a class="tocitem" href="#Plot-the-Results"><span>Plot the Results</span></a></li><li><a class="tocitem" href="#References"><span>References</span></a></li></ul></li></ul></li><li><a class="tocitem" href="../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Price Manipulation Example</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Price Manipulation Example</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/itsdfish/ABMPredictionMarkets.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/itsdfish/ABMPredictionMarkets.jl/blob/main/docs/src/price_manipulation_example.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Price-Manipulation-Example"><a class="docs-heading-anchor" href="#Price-Manipulation-Example">Price Manipulation Example</a><a id="Price-Manipulation-Example-1"></a><a class="docs-heading-anchor-permalink" href="#Price-Manipulation-Example" title="Permalink"></a></h1><p>Our goal in this example is to develop an agent based model of price manipulation in a prediction market as described in the arXiv paper entitled <em>How manipulable are prediction markets?</em> (Rasooly &amp; Rozzi, 2025). In this example, a small set of agents trade shares in a prediction market based on a constant product market maker. During the trading period, a manipulator increases the current market price by .05 units. The model illustrates partial recovery of the market price, similar to what was found empirically in a large scale field experiment conducted by the authors (Rasooly &amp; Rozzi, 2025).</p><p>If you prefer to skip the explanation below, click on the ▶ icon to reveal a full version of the code.  </p><details>
+<summary><b>Full Code</b></summary><pre><code class="language-julia hljs">using ABMPredictionMarkets
+using ABMPredictionMarkets: compute_optimal_purchase
+using ABMPredictionMarkets: compute_price
+using ABMPredictionMarkets: cost_to_shares
+using ABMPredictionMarkets: get_market
+using ABMPredictionMarkets: init
+using ABMPredictionMarkets: price_to_cost
+using ABMPredictionMarkets: shares_to_cost
+using ABMPredictionMarkets: update_reserves!
+using ABMPredictionMarkets: transact!
+using Agents
+using Distributions
+using Plots
+using Random
+using Revise
+import ABMPredictionMarkets: agent_step!
+
+@agent struct CPMMAgent(NoSpaceAgent) &lt;: MarketAgent
+    judgments::Vector{Vector{Float64}}
+    money::Float64
+    shares::Vector{Vector{Float64}}
+    λ::Float64
+end
+
+function model_step!(model)
+    agent = random_agent(model)
+    agent_step!(agent, model)
+    if abmtime(model) ∈ model.times
+        market = get_market(model)
+        current_price = compute_price(market, 1, true)
+        target_price = min(1, current_price + 0.05)
+        cost = price_to_cost(market, target_price, 1, true)
+        n_shares = cost_to_shares(market, cost, 1, true)
+        update_reserves!(market, n_shares, cost, 1, true)
+        push!(model.trade_volume[1], n_shares)
+        push!(model.market_prices[1], compute_price(market, 1, true))
+    end
+    return nothing
+end
+
+function agent_step!(agent, ::CPMMAgent, market::AbstractCPMM, model)
+    (; judgments, λ) = agent
+    if agent.shares[1][1] &gt; 0
+        # sell yes shares
+        n_shares = -agent.shares[1][1]
+        cost = shares_to_cost(market, n_shares, 1, true)
+        order = AMMOrder(; id = agent.id, option = true, cost, n_shares)
+        transact!(order, market, model, 1)
+        pop!(model.trade_volume[1])
+        pop!(model.market_prices[1])
+    end
+    if agent.shares[1][2] &gt; 0
+        # sell no shares
+        n_shares = -agent.shares[1][2]
+        cost = shares_to_cost(market, n_shares, 1, false)
+        order = AMMOrder(; id = agent.id, option = false, cost, n_shares)
+        transact!(order, market, model, 1)
+        pop!(model.trade_volume[1])
+        pop!(model.market_prices[1])
+    end
+
+    price = compute_price(market, 1, true)
+    belief = (1 - λ) * judgments[1][1] + λ * price
+    if belief ≥ price
+        # buy yes shares
+        cost = compute_optimal_purchase(agent, market, belief, 1, true)
+        n_shares = cost_to_shares(market, cost, 1, true)
+        order = AMMOrder(; id = agent.id, option = true, cost, n_shares)
+        transact!(order, market, model, 1)
+    elseif belief &lt; price
+        # buy no shares
+        cost = compute_optimal_purchase(agent, market, belief, 1, false)
+        n_shares = cost_to_shares(market, cost, 1, false)
+        order = AMMOrder(; id = agent.id, option = false, cost, n_shares)
+        transact!(order, market, model, 1)
+    end
+    return nothing
+end
+
+function initialize(
+    agent_type::Type{&lt;:CPMMAgent};
+    n_agents,
+    λ,
+    money,
+    yes_reserves,
+    no_reserves,
+    manipulate_time
+)
+    yes_reserves = deepcopy(yes_reserves)
+    no_reserves = deepcopy(no_reserves)
+    space = nothing
+    model = StandardABM(
+        agent_type,
+        space;
+        properties = CPMM(; yes_reserves, no_reserves, times = [manipulate_time]),
+        model_step!,
+        scheduler = Schedulers.Randomly()
+    )
+    for i ∈ 1:n_agents
+        p = (i - 1) / (n_agents - 1)
+        judgments = [[p, 1-p]]
+        add_agent!(
+            model;
+            judgments,
+            money,
+            λ,
+            shares = [zeros(2)]
+        )
+    end
+    return model
+end
+
+config = (
+    n_agents = 11,
+    λ = 0.0,
+    money = 100,
+    no_reserves = [1000.0],
+    yes_reserves = [1000.0],
+    manipulate_time = 100,
+)
+
+market_prices = map(1:1000) do _
+    model = initialize(CPMMAgent; config...)
+    run!(model, 200)
+    model.market_prices[1]
+end
+
+plot(
+    mean(market_prices),
+    ylims = (.4, .6),
+    xlabel = &quot;Day&quot;,
+    ylabel = &quot;Price of Yes Share&quot;,
+    linewidth = 2.5,
+    grid = false,
+    leg = false,
+)
+hline!([.5], color = :black, linestyle = :dash)</code></pre></details><h2 id="Load-Dependencies"><a class="docs-heading-anchor" href="#Load-Dependencies">Load Dependencies</a><a id="Load-Dependencies-1"></a><a class="docs-heading-anchor-permalink" href="#Load-Dependencies" title="Permalink"></a></h2><p>Our first step is to load the required dependencies for simulation and plotting. In addition, we will import the function <code>agent_step!</code> so we can create a new method defining the behavior of the agents in the price manipulation simulation.</p><pre><code class="language- hljs">using ABMPredictionMarkets
+using ABMPredictionMarkets: compute_optimal_purchase
+using ABMPredictionMarkets: compute_price
+using ABMPredictionMarkets: cost_to_shares
+using ABMPredictionMarkets: get_market
+using ABMPredictionMarkets: init
+using ABMPredictionMarkets: price_to_cost
+using ABMPredictionMarkets: shares_to_cost
+using ABMPredictionMarkets: update_reserves!
+using ABMPredictionMarkets: transact!
+using Agents
+using Distributions
+using Plots
+using Random
+using Revise
+import ABMPredictionMarkets: agent_step!</code></pre><h2 id="CPMM-Agent"><a class="docs-heading-anchor" href="#CPMM-Agent">CPMM Agent</a><a id="CPMM-Agent-1"></a><a class="docs-heading-anchor-permalink" href="#CPMM-Agent" title="Permalink"></a></h2><p>The code block below defines an agent type called <em>CPMMAgent</em>. In this agent type, the first three fields are required, and the fourth field is an optional parameter included for this specific simulation scenario. The fields are defined as follows:</p><ul><li><code>judgements</code>: a vector of vectors in which elements of the outer vector represent individual prediction markets and elements of the inner vectors represent subjective price estimates of options of a given market. For example <code>judgements = [[.3,.7],[.2,.8]]</code> contains price estimates for two prediction markets and <code>[.3,.7]</code> represents the price estimates of the first and second options of the first prediction market. Currently, <code>CPMM</code> only supports binary prediction markets, but multiple prediction markets may be used within the same simulation. </li><li><code>money</code>: the amount of money in dollars available to purchase shares.</li><li><code>shares</code>: a vector of vectors recording the number of shares the agent owns. Similar to the field <code>judgments</code> elements of the outer vector represent individual prediction markets and elements of inner vector represent different options within a prediction market. </li><li><code>λ</code>: the weight given to an estimated price in <code>judgments</code> relative to the current market place, such that <span>$\lambda \in \left[0, 1 \right]$</span>.  </li></ul><pre><code class="language-julia hljs">@agent struct CPMMAgent(NoSpaceAgent) &lt;: MarketAgent
+    judgments::Vector{Vector{Float64}}
+    money::Float64
+    shares::Vector{Vector{Float64}}
+    λ::Float64
+end</code></pre><h2 id="Constant-Product-Market-Maker"><a class="docs-heading-anchor" href="#Constant-Product-Market-Maker">Constant Product Market Maker</a><a id="Constant-Product-Market-Maker-1"></a><a class="docs-heading-anchor-permalink" href="#Constant-Product-Market-Maker" title="Permalink"></a></h2><p>The price manipulation simulation uses a type of prediction market called a constant product market maker (CPMM). A CPMM is a type of automated market maker which uses an algorithm ensure liquidity in a market and adjust the price of an asset based on demand. The price of a share in a CPMM is determined by the product of the amount of reserves for <em>yes</em> shares and <em>no</em> shares:</p><p class="math-container">\[r_y \cdot r_n = k,\]</p><p>where <span>$r_y$</span> and <span>$r_n$</span> are the reserves for <em>yes</em> and <em>no</em> shares, respectively. Share prices are constrained such that the product of <em>yes</em> and <em>no</em> reserves must equal the constant <span>$k$</span>, as shown below:</p><details>
+<summary><b>Plot Code</b></summary><pre><code class="language-julia hljs">reserve_plot = let
+    x = .01:.01:250
+    y = 1000 ./ x
+    plot(x, y, xlabel = &quot;Yes Reserves&quot;, ylabel = &quot;No Reserves&quot;, lims = (0, 250), grid = false, leg = false)
+end
+nothing</code></pre></details><pre><code class="language-julia hljs">reserve_plot</code></pre><img src="26c61cb9.svg" alt="Example block output"/><p>The price is computed as the ratio of reserves. For example, the price for a <em>yes</em> share is <span>$\frac{r_n}{r_y + r_n}$</span>.</p><h2 id="Model-Step-Function"><a class="docs-heading-anchor" href="#Model-Step-Function">Model Step Function</a><a id="Model-Step-Function-1"></a><a class="docs-heading-anchor-permalink" href="#Model-Step-Function" title="Permalink"></a></h2><p>On each iteration of the simulation, the function <code>model_step!</code> is called, which performs the following actions:</p><ol><li>Select a random agent and trade via the <code>agent_step!</code> function.</li><li>Manipulate the current price by <span>$.05$</span> units at specified iterations. </li></ol><pre><code class="language-julia hljs">function model_step!(model)
+    agent = random_agent(model)
+    agent_step!(agent, model)
+    if abmtime(model) ∈ model.times
+        market = get_market(model)
+        current_price = compute_price(market, 1, true)
+        target_price = min(1, current_price + 0.05)
+        cost = price_to_cost(market, target_price, 1, true)
+        n_shares = cost_to_shares(market, cost, 1, true)
+        update_reserves!(market, n_shares, cost, 1, true)
+        push!(model.trade_volume[1], n_shares)
+        push!(model.market_prices[1], compute_price(market, 1, true))
+    end
+    return nothing
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">model_step! (generic function with 1 method)</code></pre><h2 id="Agent-Step-Function"><a class="docs-heading-anchor" href="#Agent-Step-Function">Agent Step Function</a><a id="Agent-Step-Function-1"></a><a class="docs-heading-anchor-permalink" href="#Agent-Step-Function" title="Permalink"></a></h2><p>The <code>agent_step!</code>, which is called in the <code>model_step!</code> function above, defines the trading behavior of the agents. <code>agent_step!</code> performs the following actions:</p><ol><li>sell any available <em>yes</em> or <em>no</em> shares</li><li>define belief <span>$b$</span> for price of <em>yes</em> shares as <span>$b = \lambda \cdot p + (1 - \lambda) \cdot j$</span>, where <span>$p$</span> is the current price of a <em>yes</em> share and <span>$j$</span> is the estimated price. Buy yes if <span>$b \leq j$</span>, buy no otherwise.</li></ol><pre><code class="language-julia hljs">function agent_step!(agent, ::CPMMAgent, market::AbstractCPMM, model)
+    (; judgments, λ) = agent
+    if agent.shares[1][1] &gt; 0
+        # sell yes shares
+        n_shares = -agent.shares[1][1]
+        cost = shares_to_cost(market, n_shares, 1, true)
+        order = AMMOrder(; id = agent.id, option = true, cost, n_shares)
+        transact!(order, market, model, 1)
+        pop!(model.trade_volume[1])
+        pop!(model.market_prices[1])
+    end
+    if agent.shares[1][2] &gt; 0
+        # sell no shares
+        n_shares = -agent.shares[1][2]
+        cost = shares_to_cost(market, n_shares, 1, false)
+        order = AMMOrder(; id = agent.id, option = false, cost, n_shares)
+        transact!(order, market, model, 1)
+        pop!(model.trade_volume[1])
+        pop!(model.market_prices[1])
+    end
+
+    price = compute_price(market, 1, true)
+    belief = (1 - λ) * judgments[1][1] + λ * price
+    if belief ≥ price
+        # buy yes shares
+        cost = compute_optimal_purchase(agent, market, belief, 1, true)
+        n_shares = cost_to_shares(market, cost, 1, true)
+        order = AMMOrder(; id = agent.id, option = true, cost, n_shares)
+        transact!(order, market, model, 1)
+    elseif belief &lt; price
+        # buy no shares
+        cost = compute_optimal_purchase(agent, market, belief, 1, false)
+        n_shares = cost_to_shares(market, cost, 1, false)
+        order = AMMOrder(; id = agent.id, option = false, cost, n_shares)
+        transact!(order, market, model, 1)
+    end
+    return nothing
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">agent_step! (generic function with 1 method)</code></pre><h2 id="Model-Initialization-Function"><a class="docs-heading-anchor" href="#Model-Initialization-Function">Model Initialization Function</a><a id="Model-Initialization-Function-1"></a><a class="docs-heading-anchor-permalink" href="#Model-Initialization-Function" title="Permalink"></a></h2><p>The function specified in the code block below initializes the model using parameter values provided by the user. The model contains agents and a CPMM without a spatial component. The keyword arguments for the function are defined as follows: </p><ul><li><code>agent_type</code>: the agent type used in the simlation</li><li><code>n_agents</code>: the number of agents in the simulation</li><li><code>λ</code>: the price weight parameter</li><li><code>money</code>: the initial amount of money available for each agent to buy shares</li><li><code>yes_reserves</code>: the number of reserves for <em>yes</em> shares</li><li><code>no_reserves</code>: the number of reserves for <em>no</em> shares</li><li><code>manipulate_time</code>: the time at which the market is manipulated</li></ul><p>The estimated price ranges from 0 to 1 across agents, such that the average estimate is .50.</p><pre><code class="language-julia hljs">function initialize(
+    agent_type::Type{&lt;:CPMMAgent};
+    n_agents,
+    λ,
+    money,
+    yes_reserves,
+    no_reserves,
+    manipulate_time
+)
+    yes_reserves = deepcopy(yes_reserves)
+    no_reserves = deepcopy(no_reserves)
+    space = nothing
+    model = StandardABM(
+        agent_type,
+        space;
+        properties = CPMM(; yes_reserves, no_reserves, times = [manipulate_time]),
+        model_step!,
+        scheduler = Schedulers.Randomly()
+    )
+    for i ∈ 1:n_agents
+        p = (i - 1) / (n_agents - 1)
+        judgments = [[p, 1-p]]
+        add_agent!(
+            model;
+            judgments,
+            money,
+            λ,
+            shares = [zeros(2)]
+        )
+    end
+    return model
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">initialize (generic function with 1 method)</code></pre><h2 id="Set-RNG-Seed"><a class="docs-heading-anchor" href="#Set-RNG-Seed">Set RNG Seed</a><a id="Set-RNG-Seed-1"></a><a class="docs-heading-anchor-permalink" href="#Set-RNG-Seed" title="Permalink"></a></h2><p>In the code block below, we set the seed for the random number generator to ensure reproducible results. </p><pre><code class="language-julia hljs">Random.seed!(5471)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Random.TaskLocalRNG()</code></pre><h2 id="Configure-Model"><a class="docs-heading-anchor" href="#Configure-Model">Configure Model</a><a id="Configure-Model-1"></a><a class="docs-heading-anchor-permalink" href="#Configure-Model" title="Permalink"></a></h2><p>In the <code>NamedTuple</code> below, we will set the values for the keyword arguments passed to the <code>initialize</code> function. The parameter values were selected to reproduce Figure 1 (a) reported in Rasooly &amp; Rozzi (2025). </p><pre><code class="language-julia hljs">config = (
+    n_agents = 11,
+    λ = 0.0,
+    money = 100,
+    no_reserves = [1000.0],
+    yes_reserves = [1000.0],
+    manipulate_time = 100,
+)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(n_agents = 11, λ = 0.0, money = 100, no_reserves = [1000.0], yes_reserves = [1000.0], manipulate_time = 100)</code></pre><h2 id="Simulate-the-Model"><a class="docs-heading-anchor" href="#Simulate-the-Model">Simulate the Model</a><a id="Simulate-the-Model-1"></a><a class="docs-heading-anchor-permalink" href="#Simulate-the-Model" title="Permalink"></a></h2><p>Now that we have defined the agents and the model parameters, we are in the position to simulate the model. The code below runs the model 1000 times and returns a vector of 200 market prices per run. </p><pre><code class="language- hljs">market_prices = map(1:1000) do _
+    model = initialize(CPMMAgent; config...)
+    run!(model, 200)
+    model.market_prices[1]
+end</code></pre><h2 id="Plot-the-Results"><a class="docs-heading-anchor" href="#Plot-the-Results">Plot the Results</a><a id="Plot-the-Results-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-the-Results" title="Permalink"></a></h2><p>The code block below plots the price as a function of time averaged across the 1000 simulations. The dashed line denotes the expected price based on the beliefs of the agents. At day 100, a manipulator inflates the price by 5 cents. The true price shows a gradual, but partial recovery, which suggests that price manipulation can have an enduring effect. </p><pre><code class="language- hljs">plot(
+    mean(market_prices),
+    ylims = (.39, .61),
+    xlabel = &quot;Day&quot;,
+    ylabel = &quot;Price of Yes Share&quot;,
+    linewidth = 2.5,
+    grid = false,
+    leg = false,
+)
+hline!([.5], color = :black, linestyle = :dash)</code></pre><h2 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h2><p>Rasooly, I., &amp; Rozzi, R. (2025). How manipulable are prediction markets?. arXiv preprint arXiv:2503.03312.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../arbitrage_example/">« Arbitrage Example</a><a class="docs-footer-nextpage" href="../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.11.4 on <span class="colophon-date" title="Friday 6 June 2025 14:50">Friday 6 June 2025</span>. Using Julia version 1.11.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

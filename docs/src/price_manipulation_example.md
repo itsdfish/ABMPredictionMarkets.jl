@@ -173,7 +173,7 @@ using Random
 import ABMPredictionMarkets: agent_step!
 ```
 
-## CPMM Agent 
+## CPMM Agent  
 
 The code block below defines an agent type called *CPMMAgent*. In this agent type, the first three fields are required, and the fourth field is an optional parameter included for this specific simulation scenario. The fields are defined as follows:
 

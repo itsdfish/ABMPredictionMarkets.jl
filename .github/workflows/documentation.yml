@@ -26,12 +26,10 @@ jobs:
       - uses: julia-actions/cache@v2
       - name: Install dependencies
         shell: julia --color=yes --project=docs {0}
-      - run: |
-          julia --project=docs -e '
-            using Pkg
-            Pkg.add(url = "https://github.com/itsdfish/ABMPredictionMarkets.jl")
-            Pkg.develop(PackageSpec(path=pwd()))
-            Pkg.instantiate()'
+        run: |
+          using Pkg
+          Pkg.develop(PackageSpec(path=pwd()))
+          Pkg.instantiate()
       - name: Build and deploy
         run: julia --color=yes --project=docs docs/make.jl
         env:

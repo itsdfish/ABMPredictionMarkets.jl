@@ -237,7 +237,7 @@ end
 
 ### Arbitrage Agent 
 
-The goal of the arbitrage agent is to exploit sub-additive prices by purchacing *no* shares for all markets. Using this strategy guarantees a payout of 1 dollar for $n-1$ shares, i.e., all shares except the share whose complementary event occured. Assuming prices are sub-additive (i.e., $\sum_{i=1}^n e_i< 1$), then the cost of *no* shares for all markets, *c*,  must be less than the payout: $c < n - 1$. 
+The goal of the arbitrage agent is to exploit sub-additive prices by purchacing *no* shares for all markets. Using this strategy guarantees a payout of 1 dollar for $n-1$ shares, i.e., all shares except the share whose complementary event occured. Assuming prices are sub-additive (i.e., $\sum_{i=1}^n p(e_i) > 1$), then the cost of *no* shares for all markets, *c*,  must be less than the payout: $c < n - 1$. 
 
 ```@raw html
 <details>
@@ -249,27 +249,27 @@ $c < n - 1$
 
 First, we define $c$ as:
 
-$c = \sum_{i=1}^n \bar{e}_i$
+$c = \sum_{i=1}^n p(\bar{e}_i)$
 
-In a binary market, $\bar{e}_i = 1 - e_i$. Substituting $1 - e_i$ into the equation results in:
+In a binary market, $p(\bar{e}_i) = 1 - p(e_i)$. Substituting $1 - p(e_i)$ into the equation results in:
 
-$c = \sum_{i=1}^n 1 - e_i$
+$c = \sum_{i=1}^n 1 - p(e_i)$
 
 The terms in the summation can be broken down into seperate summations of the same index set:
 
-$c = \sum_{i=1}^n 1 - \sum_{i=1}^n e_i$
+$c = \sum_{i=1}^n 1 - \sum_{i=1}^n p(e_i)$
 
 Substitute $\sum_{i=1}^n 1 = n$ into the equation above, resulting in:
 
-$c = n - \sum_{i=1}^n e_i.$
+$c = n - \sum_{i=1}^n p(e_i).$
 
-Substituting $n - \sum_{i=1}^n e_i$ into $c < n-1$, we have
+Substituting $n - \sum_{i=1}^n p(e_i)$ into $c < n-1$, we have
 
-$n - \sum_{i=1}^n e_i < n - 1$
+$n - \sum_{i=1}^n p(e_i) < n - 1$
 
 Subtract $n$ from both sides:
 
-$\sum_{i=1}^n e_i > 1,$
+$\sum_{i=1}^n p(e_i) > 1,$
 
 which is consistent with our assumption of sub-additivity.
 ```@raw html

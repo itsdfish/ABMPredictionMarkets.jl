@@ -1,3 +1,4 @@
 *Manifest.toml
 *.eps
 docs/build/
+*temp.gif

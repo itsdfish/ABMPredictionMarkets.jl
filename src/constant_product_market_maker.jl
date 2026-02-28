@@ -17,7 +17,7 @@ Holds reserves and data for a constant product market maker prediction market si
     
     CPMM(; yes_reserves, no_reserves, times = Int[])
 """
-mutable struct CPMM{T<:Real} <: AbstractCPMM
+mutable struct CPMM{T <: Real} <: AbstractCPMM
     yes_reserves::Vector{<:T}
     no_reserves::Vector{<:T}
     market_prices::Vector{Vector{T}}

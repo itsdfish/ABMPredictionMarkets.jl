@@ -18,7 +18,6 @@
         shares::Vector{Vector{Order}}
     end
 
-    import ABMPredictionMarkets: initialize
     function initialize(
         ::Type{<:TestAgent};
         n_agents,

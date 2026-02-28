@@ -26,7 +26,6 @@ export Order
 export agent_step!
 export compute_unpacking_factor
 export summarize_by_iteration
-export initialize
 export plot_dashboard
 export plot_depth_chart
 export compute_trade_volume

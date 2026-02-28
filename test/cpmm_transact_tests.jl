@@ -13,8 +13,8 @@
 
     money = 100
 
-    yes_reserves = 100
-    no_reserves = 100
+    yes_reserves = 100.0
+    no_reserves = 100.0
     config = (
         n_agents = 1,
         λ = 0.0,
@@ -57,8 +57,8 @@ end
 
     money = 100
 
-    yes_reserves = 1000
-    no_reserves = 1000
+    yes_reserves = 1000.0
+    no_reserves = 1000.0
     config = (
         n_agents = 3,
         λ = 0.0,

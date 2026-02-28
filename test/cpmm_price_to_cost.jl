@@ -7,8 +7,8 @@
     using ABMPredictionMarkets: update_reserves!
     using Test
 
-    yes_reserves = 100
-    no_reserves = 95
+    yes_reserves = 100.0
+    no_reserves = 95.0
     market = CPMM(
         yes_reserves = [yes_reserves],
         no_reserves = [no_reserves]
@@ -40,8 +40,8 @@ end
     using ABMPredictionMarkets: update_reserves!
     using Test
 
-    yes_reserves = 100
-    no_reserves = 95
+    yes_reserves = 100.0
+    no_reserves = 95.0
     market = CPMM(
         yes_reserves = [yes_reserves],
         no_reserves = [no_reserves]
@@ -76,8 +76,8 @@ end
     midx = 1
 
     for i ∈ 1:100
-        yes_reserves = 100
-        no_reserves = 95
+        yes_reserves = 100.0
+        no_reserves = 95.0
         market = CPMM(
             yes_reserves = [yes_reserves],
             no_reserves = [no_reserves]

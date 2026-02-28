@@ -8,8 +8,8 @@
     using ABMPredictionMarkets: price_to_cost
     using Test
 
-    yes_reserves = 100
-    no_reserves = 95
+    yes_reserves = 100.0
+    no_reserves = 95.0
     market = CPMM(
         yes_reserves = [yes_reserves],
         no_reserves = [no_reserves]
@@ -51,8 +51,8 @@ end
     using ABMPredictionMarkets: price_to_cost
     using Test
 
-    yes_reserves = 100
-    no_reserves = 95
+    yes_reserves = 100.0
+    no_reserves = 95.0
     market = CPMM(
         yes_reserves = [yes_reserves],
         no_reserves = [no_reserves]

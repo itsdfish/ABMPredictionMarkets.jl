@@ -17,22 +17,23 @@ Holds reserves and data for a constant product market maker prediction market si
     
     CPMM(; yes_reserves, no_reserves, times = Int[])
 """
-mutable struct CPMM <: AbstractCPMM
-    yes_reserves::Vector{Float64}
-    no_reserves::Vector{Float64}
-    market_prices::Vector{Vector{Float64}}
-    trade_volume::Vector{Vector{Float64}}
+mutable struct CPMM{T<:Real} <: AbstractCPMM
+    yes_reserves::Vector{<:T}
+    no_reserves::Vector{<:T}
+    market_prices::Vector{Vector{T}}
+    trade_volume::Vector{Vector{T}}
     iteration_ids::Vector{Vector{Int}}
     times::Vector{Int}
 end
 
 function CPMM(; yes_reserves, no_reserves, times = Int[])
     n_markets = length(no_reserves)
+    T = eltype(yes_reserves)
     return CPMM(
         yes_reserves,
         no_reserves,
-        init(Float64, n_markets),
-        init(Float64, n_markets),
+        init(T, n_markets),
+        init(T, n_markets),
         init(Int, n_markets),
         times
     )
